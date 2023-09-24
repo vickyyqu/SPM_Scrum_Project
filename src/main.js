@@ -3,6 +3,7 @@ import './style.css'
 import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap'
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
@@ -17,4 +18,13 @@ const routes = [
     }
 ]
 
-createApp(App).mount('#app')
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
+
+const app = createApp(App)
+app.use(router)
+app.mount('#app')
+
+export default router

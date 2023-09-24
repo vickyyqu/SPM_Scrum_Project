@@ -11,10 +11,11 @@ import Navbar from '../components/navbar.vue';
  left: 0;background-color: lightgray; outline: black 1px solid;">
         <div class="row">
             <div class="col-6">
-                
+                <h1>test</h1>
             </div>
 
             <div class="col-6">
+
             </div>
         </div>
     </div>
