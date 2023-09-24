@@ -4,6 +4,7 @@ import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap'
 import { createRouter, createWebHistory } from "vue-router";
+import 'bootstrap-icons/font/bootstrap-icons';
 
 const routes = [
     {
