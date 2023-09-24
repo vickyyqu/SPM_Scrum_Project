@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `Staff_Skill` (
   `Staff_ID` int NOT NULL,
   `Skill_Name` varchar(50) NOT NULL,
   `isVisible` boolean NOT NULL,
+  `Proficiency_Level` int NOT NULL,
   CONSTRAINT PK_Staff_Skill PRIMARY KEY (`Staff_ID`,`Skill_Name`)
 );
 
@@ -48,6 +49,7 @@ DROP TABLE IF EXISTS `Role_Skill`;
 CREATE TABLE IF NOT EXISTS `Role_Skill` (
   `Role_Name` varchar(20) NOT NULL,
   `Skill_Name` varchar(50) NOT NULL,
+  `Proficiency_Level` int NOT NULL,
   CONSTRAINT PK_Role_Skill PRIMARY KEY (`Role_Name`,`Skill_Name`)
 );
 
@@ -91,13 +93,13 @@ INSERT INTO staff VALUES
 (4, "Christina", "Frye", "IT", "Singapore", "chrisfrye@gmail.com", 3);
 
 INSERT INTO staff_skill VALUES
-(1, "Programming and Coding", true),
-(1, "Product Design and Development", true),
-(2, "Pricing Strategy", true),
-(3, "Pricing Strategy", true),
-(3, "Billing and Data Risk Management", true),
-(4, "Programming and Coding", true),
-(4, "Product Design and Development", true);
+(1, "Programming and Coding", true, 3),
+(1, "Product Design and Development", true, 3),
+(2, "Pricing Strategy", true, 4),
+(3, "Pricing Strategy", true, 4),
+(3, "Billing and Data Risk Management", true, 4),
+(4, "Programming and Coding", true, 4),
+(4, "Product Design and Development", true, 4);
 
 INSERT INTO skill VALUES
 ("Programming and Coding", "Apply macros, programming and coding to meet business needs"),
@@ -113,14 +115,14 @@ INSERT INTO role VALUES
 ("Full Stack Developer", "The Full Stack Developer codes and develops both front-end and back-end systems that balance product functionality with user experience and needs. He/She gathers user feedback to develop an intuitive and responsive experience for end users. He identifies security risks and ensures coding standards meet security requirements. He supports usability testing to validate user interfaces. He executes specifications and features for the next iteration of the product based on user needs and feedback, and continuously integrates code changes. He provides support to the quality testing teams.");
 
 INSERT INTO role_skill VALUES
-("Audit Manager", "Billing and Data Risk Management"),
-("Audit Manager", "Product Design and Development"),
-("Accountant", "Billing and Data Risk Management"),
-("Accountant", "Product Design and Development"),
-("Back End Developer", "Programming and Coding"),
-("Back End Developer", "Product Design and Development"),
-("Full Stack Developer", "Programming and Coding"),
-("Full Stack Developer", "Product Design and Development");
+("Audit Manager", "Billing and Data Risk Management", 4),
+("Audit Manager", "Product Design and Development", 4),
+("Accountant", "Billing and Data Risk Management", 5),
+("Accountant", "Product Design and Development", 6),
+("Back End Developer", "Programming and Coding", 6),
+("Back End Developer", "Product Design and Development", 4),
+("Full Stack Developer", "Programming and Coding", 3),
+("Full Stack Developer", "Product Design and Development", 3);
 
 INSERT INTO role_listing VALUES
 (1, "Full Stack Developer", "Singapore", "IT", 4, "2023-09-22", "2023-10-29"),
