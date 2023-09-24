@@ -1,24 +1,30 @@
 from flask import Flask, jsonify
-from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# MySQL configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'Roles_Listing'
+# SQLAlchemy configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
+db = SQLAlchemy(app)
 
-mysql = MySQL(app)
+class YourTable(db.Model):
+    __tablename__ = 'Role_Listing'  # Replace with your table name
+    # Define your table columns here
+    Listing_ID = db.Column(db.Integer, primary_key=True)
+    Role_Name = db.Column(db.String(255))
+    Country = db.Column(db.String(255))
+    Department =db.Column(db.String(255))
+    Open_Window = db.Column(db.DateTime)
+    Close_Window = db.Column(db.DateTime)
+    # Add more columns as needed
 
 @app.route('/api/data', methods=['GET'])
 def get_data():
     try:
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM your_table')
-        data = cursor.fetchall()
-        cursor.close()
-        return jsonify(data)
+        # Fetch data from the database using SQLAlchemy
+        data = YourTable.query.all()
+        data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country' : item.Country, 'dept' : item.Department, 'OpenW' : item.Open_Window, 'CloseW': item.Close_Window } for item in data]
+        return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})
 

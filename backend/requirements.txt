@@ -1,0 +1,9 @@
+
+Flask==2.3.3
+Flask-MySQL==1.5.2
+
+##python -m pip install flask
+#python -m pip install flask_cors
+#python -m pip install Flask-SQLAlchemy
+#python -m pip install mysql-connector-python
+#pip install mysql-connector-python-rf
