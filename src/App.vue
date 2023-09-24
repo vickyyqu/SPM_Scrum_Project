@@ -1,10 +1,12 @@
 <script setup>
 import RoleListingView from './views/RoleListingView.vue';
+import AddRoleListingView from './views/AddRoleListingView.vue';
 
 </script>
 
 <template>
   <RoleListingView />
+  <AddRoleListingView />
 </template>
 
 <style scoped>
