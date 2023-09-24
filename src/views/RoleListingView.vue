@@ -1,3 +1,4 @@
+
 <script >
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
@@ -90,4 +91,7 @@ export default {
         </div>
     </div>
 </template>
+
+<style>
+</style>
 
