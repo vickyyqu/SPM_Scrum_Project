@@ -1,16 +1,6 @@
 <script setup>
-
-import Navbar from './components/navbar.vue';
-import RoleListingView from './views/RoleListingView.vue';
-import AddRoleListingView from './views/AddRoleListingView.vue';
-
-
+  import Navbar from './components/navbar.vue';
 </script>
-
-<!-- <template>
-  <RoleListingView />
-  <AddRoleListingView />
-</template> -->
 
 <template>
   <Navbar />

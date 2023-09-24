@@ -1,7 +1,9 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # SQLAlchemy configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
@@ -18,7 +20,7 @@ class YourTable(db.Model):
     Close_Window = db.Column(db.DateTime)
     # Add more columns as needed
 
-@app.route('/api/data', methods=['GET'])
+@app.route('/all', methods=['GET'])
 def get_data():
     try:
         # Fetch data from the database using SQLAlchemy
@@ -29,4 +31,4 @@ def get_data():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
