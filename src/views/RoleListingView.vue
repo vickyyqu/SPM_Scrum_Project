@@ -1,6 +1,59 @@
-<script setup>
+
+<script >
 import Navbar from '../components/navbar.vue';
+import { ref, onMounted } from 'vue'
+// import { getRoleListings } from '../services/RoleListing';
+
+export default {
+  setup() {
+    // const queryResult = ref([]);
+
+    // // Example usage of getRoleListings
+    // const fetchRoleListings = () => {
+    //   getRoleListings((error, results) => {
+    //     if (error) {
+    //       console.error('Error fetching role listings:', error);
+    //     } else {
+    //       queryResult.value = results;
+    //     }
+    //   });
+    // };
+
+    // console.log(queryResult)
+
+    // Example usage of insertRole
+    // const addRole = () => {
+    //   const newRoleData = {
+    //     // Define the data for the new role here
+    //     name: 'New Role',
+    //     description: 'Description of the new role',
+    //   };
+
+    //   insertRole(newRoleData, (error, result) => {
+    //     if (error) {
+    //       console.error('Error inserting a new role:', error);
+    //     } else {
+    //       console.log('New role inserted:', result);
+    //       // Refresh role listings or perform other actions as needed
+    //     }
+    //   });
+    // };
+
+    // Fetch role listings when the component is mounted
+    // onMounted(() => {
+    //   fetchRoleListings();
+    // });
+
+    // return {
+    //   queryResult,
+    //   addRole,
+    // };
+  },
+};
+
+
 </script>
+
 
 <template>
     <Navbar />
@@ -38,5 +91,7 @@ import Navbar from '../components/navbar.vue';
         </div>
     </div>
 </template>
+
 <style>
 </style>
+

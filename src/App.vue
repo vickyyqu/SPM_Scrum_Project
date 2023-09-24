@@ -1,7 +1,9 @@
 <script setup>
+
 import Navbar from './components/navbar.vue';
 import RoleListingView from './views/RoleListingView.vue';
 import AddRoleListingView from './views/AddRoleListingView.vue';
+
 
 </script>
 
@@ -33,3 +35,4 @@ import AddRoleListingView from './views/AddRoleListingView.vue';
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
+
