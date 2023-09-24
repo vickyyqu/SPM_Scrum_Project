@@ -1,24 +1,24 @@
 <script >
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
-import { getRoleListings } from '../services/RoleListing';
+// import { getRoleListings } from '../services/RoleListing';
 
 export default {
   setup() {
-    const queryResult = ref([]);
+    // const queryResult = ref([]);
 
-    // Example usage of getRoleListings
-    const fetchRoleListings = () => {
-      getRoleListings((error, results) => {
-        if (error) {
-          console.error('Error fetching role listings:', error);
-        } else {
-          queryResult.value = results;
-        }
-      });
-    };
+    // // Example usage of getRoleListings
+    // const fetchRoleListings = () => {
+    //   getRoleListings((error, results) => {
+    //     if (error) {
+    //       console.error('Error fetching role listings:', error);
+    //     } else {
+    //       queryResult.value = results;
+    //     }
+    //   });
+    // };
 
-    console.log(queryResult)
+    // console.log(queryResult)
 
     // Example usage of insertRole
     // const addRole = () => {
@@ -39,14 +39,14 @@ export default {
     // };
 
     // Fetch role listings when the component is mounted
-    onMounted(() => {
-      fetchRoleListings();
-    });
+    // onMounted(() => {
+    //   fetchRoleListings();
+    // });
 
-    return {
-      queryResult,
-      addRole,
-    };
+    // return {
+    //   queryResult,
+    //   addRole,
+    // };
   },
 };
 
