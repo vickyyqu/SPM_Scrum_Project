@@ -1,19 +1,5 @@
-<script setup>
-import Navbar from '../components/navbar.vue';
-// import Dynamic_form from '../components/dynamic_form.vue';
-</script>
-
 <template>
-    <Navbar />
-    <div class="container-fluid pt-5" style="position: absolute;
- top: 0;
- right: 0;
- bottom: 0;
- left: 0;
- background-color: lightgray; 
- outline: black 1px solid;
- min-height: 100vh;
- min-width: 100vw;">
+    <div class="container-fluid pt-5">
 
         <div class="container">
             <div class="row">
@@ -26,30 +12,41 @@ import Navbar from '../components/navbar.vue';
             </div>
 
             <div class="row">
-                <div class="col-8 text-start">
+                <div class="col-9 text-start">
                     <label for="roleRequiredSkills1" class="form-label">Required Skills</label>
                 </div>
                 <div class="col-3 text-start">
                     <label for="roleRequiredSkills1Proficiency" class="form-label">Proficiency</label>
                 </div>
-                <div class="col"></div>
             </div>
 
-            <div class="row">
-                <div class="form-group">                    
-                    <div v-for="(input, index) in skills" :key="`phoneInput-${index}`"
+            <div class="row mb-5">
+                <div class="form-group">
+                    <div v-for="(input, index) in skills_required" :key="`skillsInput-${index}`"
                         class="input wrapper flex items-center">
-                        <input v-model="input.skill" type="text" class="form-control" />
-                        <!--          Add Svg Icon-->
-                        <svg @click="addField(input, skills)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        <div class="row">
+                            <!-- <div class="col-9"><input v-model="input.skill" type="text" class="form-control" /></div> -->
+                            <div class="col-9">
+                                <select v-model="selected" class="form-select">
+                                    <option v-for="skill in skills" :value="skill.value">
+                                        {{ skill.skillName }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-3"><input v-model="input.proficiency" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!--Add Svg Icon-->
+                        <svg @click="addField(input, skills_required)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                             width="24" height="24" class="ml-2 cursor-pointer">
                             <path fill="none" d="M0 0h24v24H0z" />
                             <path fill="green"
                                 d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
                         </svg>
 
-                        <!--          Remove Svg Icon-->
-                        <svg v-show="skills.length > 1" @click="removeField(index, skills)"
+                        <!--Remove Svg Icon-->
+                        <svg v-show="skills_required.length > 1" @click="removeField(index, skills_required)"
                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             class="ml-2 cursor-pointer">
                             <path fill="none" d="M0 0h24v24H0z" />
@@ -91,12 +88,30 @@ import Navbar from '../components/navbar.vue';
     </div>
 </template>
 <style></style>
+
 <script>
+import Navbar from '../components/navbar.vue';
+import { ref, onMounted } from 'vue'
+import skillService from '../../services/Skill.js'
+
+
 export default {
     name: "AddRemove",
+    setup() {
+        const skills = ref([])
+
+        skillService.getAllSkills().then(response => {
+            skills.value = response.data
+            console.log(skills.value)
+        })
+        return {
+            skills
+        }
+    },
     data() {
         return {
-            skills: [{ skill: "" }],
+            skills_required: [{ skill: "" }],
+            proficiency: [{ proficiency: "" }]
         };
     },
     methods: {
