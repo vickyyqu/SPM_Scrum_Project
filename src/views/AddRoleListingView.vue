@@ -1,14 +1,19 @@
 <script setup>
 import Navbar from '../components/navbar.vue';
+// import Dynamic_form from '../components/dynamic_form.vue';
 </script>
 
 <template>
     <Navbar />
-    <div class="container-fluid mt-5 pt-5" style="position: absolute;
+    <div class="container-fluid pt-5" style="position: absolute;
  top: 0;
  right: 0;
  bottom: 0;
- left: 0;background-color: lightgray; outline: black 1px solid;">
+ left: 0;
+ background-color: lightgray; 
+ outline: black 1px solid;
+ min-height: 100vh;
+ min-width: 100vw;">
 
         <div class="container">
             <div class="row">
@@ -31,23 +36,25 @@ import Navbar from '../components/navbar.vue';
             </div>
 
             <div class="row">
-                <div class="col-8 text-start">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="roleRequiredSkills1">
-                    </div>
-                </div>
-                <div class="col-3 text-start">
-                    <div class="mb-3">
-                        <input type="number" class="form-control" id="roleRequiredSkills1Proficiency" min="1" max="">
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                            class="bi bi-plus-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                            <path
-                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                <div class="form-group">                    
+                    <div v-for="(input, index) in skills" :key="`phoneInput-${index}`"
+                        class="input wrapper flex items-center">
+                        <input v-model="input.skill" type="text" class="form-control" />
+                        <!--          Add Svg Icon-->
+                        <svg @click="addField(input, skills)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            width="24" height="24" class="ml-2 cursor-pointer">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path fill="green"
+                                d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
+                        </svg>
+
+                        <!--          Remove Svg Icon-->
+                        <svg v-show="skills.length > 1" @click="removeField(index, skills)"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                            class="ml-2 cursor-pointer">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path fill="#EC4899"
+                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9.414l2.828-2.829 1.415 1.415L13.414 12l2.829 2.828-1.415 1.415L12 13.414l-2.828 2.829-1.415-1.415L10.586 12 7.757 9.172l1.415-1.415L12 10.586z" />
                         </svg>
                     </div>
                 </div>
@@ -84,3 +91,21 @@ import Navbar from '../components/navbar.vue';
     </div>
 </template>
 <style></style>
+<script>
+export default {
+    name: "AddRemove",
+    data() {
+        return {
+            skills: [{ skill: "" }],
+        };
+    },
+    methods: {
+        addField(value, fieldType) {
+            fieldType.push({ value: "" });
+        },
+        removeField(index, fieldType) {
+            fieldType.splice(index, 1);
+        },
+    },
+};
+</script>
