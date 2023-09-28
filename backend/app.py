@@ -20,6 +20,13 @@ class RoleListingTable(db.Model):
     Close_Window = db.Column(db.DateTime)
     # Add more columns as needed
 
+class RoleSkillTable(db.Model):
+    __tablename__ = "Role_Skill"
+    Role_Name = db.Column(db.String(255), primary_key=True)
+    Skill_Name = db.Column(db.String(255), primary_key=True)
+    Proficiency_Level = db.Column(db.Integer)
+
+
 @app.route('/all', methods=['GET'])
 def get_data():
     try:
@@ -29,6 +36,19 @@ def get_data():
         return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+@app.route('/allskills', methods=['GET'])
+def get_allskills():
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = RoleSkillTable.query.all()
+        data_dict = [{'name': item.Role_Name, 'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
+        return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
