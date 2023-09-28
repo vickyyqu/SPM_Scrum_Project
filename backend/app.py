@@ -9,7 +9,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
 db = SQLAlchemy(app)
 
-class YourTable(db.Model):
+class RoleListingTable(db.Model):
     __tablename__ = 'Role_Listing'  # Replace with your table name
     # Define your table columns here
     Listing_ID = db.Column(db.Integer, primary_key=True)
@@ -24,7 +24,7 @@ class YourTable(db.Model):
 def get_data():
     try:
         # Fetch data from the database using SQLAlchemy
-        data = YourTable.query.all()
+        data = RoleListingTable.query.all()
         data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country' : item.Country, 'dept' : item.Department, 'OpenW' : item.Open_Window, 'CloseW': item.Close_Window } for item in data]
         return jsonify(data_dict)
     except Exception as e:
