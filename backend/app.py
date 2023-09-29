@@ -35,6 +35,13 @@ class StaffSkillTable(db.Model):
     isVisible = db.Column(db.Boolean)
     Proficiency_Level = db.Column(db.Integer)
 
+class SkillTable(db.Model):
+    __tablename__ = 'Skill'  # Replace with your table name
+    # Define your table columns here
+    Skill_Name = db.Column(db.String(255), primary_key=True)
+    Skill_Desc = db.Column(db.String(255))
+    # Add more columns as needed
+
 
 ##### API Endpoints ######
 
@@ -49,13 +56,34 @@ def get_allrolelistings():
         return jsonify({'error': str(e)})
     
 
-@app.route('/getallskills', methods=['GET'])
-def get_allskills():
+@app.route('/getallroleskills', methods=['GET'])
+def get_allroleskills():
     try:
         # Fetch data from the database using SQLAlchemy
         data = RoleSkillTable.query.all()
         data_dict = [{'name': item.Role_Name, 'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
         return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/getroleskills/<string:listing_id>', methods=['GET'])
+def get_roleskills(listing_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        listing = RoleListingTable.query.filter_by(Listing_ID=listing_id).first()
+        if not listing:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Listing does not exist."
+                })
+        
+        role = listing.Role_Name
+        data = RoleSkillTable.query.filter_by(Role_Name=role)
+        data_dict = [{'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
+        
+        return jsonify(data_dict)
+    
     except Exception as e:
         return jsonify({'error': str(e)})
     
@@ -78,24 +106,13 @@ def get_staffskills(staff_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-@app.route('/getroleskills/<string:listing_id>', methods=['GET'])
-def get_roleskills(listing_id):
+@app.route('/getallskills', methods=['GET'])
+def get_allskills():
     try:
         # Fetch data from the database using SQLAlchemy
-        listing = RoleListingTable.query.filter_by(Listing_ID=listing_id).first()
-        if not listing:
-            return jsonify(
-                {
-                    "code": 404,
-                    "error": "Listing does not exist."
-                })
-        
-        role = listing.Role_Name
-        data = RoleSkillTable.query.filter_by(Role_Name=role)
-        data_dict = [{'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
-        
+        data = SkillTable.query.all()
+        data_dict = [{ 'skillName': item.Skill_Name, 'skillDesc': item.Skill_Desc } for item in data]
         return jsonify(data_dict)
-    
     except Exception as e:
         return jsonify({'error': str(e)})
     

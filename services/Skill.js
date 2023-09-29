@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000/";
 class SkillsService{
 
     getAllSkills(){
-        const response = axios.get(API_URL + "getAllSkills")
+        const response = axios.get(API_URL + "getallskills")
         .then((response)=>{
             console.log("Get Skills Successful")
             return response

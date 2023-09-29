@@ -38,8 +38,8 @@
                         </div>
 
                         <!--Add Svg Icon-->
-                        <svg @click="addField(input, skills_required)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            width="24" height="24" class="ml-2 cursor-pointer">
+                        <svg @click="addField(input, skills_required)" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24" width="24" height="24" class="ml-2 cursor-pointer">
                             <path fill="none" d="M0 0h24v24H0z" />
                             <path fill="green"
                                 d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
@@ -90,7 +90,6 @@
 <style></style>
 
 <script>
-import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import skillService from '../../services/Skill.js'
 

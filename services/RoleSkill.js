@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000/";
 class RoleSkillService{
 
     getAllRoleSkills(){
-        const response = axios.get(API_URL + "getallskills")
+        const response = axios.get(API_URL + "getallroleskills")
         .then((response)=>{
             console.log("Get Role Skills Successful")
             return response
