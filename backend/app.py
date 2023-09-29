@@ -60,7 +60,7 @@ def get_allskills():
         return jsonify({'error': str(e)})
     
 @app.route('/getstaffskills/<string:staff_id>', methods=['GET'])
-def get_staffkills(staff_id):
+def get_staffskills(staff_id):
     try:
         # Fetch data from the database using SQLAlchemy
         data = StaffSkillTable.query.filter_by(Staff_ID=staff_id)
@@ -77,7 +77,27 @@ def get_staffkills(staff_id):
     
     except Exception as e:
         return jsonify({'error': str(e)})
+
+@app.route('/getroleskills/<string:listing_id>', methods=['GET'])
+def get_roleskills(listing_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        listing = RoleListingTable.query.filter_by(Listing_ID=listing_id).first()
+        if not listing:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Listing does not exist."
+                })
+        
+        role = listing.Role_Name
+        data = RoleSkillTable.query.filter_by(Role_Name=role)
+        data_dict = [{'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
+        
+        return jsonify(data_dict)
     
+    except Exception as e:
+        return jsonify({'error': str(e)})
     
 
 if __name__ == '__main__':
