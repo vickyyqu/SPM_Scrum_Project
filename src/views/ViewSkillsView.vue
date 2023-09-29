@@ -1,5 +1,4 @@
 <script>
-import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import RoleSkillService from '../../services/RoleSkill.js'
 
