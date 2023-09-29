@@ -9,6 +9,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
 db = SQLAlchemy(app)
 
+##### DB Tables ######
+
 class RoleListingTable(db.Model):
     __tablename__ = 'Role_Listing'  # Replace with your table name
     # Define your table columns here
@@ -26,6 +28,15 @@ class RoleSkillTable(db.Model):
     Skill_Name = db.Column(db.String(255), primary_key=True)
     Proficiency_Level = db.Column(db.Integer)
 
+class StaffSkillTable(db.Model):
+    __tablename__ = "Staff_Skill"
+    Staff_ID = db.Column(db.String(255), primary_key=True)
+    Skill_Name = db.Column(db.String(255), primary_key=True)
+    isVisible = db.Column(db.Boolean)
+    Proficiency_Level = db.Column(db.Integer)
+
+
+##### API Endpoints ######
 
 @app.route('/all', methods=['GET'])
 def get_data():
@@ -45,6 +56,25 @@ def get_allskills():
         data = RoleSkillTable.query.all()
         data_dict = [{'name': item.Role_Name, 'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
         return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/getstaffskills/<string:staff_id>', methods=['GET'])
+def get_staffkills(staff_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = StaffSkillTable.query.filter_by(Staff_ID=staff_id)
+        data_dict = [{'id': item.Staff_ID, 'skill' : item.Skill_Name, 'isVisible' : item.isVisible, 'proficiency' : item.Proficiency_Level } for item in data]
+
+        if data_dict == []:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Staff is invalid or staff has no skills registered."
+                })
+        
+        return jsonify(data_dict)
+    
     except Exception as e:
         return jsonify({'error': str(e)})
     
