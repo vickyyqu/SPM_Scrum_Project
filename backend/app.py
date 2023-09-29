@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # SQLAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/sbrp_test'
 db = SQLAlchemy(app)
 
 ##### DB Tables ######
@@ -38,8 +38,8 @@ class StaffSkillTable(db.Model):
 
 ##### API Endpoints ######
 
-@app.route('/all', methods=['GET'])
-def get_data():
+@app.route('/getallrolelistings', methods=['GET'])
+def get_allrolelistings():
     try:
         # Fetch data from the database using SQLAlchemy
         data = RoleListingTable.query.all()
@@ -49,7 +49,7 @@ def get_data():
         return jsonify({'error': str(e)})
     
 
-@app.route('/allskills', methods=['GET'])
+@app.route('/getallskills', methods=['GET'])
 def get_allskills():
     try:
         # Fetch data from the database using SQLAlchemy
