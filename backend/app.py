@@ -1,46 +1,15 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS, cross_origin
+from config import *
+from schemas import *
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+# from flask import Flask, jsonify
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_cors import CORS, cross_origin
+# app = Flask(__name__)
+# CORS(app, resources={r"/*": {"origins": "*"}})
 
-# SQLAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/sbrp_test'
-db = SQLAlchemy(app)
-
-##### DB Tables ######
-
-class RoleListingTable(db.Model):
-    __tablename__ = 'Role_Listing'  # Replace with your table name
-    # Define your table columns here
-    Listing_ID = db.Column(db.Integer, primary_key=True)
-    Role_Name = db.Column(db.String(255))
-    Country = db.Column(db.String(255))
-    Department =db.Column(db.String(255))
-    Open_Window = db.Column(db.DateTime)
-    Close_Window = db.Column(db.DateTime)
-    # Add more columns as needed
-
-class RoleSkillTable(db.Model):
-    __tablename__ = "Role_Skill"
-    Role_Name = db.Column(db.String(255), primary_key=True)
-    Skill_Name = db.Column(db.String(255), primary_key=True)
-    Proficiency_Level = db.Column(db.Integer)
-
-class StaffSkillTable(db.Model):
-    __tablename__ = "Staff_Skill"
-    Staff_ID = db.Column(db.String(255), primary_key=True)
-    Skill_Name = db.Column(db.String(255), primary_key=True)
-    isVisible = db.Column(db.Boolean)
-    Proficiency_Level = db.Column(db.Integer)
-
-class SkillTable(db.Model):
-    __tablename__ = 'Skill'  # Replace with your table name
-    # Define your table columns here
-    Skill_Name = db.Column(db.String(255), primary_key=True)
-    Skill_Desc = db.Column(db.String(255))
-    # Add more columns as needed
+# # SQLAlchemy configuration
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
+# db = SQLAlchemy(app)
 
 
 ##### API Endpoints ######
@@ -66,6 +35,7 @@ def get_allroleskills():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+
 @app.route('/getroleskills/<string:listing_id>', methods=['GET'])
 def get_roleskills(listing_id):
     try:
@@ -87,6 +57,7 @@ def get_roleskills(listing_id):
     except Exception as e:
         return jsonify({'error': str(e)})
     
+
 @app.route('/getstaffskills/<string:staff_id>', methods=['GET'])
 def get_staffskills(staff_id):
     try:
@@ -105,6 +76,7 @@ def get_staffskills(staff_id):
     
     except Exception as e:
         return jsonify({'error': str(e)})
+
 
 @app.route('/getallskills', methods=['GET'])
 def get_allskills():
