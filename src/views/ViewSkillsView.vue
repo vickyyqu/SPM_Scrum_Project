@@ -12,6 +12,8 @@ export default {
       // Create a temporary array to store unique skills
       const uniqueSkills = [];
 
+      console.log(skillsData)
+      
       // Iterate through the skills data and add unique skills to the temporary array
       skillsData.forEach(skill => {
         if (!uniqueSkills.includes(skill.skill)) {
