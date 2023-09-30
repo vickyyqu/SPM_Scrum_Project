@@ -1,17 +1,6 @@
 from config import *
 from schemas import *
 
-# from flask import Flask, jsonify
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_cors import CORS, cross_origin
-# app = Flask(__name__)
-# CORS(app, resources={r"/*": {"origins": "*"}})
-
-# # SQLAlchemy configuration
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
-# db = SQLAlchemy(app)
-
-
 ##### API Endpoints ######
 
 @app.route('/getallrolelistings', methods=['GET'])
