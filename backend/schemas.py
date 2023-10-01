@@ -6,7 +6,7 @@ class RoleListingTable(db.Model):
     __tablename__ = 'Role_Listing'  # Replace with your table name
     # Define your table columns here
     Listing_ID = db.Column(db.Integer, primary_key=True)
-    Role_Name = db.Column(db.String(255))
+    Role_Name = db.Column(db.String(255), db.ForeignKey('Role_Skill.Role_Name'))
     Country = db.Column(db.String(255))
     Department =db.Column(db.String(255))
     Reporting_Manager = db.Column(db.String(255))
@@ -16,8 +16,8 @@ class RoleListingTable(db.Model):
 
 class RoleSkillTable(db.Model):
     __tablename__ = "Role_Skill"
-    Role_Name = db.Column(db.String(255), primary_key=True)
-    Skill_Name = db.Column(db.String(255), primary_key=True)
+    Role_Name = db.Column(db.String(255), db.ForeignKey('Role.Role_Name'), primary_key=True)
+    Skill_Name = db.Column(db.String(255), db.ForeignKey('Skill.Skill_Name'), primary_key=True)
     Proficiency_Level = db.Column(db.Integer)
 
 class StaffSkillTable(db.Model):

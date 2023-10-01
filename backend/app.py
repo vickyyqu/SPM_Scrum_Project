@@ -170,6 +170,24 @@ def put_rolelisting(listing_id):
         db.session.rollback()
         return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
     
+# get all skills for a role
+@app.route('/getskillsforrole/<string:role_name>', methods=['GET'])
+def get_skills_for_role(role_name):
+    try:
+        print(role_name)
+        # Perform a join query to retrieve Skill_Name and Skill_Desc based on Role_Name
+        skills_for_role = (
+            db.session.query(SkillTable.Skill_Name, SkillTable.Skill_Desc)
+            .join(RoleSkillTable, RoleSkillTable.Skill_Name == SkillTable.Skill_Name)
+            .filter(RoleSkillTable.Role_Name == role_name)
+            .all()
+        )
+
+        result = [{'Skill_Name': skill_name, 'Skill_Desc': skill_desc} for skill_name, skill_desc in skills_for_role]
+
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': 'Failed to retrieve skills for role.', 'details': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
