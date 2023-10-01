@@ -13,6 +13,19 @@ def get_allrolelistings():
         return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})
+
+
+@app.route('/postrolelisting', methods=['POST'])
+def post_rolelisting():
+    try:
+        data = request.get_json()
+        new_data = RoleListingTable(Role_Name=data['roleName'], Country=data['country'], Department=data['dept'], Reporting_Manager=data['reportingManager'], Open_Window=data['openWindow'], Close_Window=data['closeWindow'])
+        db.session.add(new_data)
+        db.session.commit()
+        return jsonify({'message': 'Data added successfully!'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to add data.', 'details': str(e)}), 500
     
 
 # Role_Skill
