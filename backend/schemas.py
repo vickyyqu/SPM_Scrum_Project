@@ -32,3 +32,21 @@ class SkillTable(db.Model):
     Skill_Name = db.Column(db.String(255), primary_key=True)
     Skill_Desc = db.Column(db.String(255))
     # Add more columns as needed
+
+class RoleTable(db.Model):
+    __tablename__ = 'Role'  # Replace with your table name
+    # Define your table columns here
+    Role_Name = db.Column(db.String(255), primary_key=True)
+    Role_Desc = db.Column(db.String(255))
+    # Add more columns as needed
+
+class StaffTable(db.Model):
+    __tablename__ = 'Staff'  # Replace with your table name
+    # Define your table columns here
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+    Staff_FName = db.Column(db.String(50))
+    Staff_LName = db.Column(db.String(50))
+    Dept = db.Column(db.String(50))
+    Country = db.Column(db.String(50))
+    Email = db.Column(db.String(50))
+    Role = db.Column(db.Integer)

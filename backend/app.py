@@ -3,6 +3,7 @@ from schemas import *
 
 ##### API Endpoints ######
 
+#Role_Listing
 @app.route('/getallrolelistings', methods=['GET'])
 def get_allrolelistings():
     try:
@@ -14,6 +15,7 @@ def get_allrolelistings():
         return jsonify({'error': str(e)})
     
 
+# Role_Skill
 @app.route('/getallroleskills', methods=['GET'])
 def get_allroleskills():
     try:
@@ -46,7 +48,7 @@ def get_roleskills(listing_id):
     except Exception as e:
         return jsonify({'error': str(e)})
     
-
+# Staff_Skill
 @app.route('/getstaffskills/<string:staff_id>', methods=['GET'])
 def get_staffskills(staff_id):
     try:
@@ -66,13 +68,36 @@ def get_staffskills(staff_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
+# Skill
 @app.route('/getallskills', methods=['GET'])
 def get_allskills():
     try:
         # Fetch data from the database using SQLAlchemy
         data = SkillTable.query.all()
         data_dict = [{ 'skillName': item.Skill_Name, 'skillDesc': item.Skill_Desc } for item in data]
+        return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+
+# Role
+@app.route('/getallroles', methods=['GET'])
+def get_allroles():
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = RoleTable.query.all()
+        data_dict = [{'roleName': item.Role_Name, 'roleDesc': item.Role_Desc } for item in data]
+        return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+# Staff
+@app.route('/getallstaffs', methods=['GET'])
+def get_allstaff():
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = StaffTable.query.all()
+        data_dict = [{'staffID': item.Staff_ID, 'staffFName': item.Staff_FName, 'staffLName': item.Staff_LName, 'staffDept': item.Dept, 'staffCountry': item.Country, 'staffEmail': item.Email, 'staffRole': item.Role } for item in data]
         return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})
