@@ -55,21 +55,21 @@ CREATE TABLE IF NOT EXISTS `Role_Skill` (
 
 DROP TABLE IF EXISTS `Role_Listing`;
 CREATE TABLE IF NOT EXISTS `Role_Listing` (
-  `Listing_ID` int NOT NULL,
+  `Listing_ID` int NOT NULL AUTO_INCREMENT,
   `Role_Name` varchar(20) NOT NULL,
   `Country` varchar(20) NOT NULL,
   `Department` varchar(50) NOT NULL,
-  `Reporting Manager` int NOT NULL,
+  `Reporting_Manager` int NOT NULL,
   `Open_Window` datetime NOT NULL,
   `Close_Window` datetime NOT NULL,
 PRIMARY KEY (`Listing_ID`),
-FOREIGN KEY (`Reporting Manager`) REFERENCES Staff(`Staff_ID`),
+FOREIGN KEY (`Reporting_Manager`) REFERENCES Staff(`Staff_ID`),
 FOREIGN KEY (`Role_Name`) REFERENCES Role_Skill(`Role_Name`)
 );
 
 DROP TABLE IF EXISTS `Application`;
 CREATE TABLE IF NOT EXISTS `Application` (
-  `Application_ID` int NOT NULL,
+  `Application_ID` int NOT NULL AUTO_INCREMENT,
   `Listing_ID` int NOT NULL,
   `Staff_ID` int NOT NULL,
   `Brief_Description` longtext,
