@@ -114,6 +114,61 @@ def get_allstaff():
         return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})
+
+# Managers
+@app.route('/getallmanagers', methods=['GET'])
+def get_allmanagers():
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = StaffTable.query.filter_by(Role=3).all()
+        data_dict = [{'staffID': item.Staff_ID, 'staffFName': item.Staff_FName, 'staffLName': item.Staff_LName, 'staffDept': item.Dept, 'staffCountry': item.Country, 'staffEmail': item.Email, 'staffRole': item.Role } for item in data]
+        return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+# Role_Listing by Listing_ID
+@app.route('/getrolelisting/<int:listing_id>', methods=['GET'])
+def get_rolelisting(listing_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = RoleListingTable.query.filter_by(Listing_ID=listing_id).all()
+        data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country' : item.Country, 'dept' : item.Department, 'OpenW' : item.Open_Window, 'CloseW': item.Close_Window } for item in data]
+
+        if data_dict == []:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Listing does not exist."
+                })
+        
+        return jsonify(data_dict)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+# Update Role_Listing
+@app.route('/updaterolelisting/<int:listing_id>', methods=['POST'])
+def put_rolelisting(listing_id):
+    try:
+        data = request.get_json()
+        listing = RoleListingTable.query.filter_by(Listing_ID=listing_id).first()
+        
+        if listing is not None:
+            listing.Role_Name = data['roleName']
+            listing.Country = data['country']
+            listing.Department = data['dept']
+            listing.Reporting_Manager = data['reportingManager']
+            listing.Open_Window = data['openWindow']
+            listing.Close_Window = data['closeWindow']
+
+            db.session.commit()
+            return jsonify({"message": "Listing updated successfully"}), 200
+        else:
+            return jsonify({"message": "Listing does not exist"}), 404
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
     
 
 if __name__ == '__main__':
