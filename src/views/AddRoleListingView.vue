@@ -6,7 +6,16 @@
                 <div class="col text-start">
                     <div class="mb-3">
                         <label for="roleTitle" class="form-label">Role Title</label>
-                        <input type="text" class="form-control" id="roleTitle">
+                        <input type="text" class="form-control" id="roleTitle" v-model="search_role_name">
+                    </div>
+                </div>
+                <div class="col">
+                    <div v-for="(value, index) in role_names" class="form-check">
+                        <input class="form-check-input" type="radio" name="role_name" v-bind:id="value.role_name"
+                            v-bind:value="value.role_name" v-model="role_name">
+                        <label class="form-check-label" v-bind:for="value.role_name">
+                            <strong>{{ value.Role_Name }}</strong>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -92,33 +101,30 @@
 <script>
 import { ref, onMounted } from 'vue'
 import skillService from '../../services/Skill.js'
+import axios from 'axios'
 
 
 export default {
-    name: "AddRemove",
-    setup() {
-        const skills = ref([])
-
-        skillService.getAllSkills().then(response => {
-            skills.value = response.data
-            console.log(skills.value)
-        })
-        return {
-            skills
-        }
-    },
     data() {
         return {
-            skills_required: [{ skill: "" }],
-            proficiency: [{ proficiency: "" }]
+            search_role_name: "",
+            role_names: []
         };
     },
-    methods: {
-        addField(value, fieldType) {
-            fieldType.push({ value: "" });
-        },
-        removeField(index, fieldType) {
-            fieldType.splice(index, 1);
+    watch: {
+        search_role_name: function () {
+            if (this.search_role_name.length > 2) {
+                axios.get('http://localhost:8000/getroles/' + this.search_role_name)
+                    .then(response => {
+                        console.log(response.data)
+                        this.role_names = response.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                this.role_names = [];
+            }
         },
     },
 };
