@@ -63,19 +63,19 @@ export default {
         });
 
         const sendRequest = async () => {
-
             const requestBody = {
-            "roleName": roleName.value,
-            "country": country.value,
-            "dept": dept.value,
-            "reportingManager": reportingManager.value,
-            "openWindow": openW.value,
-            "closeWindow": closeW.value,
+                roleName: roleName.value,
+                country: country.value,
+                dept: dept.value,
+                reportingManager: reportingManager.value,
+                openWindow: openW.value,
+                closeWindow: closeW.value,
             };
 
             try {
                 const response = await axios.post(
-                    "http://localhost:8000/updaterolelisting/" + roleListing.value.id,
+                    "http://localhost:8000/updaterolelisting/" +
+                        roleListing.value.id,
                     requestBody
                 );
 
@@ -97,82 +97,90 @@ export default {
             dept,
             reportingManager,
             managers,
-            sendRequest
+            sendRequest,
         };
     },
 };
 </script>
 
 <template>
-    <Navbar />
-    <div v-if="roleListing">
-        <div class="container">
-            <div class="row">
-                <label for="role_name">Role_Name:</label>
-                <select name="role_name" id="role_name" v-model="roleName">
-                    <option
-                        v-for="(role, key) in roles"
-                        :key="role.roleName"
-                        :value="role.roleName"
-                    >
-                        {{ role.roleName }}
-                    </option>
-                </select>
-            </div>
+    <div>
+        <Navbar />
 
-            <div class="row">
-                <label for="reporting_manager">Reporting Manager:</label>
-                <select name="reporting_manager" id="reporting_manager">
-                    <option
-                        v-for="(manager, key) in managers"
-                        :key="manager.staffID"
-                        :value="manager.staffID"
-                    >
-                        {{ manager.staffFName + " " + manager.staffLName }}
-                    </option>
-                </select>
-            </div>
+        <div v-if="roleListing">
+            <div class="container">
+                <div class="row">
+                    <label for="role_name" class="mt-5">Role Name:</label>
+                    <select name="role_name" id="role_name" v-model="roleName">
+                        <option
+                            v-for="(role, key) in roles"
+                            :key="role.roleName"
+                            :value="role.roleName"
+                        >
+                            {{ role.roleName }}
+                        </option>
+                    </select>
+                </div>
 
-            <div class="row">
-                <input
-                    type="text"
-                    id="country"
-                    name="country"
-                    v-model="country"
-                />
-            </div>
-            <div class="row">
-                <input type="text" id="country" name="country" v-model="dept" />
-            </div>
-            <div class="row">
-                <label for="datePicker">Open Window:</label>
-                <input
-                    type="date"
-                    id="datePicker"
-                    name="datePicker"
-                    v-model="openW"
-                />
-            </div>
-            <div class="row">
-                <label for="datePicker">Close Window:</label>
-                <input
-                    type="date"
-                    id="datePicker"
-                    name="datePicker"
-                    v-model="closeW"
-                />
-            </div>
+                <div class="row">
+                    <label for="reporting_manager">Reporting Manager:</label>
+                    <select name="reporting_manager" id="reporting_manager">
+                        <option
+                            v-for="(manager, key) in managers"
+                            :key="manager.staffID"
+                            :value="manager.staffID"
+                        >
+                            {{ manager.staffFName + " " + manager.staffLName }}
+                        </option>
+                    </select>
+                </div>
 
-            <div class="row">
-                <label for="roleDesc">Role Description:</label>
-                <div id="roleDesc">{{ selectedRoleDesc }}</div>
-            </div>
+                <div class="row">
+                    <label for="country">Country:</label>
+                    <input
+                        type="text"
+                        id="country"
+                        name="country"
+                        v-model="country"
+                    />
+                </div>
 
-            <button @click="sendRequest">Update</button>
+                <div class="row">
+                    <label for="dept">Department:</label>
+                    <input type="text" id="dept" name="dept" v-model="dept" />
+                </div>
+
+                <div class="row">
+                    <label for="datePicker">Open Window:</label>
+                    <input
+                        type="date"
+                        id="datePicker"
+                        name="datePicker"
+                        v-model="openW"
+                    />
+                </div>
+
+                <div class="row">
+                    <label for="datePicker">Close Window:</label>
+                    <input
+                        type="date"
+                        id="datePicker"
+                        name="datePicker"
+                        v-model="closeW"
+                    />
+                </div>
+
+                <div class="row">
+                    <label for="roleDesc">Role Description:</label>
+                    <div id="roleDesc">{{ selectedRoleDesc }}</div>
+                </div>
+
+                <button @click="sendRequest">Update</button>
+            </div>
         </div>
-    </div>
-    <div v-else>
-        <h1>Role Listing does not exist</h1>
+        <div v-else>
+            <h1>Role Listing does not exist</h1>
+        </div>
     </div>
 </template>
 
