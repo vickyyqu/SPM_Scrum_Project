@@ -18,5 +18,19 @@ class StaffsService{
         return response
     }
 
+    getAllManagers(){
+        const response = axios.get(API_URL + "getallmanagers")
+        .then((response)=>{
+            console.log("Get Managers Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Managers NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
 }
 export default new StaffsService()

@@ -18,5 +18,19 @@ class RoleService{
         return response
     }
 
+    getRoleDesc(role_name){
+        const response = axios.get(API_URL + "getroledesc/" + role_name)
+        .then((response)=>{
+            console.log("Get Role Description Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Role Description NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
 }
 export default new RoleService()

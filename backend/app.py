@@ -132,7 +132,7 @@ def get_rolelisting(listing_id):
     try:
         # Fetch data from the database using SQLAlchemy
         data = RoleListingTable.query.filter_by(Listing_ID=listing_id).all()
-        data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country' : item.Country, 'dept' : item.Department, 'OpenW' : item.Open_Window, 'CloseW': item.Close_Window } for item in data]
+        data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country' : item.Country, 'dept' : item.Department, 'reportingManager': item.Reporting_Manager, 'OpenW' : item.Open_Window, 'CloseW': item.Close_Window } for item in data]
 
         if data_dict == []:
             return jsonify(
@@ -188,6 +188,25 @@ def get_skills_for_role(role_name):
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'error': 'Failed to retrieve skills for role.', 'details': str(e)}), 500
+    
+# get role desc from role name
+@app.route('/getroledesc/<string:role_name>', methods=['GET'])
+def get_roledesc(role_name):
+    try:
+        print(role_name)
+        # Perform a join query to retrieve Skill_Name and Skill_Desc based on Role_Name
+        skills_for_role = (
+            db.session.query(RoleTable.Role_Name, RoleTable.Role_Desc)
+            .join(RoleSkillTable, RoleSkillTable.Role_Name == RoleTable.Role_Name)
+            .filter(RoleSkillTable.Role_Name == role_name)
+            .first()
+        )
+
+        result = {'Role_Desc': skills_for_role[1]}
+
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': 'Failed to retrieve role desc for role.', 'details': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
