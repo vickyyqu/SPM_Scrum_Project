@@ -27,5 +27,5 @@ dist-ssr
 __pycache__/
 *.py
 
-# Config
-# config.py
+# env
+.env
