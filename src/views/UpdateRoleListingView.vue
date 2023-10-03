@@ -133,7 +133,6 @@ export default {
                             {{ manager.staffFName + " " + manager.staffLName }}
                         </option>
                     </select>
-                    <h1>HERE {{ reportingManager }}</h1>
                 </div>
 
                 <div class="row">
