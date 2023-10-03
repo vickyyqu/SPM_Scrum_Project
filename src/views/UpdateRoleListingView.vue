@@ -80,6 +80,7 @@ export default {
                 );
 
                 console.log("Response:", response.data);
+                alert("Listing successfully updated!");
             } catch (error) {
                 console.error("Error:", error);
             }
