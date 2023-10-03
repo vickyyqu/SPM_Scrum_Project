@@ -15,3 +15,5 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/sbrp_test'
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 db = SQLAlchemy(app)
+
+#testing to push to github pls ignore -- will delete
