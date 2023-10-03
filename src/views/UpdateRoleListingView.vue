@@ -19,7 +19,7 @@ export default {
         const selectedRoleDesc = ref();
         const country = ref();
         const dept = ref();
-        const reportingManager = ref();
+        const reportingManager = ref(0);
         const managers = ref();
 
         const fetchRoleDesc = async () => {
@@ -89,13 +89,13 @@ export default {
             roleListing,
             roles,
             roleName,
+            reportingManager,
             openW,
             closeW,
             roleDesc,
             selectedRoleDesc,
             country,
             dept,
-            reportingManager,
             managers,
             sendRequest,
         };
@@ -124,7 +124,7 @@ export default {
 
                 <div class="row">
                     <label for="reporting_manager">Reporting Manager:</label>
-                    <select name="reporting_manager" id="reporting_manager">
+                    <select name="reporting_manager" id="reporting_manager" v-model="reportingManager">
                         <option
                             v-for="(manager, key) in managers"
                             :key="manager.staffID"
@@ -133,6 +133,7 @@ export default {
                             {{ manager.staffFName + " " + manager.staffLName }}
                         </option>
                     </select>
+                    <h1>HERE {{ reportingManager }}</h1>
                 </div>
 
                 <div class="row">
