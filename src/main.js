@@ -28,7 +28,7 @@ const routes = [
         component: () => import('./views/UpdateRoleListingView.vue')
     },
     {
-        path: '/rolelistingdetails', 
+        path: '/rolelistingdetails/:RoleName', 
         name: 'roleListingdetails',
         component: () => import("./views/ViewRoleListingDetails.vue")
     }

@@ -2,10 +2,18 @@
 <script >
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
+import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
 
 export default {
     setup() {
+        const route = useRoute()
+        
+        var RoleName = route.params.RoleName
+
+        return{
+            RoleName
+        }
     },
 
 
@@ -36,7 +44,7 @@ export default {
             </div>
         </div>
 
-        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">Role Listing Title
+        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{RoleName}}
             <button class="btn btn-dark px-2 py-1 ms-3" disabled>79% Match</button>
         </h2>
 
