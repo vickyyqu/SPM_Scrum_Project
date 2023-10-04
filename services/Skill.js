@@ -18,5 +18,19 @@ class SkillsService{
         return response
     }
 
+    getSkillsForRole(role_name){
+        const response = axios.get(API_URL + "getskillsforrole/" + role_name)
+        .then((response)=>{
+            console.log("Get Skills Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Skills NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
 }
 export default new SkillsService()
