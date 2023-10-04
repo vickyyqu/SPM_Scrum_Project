@@ -8,8 +8,8 @@ import roleListingService from '../../services/RoleListing.js'
 export default {
     setup() {
         const route = useRoute()
-        
-        var RoleName = route.params.RoleName
+
+        var RoleName = route.query.RoleName
 
         return{
             RoleName
