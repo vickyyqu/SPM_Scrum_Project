@@ -175,7 +175,18 @@ export default {
                     label="staffFName"
                     :reduce="(option) => option.staffID"
                     :clearable="false"
-                ></v-select>
+                >
+                    <template #selected-option="{ staffFName, staffLName }">
+                        <div>
+                            {{ staffFName }} {{ staffLName }}
+                        </div>
+                    </template>
+                    <template #option="{ staffFName, staffLName }">
+                        <div>
+                            {{ staffFName }} {{ staffLName }}
+                        </div>
+                    </template></v-select
+                >
 
                 <div class="row">
                     <label for="country">Country:</label>
