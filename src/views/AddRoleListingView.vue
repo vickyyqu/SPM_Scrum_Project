@@ -41,10 +41,12 @@ export default {
 
         const fetchRoleSkill = async () => {
             try {
-                const response = await skillService.getSkillsForRole(
+                const response = await skillService.getSkillsAndProficiencyLevelForRole(
                     roleName.value
                 );
+                console.log(response.data)
                 skills.value = response.data;
+                
             } catch (error) {
                 console.error("Error fetching role skills:", error);
             }
@@ -57,7 +59,6 @@ export default {
             .getRoleListingById(route.params.listing_id)
             .then((response) => {
                 roleListing.value = response.data[0];
-                console.log(roleListing.value);
                 roleName.value = roleListing.value.name;
                 country.value = roleListing.value.country;
                 dept.value = roleListing.value.dept;
@@ -97,16 +98,14 @@ export default {
                 closeWindow: closeW.value,
             };
 
-            try {
-                const response = await axios.post(
-                    "http://localhost:8000/addrolelisting/"
-                );
-                console.log("Response:", response.data);
-                alert("Listing successfully added!");
-
-            } catch (error) {
-                console.error("Error:", error);
-            }
+            roleListingService.addRoleListing(roleListing.value.id, requestBody)
+                .then((response) => {
+                    console.log("Response:", response.data);
+                    alert("Listing successfully updated!");
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         };
 
         return {
@@ -176,9 +175,9 @@ export default {
                     <label for="roleDesc">Skills Required:</label>
                 </div>
 
-                <span class="badge text-bg-primary" v-for="skill in skills">{{
-                    skill.Skill_Name
-                }}</span>
+                <span class="badge text-bg-primary" v-for="skill in skills">
+                    {{skill.Skill_Name}} - {{skill.Proficiency_Level}}
+                </span>
 
                 <button @click="sendRequest">Add Role Listing</button>
             </div>
