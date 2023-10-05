@@ -3,10 +3,89 @@
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import roleListingService from '../../services/RoleListing.js'
+import RoleSkillService from '../../services/RoleSkill.js'
+import StaffSkillsService from '../../services/StaffSkill.js'
+import { all } from 'axios';
 
 export default {
-    setup() {
+    data() {
+        return {
+            listingId: 1,
+            staffId: 1,
+            skillMatch_list: [],
+            overallMatch: 0.00
+        }
     },
+    mounted() {
+        this.getOverallMatch()
+    },
+    methods: {
+        async getRoleSkill() {
+            try {
+                const response = await RoleSkillService.getRoleSkills(this.listingId)
+                console.log(response.data)
+                return response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getStaffSkill() {
+            try {
+                const response = await StaffSkillsService.getStaffSkills(this.staffId)
+                console.log(response.data)
+                return response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getOverallMatch() {
+            // var roleSkills = await this.getRoleSkill()
+            // var staffSkills = await this.getStaffSkill()
+            var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
+            var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
+            var allSkills = []
+            var count = 0
+            this.overallMatch = 0
+            this.skillMatch_list = []
+
+            for (let i = 0; i < roleSkills.length; i++) {
+                var rSkill = roleSkills[i].skill.toUpperCase()
+
+                for (let j = 0; j < staffSkills.length; j++) {
+                    var sSkill = staffSkills[j].skill.toUpperCase()
+
+                    if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
+                        allSkills.push(rSkill)
+                        var match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
+                        var out = {
+                            "skill": roleSkills[i].skill,
+                            "proficiency": roleSkills[i].proficiency,
+                            "match": match.toFixed(0)
+                        }
+                        this.skillMatch_list.push(out)
+                        this.overallMatch += match
+                        count ++
+                    }
+                }
+                if (!allSkills.includes(rSkill)) {
+                    allSkills.push(rSkill)
+                    var out = {
+                        "skill": roleSkills[i].skill,
+                        "proficiency": roleSkills[i].proficiency,
+                        "match": 0
+                    }
+                    this.skillMatch_list.push(out)
+                    count ++
+                }
+            }
+            if (count > 0){
+                this.overallMatch = this.overallMatch/count
+            } else if (roleSkills.length  == 0){
+                this.overallMatch = 100
+            }
+            this.overallMatch = this.overallMatch.toFixed(0)
+        }
+    }
 
 
 };
@@ -36,35 +115,43 @@ export default {
             </div>
         </div>
 
-        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">Role Listing Title
-            <button class="btn btn-dark px-2 py-1 ms-3" disabled>79% Match</button>
+        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">Senior Product Manager
+            <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
 
         <div class="mt-3 px-3" style="width: 40%; min-height: 50%; text-align: left;">
-            <h6 style="font-style:italic;">Skills required:</h6>
-            
-            <div class="mb-3">
-                <div class="d-flex justify-content-between">
-                    <span style="max-width: 60%;">Skill Name</span>
-                    <span style="max-width: 40%;">Proficiency</span>
-                </div>
-                <button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button>
+            <h6 style="font-style:italic;">Skills Required:</h6>
+
+            <div v-if="skillMatch_list.length == 0">
+                <button class="btn btn-warning px-2 py-1 w-100" disabled><span>There are no skills required for this role.</span></button>
             </div>
 
-            <div class="mb-3">
-                <div class="d-flex justify-content-between">
-                    <span style="max-width: 60%;">Skill Name</span>
-                    <span style="max-width: 40%;">Proficiency</span>
-                </div>
-                <button class="btn btn-warning px-2 py-1 w-100" disabled><span>75% Match</span></button>
-            </div>
+            <div v-for="skill in skillMatch_list">
 
-            <div class="mb-3">
-                <div class="d-flex justify-content-between">
-                    <span style="max-width: 60%;">Skill Name</span>
-                    <span style="max-width: 40%;">Proficiency</span>
+                <div v-if="skill.match == 100" class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span style="max-width: 60%;">{{ skill.skill }}</span>
+                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+                    </div>
+                    <button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button>
                 </div>
-                <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this skill.</span></button>
+
+                <div v-else-if="skill.match == 0" class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span style="max-width: 60%;">{{ skill.skill }}</span>
+                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+                    </div>
+                    <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this
+                            skill.</span></button>
+                </div>
+
+                <div v-else class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span style="max-width: 60%;">{{ skill.skill }}</span>
+                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+                    </div>
+                    <button class="btn btn-warning px-2 py-1 w-100" disabled><span>{{ skill.match }}% Match</span></button>
+                </div>
             </div>
 
         </div>
@@ -75,7 +162,7 @@ export default {
                 dignissimos. Dicta nobis officiis, magni qui quasi voluptate. Magni, culpa unde eos adipisci autem
                 tempora eius harum repudiandae cumque cupiditate?</p>
         </div>
-    
+
     </div>
 </template>
 
