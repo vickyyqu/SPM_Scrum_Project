@@ -1,114 +1,189 @@
+<script>
+import Navbar from "../components/navbar.vue";
+import { ref, watch, computed } from "vue";
+import { useRoute } from "vue-router";
+import roleListingService from "../../services/RoleListing.js";
+import roleService from "../../services/Role.js";
+import staffService from "../../services/Staff.js";
+import skillService from "../../services/Skill.js";
+import countryService from "../../services/Country.js";
+import axios from "axios";
+import "vue-select/dist/vue-select.css";
+
+export default {
+    setup() {
+        const roleListing = ref();
+        const roles = ref();
+        const route = useRoute();
+        const roleName = ref(0);
+        const openW = ref();
+        const closeW = ref();
+        const roleDesc = ref();
+        const selectedRoleDesc = ref();
+        const country = ref();
+        const dept = ref();
+        const reportingManager = ref(0);
+        const managers = ref();
+        const skills = ref();
+
+        const searchText = ref("");
+        const isOpen = ref(false);
+        const selectedOption = ref(null);
+
+        const fetchRoleDesc = async () => {
+            try {
+                const response = await roleService.getRoleDesc(roleName.value);
+                selectedRoleDesc.value = response.data.Role_Desc;
+            } catch (error) {
+                console.error("Error fetching roleDesc:", error);
+            }
+        };
+
+        const fetchRoleSkill = async () => {
+            try {
+                const response = await skillService.getSkillsForRole(
+                    roleName.value
+                );
+                skills.value = response.data;
+            } catch (error) {
+                console.error("Error fetching role skills:", error);
+            }
+        };
+
+        watch(roleName, fetchRoleDesc);
+        watch(roleName, fetchRoleSkill);
+
+        roleListingService
+            .getRoleListingById(route.params.listing_id)
+            .then((response) => {
+                roleListing.value = response.data[0];
+                console.log(roleListing.value);
+                roleName.value = roleListing.value.name;
+                country.value = roleListing.value.country;
+                dept.value = roleListing.value.dept;
+                reportingManager.value = roleListing.value.reportingManager;
+
+                const startD = new Date(roleListing.value.OpenW);
+                const endD = new Date(roleListing.value.CloseW);
+                openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
+                closeW.value = endD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
+
+                console.log(openW.value);
+                console.log(closeW.value);
+            });
+
+        staffService.getAllManagers().then((response) => {
+            managers.value = response.data;
+            console.log(managers.value);
+        });
+
+        roleService.getAllRoles().then((response) => {
+            roles.value = response.data;
+            console.log(roles.value);
+        });
+
+
+        const countries = countryService.getAllCountries()
+        console.log(countries)
+
+
+        const sendRequest = async () => {
+            const requestBody = {
+                roleName: roleName.value,
+                country: country.value,
+                dept: dept.value,
+                reportingManager: reportingManager.value,
+                openWindow: openW.value,
+                closeWindow: closeW.value,
+            };
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:8000/addrolelisting/"
+                );
+                console.log("Response:", response.data);
+                alert("Listing successfully added!");
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        return {
+            roleListing,
+            roles,
+            roleName,
+            reportingManager,
+            openW,
+            closeW,
+            roleDesc,
+            selectedRoleDesc,
+            country,
+            dept,
+            managers,
+            sendRequest,
+            skills,
+            countries
+        };
+    },
+};
+</script>
+
 <template>
-    <div class="container-fluid pt-5">
-
-        <div class="container">
-            <div class="row">
-                <div class="col text-start">
-                    <div class="mb-3">
-                        <label for="roleTitle" class="form-label">Role Name</label>
-                        <input type="text" class="form-control" id="roleTitle" v-model="search_role_name"
-                            placeholder="Search for Roles">
-                        <div class="form-text">Please enter at least 3 letters.</div>
-                    </div>
-                </div>
+    <div>
+        <div>
+            <div class="container">
                 <div class="row">
-                    <div class="col d-flex flex-column">
-                        <div v-for="(value, index) in role_names" class="form-check d-inline-flex">
-                            <input class="form-check-input" type="radio" name="role_name" v-bind:id="value.role_name"
-                                v-bind:value="value.role_name" v-model="role_name">
-                            <label class="form-check-label" v-bind:for="value.role_name">
-                                <strong>{{ value.Role_Name }}</strong>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <button type="button" class="btn btn-info" @click="searched = true">Search</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-fluid" v-show="searched">
-                <div class="row">
-                    <div class="col text-start">
-                        <label for="roleRequiredSkills1" class="form-label">Required Skills - Proficiency</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        <span v-for="(badge, index) in badges" :key="index" class="badge text-bg-primary rounded-pill">
-                            {{ badge }}
-                        </span>
-                    </div>
+                    <label for="role_name" class="mt-5">Role Name:</label>
                 </div>
 
+                <v-select :options="roles" label="roleName" track-by="roleName" v-model="roleName"
+                    :reduce="(option) => option.roleName" :clearable="false"></v-select>
 
-                <div class="row mb-3">
-                    <div class="col-4 text-start">
-                        <label for="roleCountry" class="form-label">Country</label>
-                        <input type="text" class="form-control" id="roleCountry">
-                    </div>
-                    <div class="col-4 text-start">
-                        <label for="roleDepartment" class="form-label">Department</label>
-                        <input type="text" class="form-control" id="roleDepartment">
-                    </div>
-                    <div class="col-4 text-start">
-                        <label for="roleReportingManager" class="form-label">Reporting Manager</label>
-                        <input type="text" class="form-control" id="roleReportingManager">
-                    </div>
+                <div class="row">
+                    <label for="reporting_manager">Reporting Manager:</label>
+                </div>
+
+                <v-select v-model="reportingManager" :options="managers" label="staffFName"
+                    :reduce="(option) => option.staffID" :clearable="false"></v-select>
+
+                <div class="row">
+                    <label for="country">Country:</label>
+                </div>
+                <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
+
+                <div class="row">
+                    <label for="dept">Department:</label>
+                    <input type="text" id="dept" name="dept" v-model="dept" />
                 </div>
 
                 <div class="row">
-                    <div class="col text-start">
-                        <label for="roleDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="roleDescription" rows="5"></textarea>
-                    </div>
+                    <label for="datePicker">Open Window:</label>
+                    <input type="date" id="datePicker" name="datePicker" v-model="openW" />
                 </div>
 
-                <div class="row mt-5">
-                    <div class="col d-flex justify-content-end">
-                        <button type="button" class="btn btn-warning rounded-pill">Post Listing</button>
-                    </div>
+                <div class="row">
+                    <label for="datePicker">Close Window:</label>
+                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" />
                 </div>
+
+                <div class="row">
+                    <label for="roleDesc">Role Description:</label>
+                    <div id="roleDesc">{{ selectedRoleDesc }}</div>
+                </div>
+
+                <div class="row">
+                    <label for="roleDesc">Skills Required:</label>
+                </div>
+
+                <span class="badge text-bg-primary" v-for="skill in skills">{{
+                    skill.Skill_Name
+                }}</span>
+
+                <button @click="sendRequest">Add Role Listing</button>
             </div>
         </div>
     </div>
 </template>
+
 <style></style>
-
-<script>
-import { ref, onMounted } from 'vue'
-import skillService from '../../services/Skill.js'
-import axios from 'axios'
-
-
-export default {
-    data() {
-        return {
-            search_role_name: "",
-            role_names: [],
-            badges: ['Badge 1', 'Badge 2', 'Badge 3', 'Badge 4'], // Your badge data
-            searched: false
-        };
-    },
-    watch: {
-        search_role_name: function () {
-            if (this.search_role_name.length > 2) {
-                axios.get('http://localhost:8000/getroles/' + this.search_role_name)
-                    .then(response => {
-                        console.log(response.data)
-                        this.role_names = response.data;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            } else {
-                this.role_names = [];
-            }
-        },
-    },
-    methods() {
-    }
-};
-</script>
