@@ -91,18 +91,14 @@ export default {
                 closeWindow: closeW.value,
             };
 
-            try {
-                const response = await axios.post(
-                    "http://localhost:8000/updaterolelisting/" +
-                        roleListing.value.id,
-                    requestBody
-                );
-
-                console.log("Response:", response.data);
-                alert("Listing successfully updated!");
-            } catch (error) {
-                console.error("Error:", error);
-            }
+            roleListingService.updateRoleListing(roleListing.value.id, requestBody)
+                .then((response) => {
+                    console.log("Response:", response.data);
+                    alert("Listing successfully updated!");
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         };
 
         return {
@@ -175,7 +171,18 @@ export default {
                     label="staffFName"
                     :reduce="(option) => option.staffID"
                     :clearable="false"
-                ></v-select>
+                >
+                    <template #selected-option="{ staffFName, staffLName }">
+                        <div>
+                            {{ staffFName }} {{ staffLName }}
+                        </div>
+                    </template>
+                    <template #option="{ staffFName, staffLName }">
+                        <div>
+                            {{ staffFName }} {{ staffLName }}
+                        </div>
+                    </template></v-select
+                >
 
                 <div class="row">
                     <label for="country">Country:</label>
