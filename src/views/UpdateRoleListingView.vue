@@ -1,6 +1,6 @@
 <script>
 import Navbar from "../components/navbar.vue";
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
@@ -9,7 +9,7 @@ import skillService from "../../services/Skill.js";
 import axios from "axios";
 import "vue-select/dist/vue-select.css";
 import countryService from "../../services/Country.js";
-import departmentService from "../../services/Department.js"
+import departmentService from "../../services/Department.js";
 
 export default {
     setup() {
@@ -20,7 +20,7 @@ export default {
         const minDate = ref();
         const openW = ref();
         const closeW = ref();
-        const currentDate = ref(new Date().toISOString().split('T')[0]);
+        const currentDate = ref(new Date().toISOString().split("T")[0]);
         const roleDesc = ref();
         const selectedRoleDesc = ref();
         const country = ref();
@@ -30,7 +30,6 @@ export default {
         const skills = ref();
         const countries = countryService.getAllCountries();
         const departments = departmentService.getAllDepartments();
-
 
         const fetchRoleDesc = async () => {
             try {
@@ -115,8 +114,8 @@ export default {
 
         const handleCloseWChange = () => {
             const inputDate = closeW.value;
-            if (inputDate <= currentDate.value) {
-                closeW.value = currentDate.value;
+            if (inputDate <= openW.value) {
+                closeW.value = minDate.value;
             }
         };
 
@@ -147,123 +146,137 @@ export default {
     <div>
         <Navbar />
 
-        <div v-if="roleListing">
-            <div class="container">
-                <div class="row">
-                    <label for="role_name" class="mt-5">Role Name:</label>
-                    <!-- <select name="role_name" id="role_name" v-model="roleName">
-                        <option
-                            v-for="(role, key) in roles"
-                            :key="role.roleName"
-                            :value="role.roleName"
+        <div>
+            <div v-if="roleListing">
+                <h1 class="text-start mt-5">Edit Listing</h1>
+
+                <div class="text-start">
+                    <div class="mb-3">
+                        <label for="role_name" class="form-label fw-semibold"
+                            >Role Name:</label
                         >
-                            {{ role.roleName }}
-                        </option>
-                    </select> -->
-                </div>
+                        <v-select
+                            :options="roles"
+                            label="roleName"
+                            track-by="roleName"
+                            v-model="roleName"
+                            :reduce="(option) => option.roleName"
+                            :clearable="false"
+                            class="custom-select rounded-1"
+                        ></v-select>
+                    </div>
 
-                <v-select
-                    :options="roles"
-                    label="roleName"
-                    track-by="roleName"
-                    v-model="roleName"
-                    :reduce="(option) => option.roleName"
-                    :clearable="false"
-                ></v-select>
-
-                <div class="row">
-                    <label for="reporting_manager">Reporting Manager:</label>
-                    <!-- <select
-                        name="reporting_manager"
-                        id="reporting_manager"
-                        v-model="reportingManager"
-                    >
-                        <option
-                            v-for="(manager, key) in managers"
-                            :key="manager.staffID"
-                            :value="manager.staffID"
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="country" class="form-label fw-semibold">Country:</label>
+                        <v-select
+                            v-model="country"
+                            :options="countries"
+                            label="country"
+                            :clearable="false"
+                            class="custom-select rounded-1"
+                        ></v-select>
+                        </div>
+                        <div class="col">
+                            <label for="dept" class="form-label fw-semibold">Department:</label>
+                        <v-select
+                            v-model="dept"
+                            :options="departments"
+                            label="department"
+                            :clearable="false"
+                            class="custom-select rounded-1"
+                        ></v-select>
+                        </div>
+                        <div class="col">
+                            <label for="reporting_manager" class="form-label fw-semibold"
+                            >Reporting Manager:</label
                         >
-                            {{ manager.staffFName + " " + manager.staffLName }}
-                        </option>
-                    </select> -->
+                        <v-select
+                            v-model="reportingManager"
+                            :options="managers"
+                            label="staffFName"
+                            :reduce="(option) => option.staffID"
+                            :clearable="false"
+                            class="custom-select rounded-1"
+                        >
+                            <template
+                                #selected-option="{ staffFName, staffLName }"
+                            >
+                                <div>{{ staffFName }} {{ staffLName }}</div>
+                            </template>
+                            <template #option="{ staffFName, staffLName }">
+                                <div>{{ staffFName }} {{ staffLName }}</div>
+                            </template></v-select
+                        >
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="datePicker" class="form-label fw-semibold"
+                            >Open Window:</label
+                        >
+                        <input
+                            type="date"
+                            id="datePicker"
+                            name="datePicker"
+                            v-model="openW"
+                            @change="handleDateChange"
+                            class="form-control"
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="datePicker" class="form-label fw-semibold"
+                            >Close Window:</label
+                        >
+                        <input
+                            type="date"
+                            id="datePicker"
+                            name="datePicker"
+                            v-model="closeW"
+                            @change="handleCloseWChange"
+                            class="form-control"
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="roleDesc" class="form-label fw-semibold"
+                            >Role Description:</label
+                        >
+                        <div id="roleDesc" class="bg-white p-3 rounded-3">
+                            {{ selectedRoleDesc }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 gap-2">
+                        <label for="roleDesc" class="form-label fw-semibold"
+                            >Required Skills:</label
+                        >
+                        <div>
+                        <span
+                            class="badge text-bg-primary me-2 mt-2"
+                            v-for="skill in skills"
+                            >{{ skill.Skill_Name }}</span
+                        >
+                        </div>
+                    </div>
+
+                    <button type="submit" @click="sendRequest" class="btn btn-warning fw-semibold">
+                        Update Listing
+                    </button>
                 </div>
 
-                <v-select
-                    v-model="reportingManager"
-                    :options="managers"
-                    label="staffFName"
-                    :reduce="(option) => option.staffID"
-                    :clearable="false"
-                >
-                    <template #selected-option="{ staffFName, staffLName }">
-                        <div>{{ staffFName }} {{ staffLName }}</div>
-                    </template>
-                    <template #option="{ staffFName, staffLName }">
-                        <div>{{ staffFName }} {{ staffLName }}</div>
-                    </template></v-select
-                >
-
-                <div class="row">
-                    <label for="country">Country:</label>
-                    <!-- <input
-                        type="text"
-                        id="country"
-                        name="country"
-                        v-model="country"
-                    /> -->
-                </div>
-
-                <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
-
-                <div class="row">
-                    <label for="dept">Department:</label>
-                    <!-- <input type="text" id="dept" name="dept" v-model="dept" /> -->
-                </div>
-
-                <v-select v-model="dept" :options="departments" label="department" :clearable="false"></v-select>
-
-                <div class="row">
-                    <label for="datePicker">Open Window:</label>
-                    <input
-                        type="date"
-                        id="datePicker"
-                        name="datePicker"
-                        v-model="openW"
-                        @change="handleDateChange"
-                    />
-                </div>
-
-                <div class="row">
-                    <label for="datePicker">Close Window:</label>
-                    <input
-                        type="date"
-                        id="datePicker"
-                        name="datePicker"
-                        v-model="closeW"
-                        @change="handleCloseWChange"
-                    />
-                </div>
-
-                <div class="row">
-                    <label for="roleDesc">Role Description:</label>
-                    <div id="roleDesc">{{ selectedRoleDesc }}</div>
-                </div>
-
-                <div class="row">
-                    <label for="roleDesc">Skills Required:</label>
-                </div>
-
-                <span class="badge text-bg-primary" v-for="skill in skills">{{
-                    skill.Skill_Name
-                }}</span>
-
-                <button @click="sendRequest">Update</button>
             </div>
-        </div>
-        <div v-else>
-            <h1>Role Listing does not exist</h1>
+            <div v-else>
+                <h1>Role Listing does not exist</h1>
+            </div>
         </div>
     </div>
 </template>
 
-<style></style>
+<style scoped>
+.custom-select {
+    background-color: white; 
+}
+</style>
