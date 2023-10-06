@@ -120,7 +120,21 @@ export default {
                     <label for="reporting_manager" class="form-label">Reporting Manager:</label>
                 </div>
 
-                <v-select v-model="reportingManager" :options="managers" label="staffFName" :clearable="false"></v-select>
+                <!-- <v-select v-model="reportingManager" :options="managers" label="staffFName" :clearable="false"></v-select> -->
+                <v-select
+                    v-model="reportingManager"
+                    :options="managers"
+                    label="staffFName"
+                    :reduce="(option) => option.staffID"
+                    :clearable="false"
+                >
+                    <template #selected-option="{ staffFName, staffLName }">
+                        <div>{{ staffFName }} {{ staffLName }}</div>
+                    </template>
+                    <template #option="{ staffFName, staffLName }">
+                        <div>{{ staffFName }} {{ staffLName }}</div>
+                    </template></v-select
+                >
 
                 <div class="row">
                     <label for="country" class="form-label">Country:</label>

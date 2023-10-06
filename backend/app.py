@@ -27,7 +27,7 @@ def add_rolelisting():
             Role_Name = data['roleName']['roleName'],
             Country = data['country'],
             Department = data['dept'],
-            Reporting_Manager = data['reportingManager']['staffID'],
+            Reporting_Manager = data['reportingManager'],
             Open_Window = data['openWindow'],
             Close_Window = data['closeWindow'])
         db.session.add(new_role_listing)
