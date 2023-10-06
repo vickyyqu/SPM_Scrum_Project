@@ -6,7 +6,7 @@ import roleService from "../../services/Role.js";
 import staffService from "../../services/Staff.js";
 import skillService from "../../services/Skill.js";
 import countryService from "../../services/Country.js";
-import axios from "axios";
+import departmentService from "../../services/Department.js"
 import "vue-select/dist/vue-select.css";
 
 export default {
@@ -24,10 +24,14 @@ export default {
         const managers = ref();
         const skills = ref();
 
+        const minDate = ref();
+        const currentDate = ref(new Date().toISOString().split('T')[0]);
         const startD = new Date();
         const endD = new Date();
         openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
         closeW.value = endD.toISOString().slice(0, 10);
+        
+        // const departments = ref(); //departmentService.getAllDepartments();
 
         staffService.getAllManagers().then((response) => {
             managers.value = response.data;
@@ -39,6 +43,7 @@ export default {
             console.log(roles.value);
         });
 
+        const departments = departmentService.getAllDepartments()
 
         const countries = countryService.getAllCountries()
         console.log(countries)
@@ -85,6 +90,21 @@ export default {
                 });
         };
 
+        minDate.value = startD.toISOString().slice(0, 10);
+        function handleDateChange() {
+            const inputDate = openW.value;
+            if (inputDate < minDate.value) {
+                openW.value = minDate.value;
+            }
+        };
+
+        const handleCloseWChange = () => {
+            const inputDate = closeW.value;
+            if (inputDate <= currentDate.value) {
+                closeW.value = currentDate.value;
+            }
+        };
+
         return {
             roleListing,
             roles,
@@ -99,10 +119,15 @@ export default {
             managers,
             sendRequest,
             skills,
-            countries
+            countries,
+            departments,
+            handleDateChange,
+            handleCloseWChange,
         };
     }
 }
+
+
 </script>
 
 <template>
@@ -121,40 +146,38 @@ export default {
                 </div>
 
                 <!-- <v-select v-model="reportingManager" :options="managers" label="staffFName" :clearable="false"></v-select> -->
-                <v-select
-                    v-model="reportingManager"
-                    :options="managers"
-                    label="staffFName"
-                    :reduce="(option) => option.staffID"
-                    :clearable="false"
-                >
+                <v-select v-model="reportingManager" :options="managers" label="staffFName"
+                    :reduce="(option) => option.staffID" :clearable="false">
                     <template #selected-option="{ staffFName, staffLName }">
                         <div>{{ staffFName }} {{ staffLName }}</div>
                     </template>
                     <template #option="{ staffFName, staffLName }">
                         <div>{{ staffFName }} {{ staffLName }}</div>
-                    </template></v-select
-                >
+                    </template></v-select>
 
                 <div class="row">
                     <label for="country" class="form-label">Country:</label>
                 </div>
-                
+
                 <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
 
                 <div class="row">
                     <label for="dept" class="form-label">Department:</label>
-                    <input type="text" id="dept" name="dept" v-model="dept" class="form-control"/>
+                    <!-- <input type="text" id="dept" name="dept" v-model="dept" class="form-control"/> -->
                 </div>
+
+                <v-select v-model="dept" :options="departments" label="department" :clearable="false"></v-select>
 
                 <div class="row">
                     <label for="datePicker" class="form-label">Open Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="openW" class="form-control"/>
+                    <input type="date" id="datePicker" name="datePicker" v-model="openW" class="form-control"
+                        @change="handleDateChange()" />
                 </div>
 
                 <div class="row">
                     <label for="datePicker" class="form-label">Close Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" class="form-control" />
+                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" class="form-control"
+                        @change="handleCloseWChange()" />
                 </div>
 
                 <div class="row">
@@ -167,7 +190,7 @@ export default {
                 </div>
 
                 <span class="badge text-bg-primary" v-for="skill in skills">
-                    {{ skill.Skill_Name }}  <!-- - {{ skill.Proficiency_Level }} -->
+                    {{ skill.Skill_Name }} <!-- - {{ skill.Proficiency_Level }} -->
                 </span>
 
                 <button @click="sendRequest">Add Role Listing</button>
