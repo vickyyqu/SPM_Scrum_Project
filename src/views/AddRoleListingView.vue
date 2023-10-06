@@ -30,23 +30,20 @@ export default {
         const endD = new Date();
         openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
         closeW.value = endD.toISOString().slice(0, 10);
-        
+
         // const departments = ref(); //departmentService.getAllDepartments();
 
         staffService.getAllManagers().then((response) => {
             managers.value = response.data;
-            console.log(managers.value);
         });
 
         roleService.getAllRoles().then((response) => {
             roles.value = response.data;
-            console.log(roles.value);
         });
 
         const departments = departmentService.getAllDepartments()
 
         const countries = countryService.getAllCountries()
-        console.log(countries)
 
         watch(roleName, async () => {
             try {
@@ -54,14 +51,12 @@ export default {
                 const response_roleDesc = await roleService.getRoleDesc(roleName.value.roleName);
 
                 selectedRoleDesc.value = response_roleDesc.data.Role_Desc;
-                console.log(response_roleDesc.data.Role_Desc)
 
                 const response_skillProficiency = await skillService.getSkillsAndProficiencyLevelForRole(
                     roleName.value.roleName
                 );
 
                 skills.value = response_skillProficiency.data;
-                console.log(response_roleDesc.data.Role_Desc)
 
             } catch (error) {
                 answer.value = 'Error! Could not get skills and proficiency. ' + error
@@ -70,24 +65,33 @@ export default {
         })
 
         const sendRequest = async () => {
-            const requestBody = {
-                roleName: roleName.value,
-                country: country.value,
-                dept: dept.value,
-                reportingManager: reportingManager.value,
-                openWindow: openW.value,
-                closeWindow: closeW.value,
-            };
+            console.log(currentDate)
+            if (openW.value > closeW.value) {
+                alert("Please ensure that the close window is after the open window!");
+            } else if (openW.value < currentDate.value) {
+                alert("Please ensure that the open window is after today's date!");
+            } else if (closeW.value < currentDate.value) {
+                alert("Please ensure that the close window is after today's date!");
+            } else {
 
-            console.log(requestBody)
-            roleListingService.addRoleListing(requestBody)
-                .then((response) => {
-                    console.log("Response:", response.data);
-                    alert("Listing successfully added!");
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
+                const requestBody = {
+                    roleName: roleName.value,
+                    country: country.value,
+                    dept: dept.value,
+                    reportingManager: reportingManager.value,
+                    openWindow: openW.value,
+                    closeWindow: closeW.value,
+                };
+
+                roleListingService.addRoleListing(requestBody)
+                    .then((response) => {
+                        alert("Listing successfully added!");
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
         };
 
         minDate.value = startD.toISOString().slice(0, 10);
@@ -100,7 +104,7 @@ export default {
 
         const handleCloseWChange = () => {
             const inputDate = closeW.value;
-            if (inputDate <= currentDate.value) {
+            if (inputDate <= openW.value) {
                 closeW.value = currentDate.value;
             }
         };
@@ -131,70 +135,75 @@ export default {
 </script>
 
 <template>
-    <div>
-        <div>
-            <div class="container">
-                <div class="row">
-                    <label for="role_name" class="mt-5 form-label">Role Name:</label>
-                </div>
-
-                <v-select :options="roles" label="roleName" track-by="roleName" v-model="roleName"
-                    :clearable="false"></v-select>
-
-                <div class="row">
-                    <label for="reporting_manager" class="form-label">Reporting Manager:</label>
-                </div>
-
-                <!-- <v-select v-model="reportingManager" :options="managers" label="staffFName" :clearable="false"></v-select> -->
-                <v-select v-model="reportingManager" :options="managers" label="staffFName"
-                    :reduce="(option) => option.staffID" :clearable="false">
-                    <template #selected-option="{ staffFName, staffLName }">
-                        <div>{{ staffFName }} {{ staffLName }}</div>
-                    </template>
-                    <template #option="{ staffFName, staffLName }">
-                        <div>{{ staffFName }} {{ staffLName }}</div>
-                    </template></v-select>
-
-                <div class="row">
-                    <label for="country" class="form-label">Country:</label>
-                </div>
-
-                <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
-
-                <div class="row">
-                    <label for="dept" class="form-label">Department:</label>
-                    <!-- <input type="text" id="dept" name="dept" v-model="dept" class="form-control"/> -->
-                </div>
-
-                <v-select v-model="dept" :options="departments" label="department" :clearable="false"></v-select>
-
-                <div class="row">
-                    <label for="datePicker" class="form-label">Open Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="openW" class="form-control"
-                        @change="handleDateChange()" />
-                </div>
-
-                <div class="row">
-                    <label for="datePicker" class="form-label">Close Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" class="form-control"
-                        @change="handleCloseWChange()" />
-                </div>
-
-                <div class="row">
-                    <label for="roleDesc" class="form-label">Role Description:</label>
-                    <div id="roleDesc">{{ selectedRoleDesc }}</div>
-                </div>
-
-                <div class="row">
-                    <label for="roleDesc" class="form-label">Skills Required:</label>
-                </div>
-
-                <span class="badge text-bg-primary" v-for="skill in skills">
-                    {{ skill.Skill_Name }} <!-- - {{ skill.Proficiency_Level }} -->
-                </span>
-
-                <button @click="sendRequest">Add Role Listing</button>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-start mt-5">Add Listing</h1>
             </div>
+        </div>
+        <div class="text-start">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="role_name" class="form-label fw-semibold">Role Name:</label>
+                    <v-select :options="roles" label="roleName" track-by="roleName" v-model="roleName" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="country" class="form-label fw-semibold">Country:</label>
+                    <v-select v-model="country" :options="countries" label="country" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
+                </div>
+                <div class="col">
+                    <label for="dept" class="form-label fw-semibold">Department:</label>
+                    <v-select v-model="dept" :options="departments" label="department" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
+                </div>
+                <div class="col">
+                    <label for="reporting_manager" class="form-label fw-semibold">Reporting Manager:</label>
+                    <v-select v-model="reportingManager" :options="managers" label="staffFName"
+                        :reduce="(option) => option.staffID" :clearable="false" class="custom-select rounded-1">
+                        <template #selected-option="{ staffFName, staffLName }">
+                            <div>{{ staffFName }} {{ staffLName }}</div>
+                        </template>
+                        <template #option="{ staffFName, staffLName }">
+                            <div>{{ staffFName }} {{ staffLName }}</div>
+                        </template></v-select>
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="datePicker" class="form-label fw-semibold">Open Window:</label>
+                <input type="date" id="datePicker" name="datePicker" v-model="openW" @change="handleDateChange"
+                    class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="datePicker" class="form-label fw-semibold">Close Window:</label>
+                <input type="date" id="datePicker" name="datePicker" v-model="closeW" @change="handleCloseWChange"
+                    class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="roleDesc" class="form-label fw-semibold">Role Description:</label>
+                <div id="roleDesc" class="bg-white p-3 rounded-3">
+                    {{ selectedRoleDesc }}
+                </div>
+            </div>
+
+            <div class="mb-3 gap-2">
+                <label for="roleDesc" class="form-label fw-semibold">Required Skills:</label>
+                <div>
+                    <span class="badge text-bg-primary me-2 mt-2" v-for="skill in skills">{{ skill.Skill_Name }}</span>
+                </div>
+            </div>
+
+            <button type="submit" @click="sendRequest" class="btn btn-warning fw-semibold">
+                Add Role Listing
+            </button>
         </div>
     </div>
 </template>
