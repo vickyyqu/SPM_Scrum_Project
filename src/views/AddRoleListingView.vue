@@ -66,7 +66,10 @@ export default {
 
         const sendRequest = async () => {
             console.log(currentDate)
-            if (openW.value > closeW.value) {
+            if (String(roleName.value).trim() == "" || String(country.value).trim() == "" || String(dept.value).trim() == "" || String(reportingManager.value).trim() == "" || String(openW.value).trim() == "" || String(closeW.value).trim() == "") {
+                alert("Please ensure that all fields are filled in!");
+            }
+            else if (openW.value > closeW.value) {
                 alert("Please ensure that the close window is after the open window!");
             } else if (openW.value < currentDate.value) {
                 alert("Please ensure that the open window is after today's date!");
