@@ -32,5 +32,19 @@ class RoleService{
         return response
     }
 
+    getRolesMatchingSearch(role_name){
+        const response = axios.get(API_URL + "getroles/<string:role_name_search>" + role_name)
+        .then((response)=>{
+            console.log("Get Role Match Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Role Match NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
 }
 export default new RoleService()

@@ -32,5 +32,19 @@ class SkillsService{
         return response
     }
 
+    getSkillsAndProficiencyLevelForRole(role_name){ 
+        const response = axios.get(API_URL + "getrequiredskillsandproficiency/" + role_name)
+        .then((response)=>{ 
+            console.log("Get Skills and Proficiency Levels Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Skills and Proficiency Levels NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
 }
 export default new SkillsService()
