@@ -2,19 +2,29 @@
 <script >
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
+import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
+import router from '../main';
 
 export default {
     setup() {
         const roleListings = ref([])
+        const route = useRoute()
 
         roleListingService.getAllRoleListings().then(response => {
             roleListings.value = response.data
             console.log(roleListings.value)
         })
-        return {
-            roleListings
+        function viewDetails(roleName){
+            router.push({path:"/rolelistingdetails", query:{ RoleName: roleName}})
         }
+
+        return {
+            roleListings,
+            viewDetails
+        }
+
+
     },
 
 
@@ -32,9 +42,9 @@ export default {
  left: 0;background-color: lightgray; outline: black 1px solid;">
         <div class="row">
             <div class="col-6">
-                <div class="card mx-auto rounded" style="width: 25rem;">
+                <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(roleListings[0]['name'])">
                     <div class="card-body">
-                        <h5 class="card-title">{{ roleListings[0]['name'] }}</h5>
+                        <h5 class="card-title">{{roleListings[0]['name']}}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{ roleListings[0]['dept'] }}</h6>
                         <h6 href="#" class="subtitle">{{ roleListings[0]['OpenW'] }}</h6>
                         <h6 href="#" class="subtitle">{{ roleListings[0]['CloseW'] }}</h6>

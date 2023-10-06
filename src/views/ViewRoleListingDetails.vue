@@ -2,14 +2,24 @@
 <script >
 import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
+import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
 import RoleSkillService from '../../services/RoleSkill.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
+import RoleService from '../../services/Role'
 import { all } from 'axios';
+import Role from '../../services/Role';
 
 export default {
+
     data() {
+        const route = useRoute()
+        var role_name = route.query.RoleName
+        var role_desc = ""
         return {
+            role_desc,
+            route,
+            role_name,
             listingId: 1,
             staffId: 1,
             skillMatch_list: [],
@@ -18,8 +28,18 @@ export default {
     },
     mounted() {
         this.getOverallMatch()
+        this.getRoleDetails()
     },
     methods: {
+        async getRoleDetails(){
+            try {
+                const response = await RoleService.getRoleDesc(this.role_name)
+                this.role_desc = response.data['Role_Desc']
+            }
+            catch(error){
+                console.log(error)
+            }
+        },
         async getRoleSkill() {
             try {
                 const response = await RoleSkillService.getRoleSkills(this.listingId)
@@ -115,7 +135,7 @@ export default {
             </div>
         </div>
 
-        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">Senior Product Manager
+        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{role_name}}
             <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
 
@@ -158,9 +178,7 @@ export default {
 
         <div class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style="font-style:italic;">Role Description:</h6>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, modi
-                dignissimos. Dicta nobis officiis, magni qui quasi voluptate. Magni, culpa unde eos adipisci autem
-                tempora eius harum repudiandae cumque cupiditate?</p>
+            <p>{{ role_desc }}</p>
         </div>
 
     </div>
