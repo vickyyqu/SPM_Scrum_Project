@@ -50,16 +50,16 @@ def get_roleskills(listing_id):
                 {
                     "code": 404,
                     "error": "Listing does not exist."
-                })
+                }), 501
         
         role = listing.Role_Name
         data = RoleSkillTable.query.filter_by(Role_Name=role)
         data_dict = [{'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
         
-        return jsonify(data_dict)
+        return jsonify(data_dict), 201
     
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 501
     
 # Staff_Skill
 @app.route('/getstaffskills/<string:staff_id>', methods=['GET'])
@@ -74,12 +74,12 @@ def get_staffskills(staff_id):
                 {
                     "code": 404,
                     "error": "Staff is invalid or staff has no skills registered."
-                })
+                }), 501
         
-        return jsonify(data_dict)
+        return jsonify(data_dict), 201
     
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 501
 
 # Skill
 @app.route('/getallskills', methods=['GET'])
