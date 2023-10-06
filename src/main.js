@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap'
 import { createRouter, createWebHistory } from "vue-router";
 import 'bootstrap-icons/font/bootstrap-icons';
+import vSelect from 'vue-select'
 
 const routes = [
     {
@@ -40,6 +41,7 @@ const router = createRouter({
 });
 
 const app = createApp(App)
+app.component('v-select', vSelect)
 app.use(router)
 app.mount('#app')
 

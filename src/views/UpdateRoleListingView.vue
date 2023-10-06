@@ -1,11 +1,13 @@
 <script>
 import Navbar from "../components/navbar.vue";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
 import staffService from "../../services/Staff.js";
+import skillService from "../../services/Skill.js";
 import axios from "axios";
+import "vue-select/dist/vue-select.css";
 
 export default {
     setup() {
@@ -21,6 +23,11 @@ export default {
         const dept = ref();
         const reportingManager = ref(0);
         const managers = ref();
+        const skills = ref();
+
+        const searchText = ref("");
+        const isOpen = ref(false);
+        const selectedOption = ref(null);
 
         const fetchRoleDesc = async () => {
             try {
@@ -31,7 +38,19 @@ export default {
             }
         };
 
+        const fetchRoleSkill = async () => {
+            try {
+                const response = await skillService.getSkillsForRole(
+                    roleName.value
+                );
+                skills.value = response.data;
+            } catch (error) {
+                console.error("Error fetching role skills:", error);
+            }
+        };
+
         watch(roleName, fetchRoleDesc);
+        watch(roleName, fetchRoleSkill);
 
         roleListingService
             .getRoleListingById(route.params.listing_id)
@@ -99,6 +118,7 @@ export default {
             dept,
             managers,
             sendRequest,
+            skills,
         };
     },
 };
@@ -112,7 +132,7 @@ export default {
             <div class="container">
                 <div class="row">
                     <label for="role_name" class="mt-5">Role Name:</label>
-                    <select name="role_name" id="role_name" v-model="roleName">
+                    <!-- <select name="role_name" id="role_name" v-model="roleName">
                         <option
                             v-for="(role, key) in roles"
                             :key="role.roleName"
@@ -120,12 +140,25 @@ export default {
                         >
                             {{ role.roleName }}
                         </option>
-                    </select>
+                    </select> -->
                 </div>
+
+                <v-select
+                    :options="roles"
+                    label="roleName"
+                    track-by="roleName"
+                    v-model="roleName"
+                    :reduce="(option) => option.roleName"
+                    :clearable="false"
+                ></v-select>
 
                 <div class="row">
                     <label for="reporting_manager">Reporting Manager:</label>
-                    <select name="reporting_manager" id="reporting_manager" v-model="reportingManager">
+                    <!-- <select
+                        name="reporting_manager"
+                        id="reporting_manager"
+                        v-model="reportingManager"
+                    >
                         <option
                             v-for="(manager, key) in managers"
                             :key="manager.staffID"
@@ -133,8 +166,16 @@ export default {
                         >
                             {{ manager.staffFName + " " + manager.staffLName }}
                         </option>
-                    </select>
+                    </select> -->
                 </div>
+
+                <v-select
+                    v-model="reportingManager"
+                    :options="managers"
+                    label="staffFName"
+                    :reduce="(option) => option.staffID"
+                    :clearable="false"
+                ></v-select>
 
                 <div class="row">
                     <label for="country">Country:</label>
@@ -175,6 +216,14 @@ export default {
                     <label for="roleDesc">Role Description:</label>
                     <div id="roleDesc">{{ selectedRoleDesc }}</div>
                 </div>
+
+                <div class="row">
+                    <label for="roleDesc">Skills Required:</label>
+                </div>
+
+                <span class="badge text-bg-primary" v-for="skill in skills">{{
+                    skill.Skill_Name
+                }}</span>
 
                 <button @click="sendRequest">Update</button>
             </div>
