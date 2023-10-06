@@ -15,8 +15,10 @@ export default {
         const roles = ref();
         const route = useRoute();
         const roleName = ref(0);
+        const minDate = ref();
         const openW = ref();
         const closeW = ref();
+        const currentDate = ref(new Date().toISOString().split('T')[0]);
         const roleDesc = ref();
         const selectedRoleDesc = ref();
         const country = ref();
@@ -64,6 +66,7 @@ export default {
 
                 const startD = new Date(roleListing.value.OpenW);
                 const endD = new Date(roleListing.value.CloseW);
+                minDate.value = startD.toISOString().slice(0, 10);
                 openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
                 closeW.value = endD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
 
@@ -91,7 +94,8 @@ export default {
                 closeWindow: closeW.value,
             };
 
-            roleListingService.updateRoleListing(roleListing.value.id, requestBody)
+            roleListingService
+                .updateRoleListing(roleListing.value.id, requestBody)
                 .then((response) => {
                     console.log("Response:", response.data);
                     alert("Listing successfully updated!");
@@ -99,6 +103,20 @@ export default {
                 .catch((error) => {
                     console.error("Error:", error);
                 });
+        };
+
+        const handleDateChange = () => {
+            const inputDate = openW.value;
+            if (inputDate < minDate.value) {
+                openW.value = minDate.value;
+            }
+        };
+
+        const handleCloseWChange = () => {
+            const inputDate = closeW.value;
+            if (inputDate <= currentDate.value) {
+                closeW.value = currentDate.value;
+            }
         };
 
         return {
@@ -115,6 +133,8 @@ export default {
             managers,
             sendRequest,
             skills,
+            handleDateChange,
+            handleCloseWChange
         };
     },
 };
@@ -173,14 +193,10 @@ export default {
                     :clearable="false"
                 >
                     <template #selected-option="{ staffFName, staffLName }">
-                        <div>
-                            {{ staffFName }} {{ staffLName }}
-                        </div>
+                        <div>{{ staffFName }} {{ staffLName }}</div>
                     </template>
                     <template #option="{ staffFName, staffLName }">
-                        <div>
-                            {{ staffFName }} {{ staffLName }}
-                        </div>
+                        <div>{{ staffFName }} {{ staffLName }}</div>
                     </template></v-select
                 >
 
@@ -206,6 +222,7 @@ export default {
                         id="datePicker"
                         name="datePicker"
                         v-model="openW"
+                        @change="handleDateChange"
                     />
                 </div>
 
@@ -216,6 +233,7 @@ export default {
                         id="datePicker"
                         name="datePicker"
                         v-model="closeW"
+                        @change="handleCloseWChange"
                     />
                 </div>
 
