@@ -18,13 +18,19 @@ def get_allrolelistings():
         return jsonify({'error': str(e)})
 
 
-@app.route('/addtrolelisting', methods=['POST'])
-def add_rolelisting(request):
+@app.route('/addrolelisting', methods=['POST'])
+def add_rolelisting():
     try:
         data = request.get_json()
-        new_data = RoleListingTable(Role_Name=data['roleName'], Country=data['country'], Department=data['dept'],
-                                    Reporting_Manager=data['reportingManager'], Open_Window=data['openWindow'], Close_Window=data['closeWindow'])
-        db.session.add(new_data)
+        print(data)
+        new_role_listing = RoleListingTable(
+            Role_Name = data['roleName']['roleName'],
+            Country = data['country'],
+            Department = data['dept'],
+            Reporting_Manager = data['reportingManager']['staffID'],
+            Open_Window = data['openWindow'],
+            Close_Window = data['closeWindow'])
+        db.session.add(new_role_listing)
         db.session.commit()
         return jsonify({'message': 'Data added successfully!'}), 201
     except Exception as e:

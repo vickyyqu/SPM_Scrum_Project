@@ -1,7 +1,6 @@
 <script>
 import Navbar from "../components/navbar.vue";
 import { ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
 import staffService from "../../services/Staff.js";
@@ -14,64 +13,21 @@ export default {
     setup() {
         const roleListing = ref();
         const roles = ref();
-        const route = useRoute();
-        const roleName = ref(0);
+        const roleName = ref('');
         const openW = ref();
         const closeW = ref();
         const roleDesc = ref();
-        const selectedRoleDesc = ref();
+        const selectedRoleDesc = ref('');
         const country = ref();
         const dept = ref();
-        const reportingManager = ref(0);
+        const reportingManager = ref('');
         const managers = ref();
         const skills = ref();
 
-        const searchText = ref("");
-        const isOpen = ref(false);
-        const selectedOption = ref(null);
-
-        const fetchRoleDesc = async () => {
-            try {
-                const response = await roleService.getRoleDesc(roleName.value);
-                selectedRoleDesc.value = response.data.Role_Desc;
-            } catch (error) {
-                console.error("Error fetching roleDesc:", error);
-            }
-        };
-
-        const fetchRoleSkill = async () => {
-            try {
-                const response = await skillService.getSkillsAndProficiencyLevelForRole(
-                    roleName.value
-                );
-                console.log(response.data)
-                skills.value = response.data;
-                
-            } catch (error) {
-                console.error("Error fetching role skills:", error);
-            }
-        };
-
-        watch(roleName, fetchRoleDesc);
-        watch(roleName, fetchRoleSkill);
-
-        roleListingService
-            .getRoleListingById(route.params.listing_id)
-            .then((response) => {
-                roleListing.value = response.data[0];
-                roleName.value = roleListing.value.name;
-                country.value = roleListing.value.country;
-                dept.value = roleListing.value.dept;
-                reportingManager.value = roleListing.value.reportingManager;
-
-                const startD = new Date(roleListing.value.OpenW);
-                const endD = new Date(roleListing.value.CloseW);
-                openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
-                closeW.value = endD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
-
-                console.log(openW.value);
-                console.log(closeW.value);
-            });
+        const startD = new Date();
+        const endD = new Date();
+        openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
+        closeW.value = endD.toISOString().slice(0, 10);
 
         staffService.getAllManagers().then((response) => {
             managers.value = response.data;
@@ -87,6 +43,26 @@ export default {
         const countries = countryService.getAllCountries()
         console.log(countries)
 
+        watch(roleName, async () => {
+            try {
+
+                const response_roleDesc = await roleService.getRoleDesc(roleName.value.roleName);
+
+                selectedRoleDesc.value = response_roleDesc.data.Role_Desc;
+                console.log(response_roleDesc.data.Role_Desc)
+
+                const response_skillProficiency = await skillService.getSkillsAndProficiencyLevelForRole(
+                    roleName.value.roleName
+                );
+
+                skills.value = response_skillProficiency.data;
+                console.log(response_roleDesc.data.Role_Desc)
+
+            } catch (error) {
+                answer.value = 'Error! Could not get skills and proficiency. ' + error
+            }
+
+        })
 
         const sendRequest = async () => {
             const requestBody = {
@@ -98,10 +74,11 @@ export default {
                 closeWindow: closeW.value,
             };
 
-            roleListingService.addRoleListing(roleListing.value.id, requestBody)
+            console.log(requestBody)
+            roleListingService.addRoleListing(requestBody)
                 .then((response) => {
                     console.log("Response:", response.data);
-                    alert("Listing successfully updated!");
+                    alert("Listing successfully added!");
                 })
                 .catch((error) => {
                     console.error("Error:", error);
@@ -124,8 +101,8 @@ export default {
             skills,
             countries
         };
-    },
-};
+    }
+}
 </script>
 
 <template>
@@ -133,50 +110,50 @@ export default {
         <div>
             <div class="container">
                 <div class="row">
-                    <label for="role_name" class="mt-5">Role Name:</label>
+                    <label for="role_name" class="mt-5 form-label">Role Name:</label>
                 </div>
 
                 <v-select :options="roles" label="roleName" track-by="roleName" v-model="roleName"
-                    :reduce="(option) => option.roleName" :clearable="false"></v-select>
+                    :clearable="false"></v-select>
 
                 <div class="row">
-                    <label for="reporting_manager">Reporting Manager:</label>
+                    <label for="reporting_manager" class="form-label">Reporting Manager:</label>
                 </div>
 
-                <v-select v-model="reportingManager" :options="managers" label="staffFName"
-                    :reduce="(option) => option.staffID" :clearable="false"></v-select>
+                <v-select v-model="reportingManager" :options="managers" label="staffFName" :clearable="false"></v-select>
 
                 <div class="row">
-                    <label for="country">Country:</label>
+                    <label for="country" class="form-label">Country:</label>
                 </div>
+                
                 <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
 
                 <div class="row">
-                    <label for="dept">Department:</label>
-                    <input type="text" id="dept" name="dept" v-model="dept" />
+                    <label for="dept" class="form-label">Department:</label>
+                    <input type="text" id="dept" name="dept" v-model="dept" class="form-control"/>
                 </div>
 
                 <div class="row">
-                    <label for="datePicker">Open Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="openW" />
+                    <label for="datePicker" class="form-label">Open Window:</label>
+                    <input type="date" id="datePicker" name="datePicker" v-model="openW" class="form-control"/>
                 </div>
 
                 <div class="row">
-                    <label for="datePicker">Close Window:</label>
-                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" />
+                    <label for="datePicker" class="form-label">Close Window:</label>
+                    <input type="date" id="datePicker" name="datePicker" v-model="closeW" class="form-control" />
                 </div>
 
                 <div class="row">
-                    <label for="roleDesc">Role Description:</label>
+                    <label for="roleDesc" class="form-label">Role Description:</label>
                     <div id="roleDesc">{{ selectedRoleDesc }}</div>
                 </div>
 
                 <div class="row">
-                    <label for="roleDesc">Skills Required:</label>
+                    <label for="roleDesc" class="form-label">Skills Required:</label>
                 </div>
 
                 <span class="badge text-bg-primary" v-for="skill in skills">
-                    {{skill.Skill_Name}} - {{skill.Proficiency_Level}}
+                    {{ skill.Skill_Name }}  <!-- - {{ skill.Proficiency_Level }} -->
                 </span>
 
                 <button @click="sendRequest">Add Role Listing</button>
