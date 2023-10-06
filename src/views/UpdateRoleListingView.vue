@@ -8,6 +8,8 @@ import staffService from "../../services/Staff.js";
 import skillService from "../../services/Skill.js";
 import axios from "axios";
 import "vue-select/dist/vue-select.css";
+import countryService from "../../services/Country.js";
+import departmentService from "../../services/Department.js"
 
 export default {
     setup() {
@@ -26,10 +28,9 @@ export default {
         const reportingManager = ref(0);
         const managers = ref();
         const skills = ref();
+        const countries = countryService.getAllCountries();
+        const departments = departmentService.getAllDepartments();
 
-        const searchText = ref("");
-        const isOpen = ref(false);
-        const selectedOption = ref(null);
 
         const fetchRoleDesc = async () => {
             try {
@@ -134,7 +135,9 @@ export default {
             sendRequest,
             skills,
             handleDateChange,
-            handleCloseWChange
+            handleCloseWChange,
+            countries,
+            departments,
         };
     },
 };
@@ -202,18 +205,22 @@ export default {
 
                 <div class="row">
                     <label for="country">Country:</label>
-                    <input
+                    <!-- <input
                         type="text"
                         id="country"
                         name="country"
                         v-model="country"
-                    />
+                    /> -->
                 </div>
+
+                <v-select v-model="country" :options="countries" label="country" :clearable="false"></v-select>
 
                 <div class="row">
                     <label for="dept">Department:</label>
-                    <input type="text" id="dept" name="dept" v-model="dept" />
+                    <!-- <input type="text" id="dept" name="dept" v-model="dept" /> -->
                 </div>
+
+                <v-select v-model="dept" :options="departments" label="department" :clearable="false"></v-select>
 
                 <div class="row">
                     <label for="datePicker">Open Window:</label>
