@@ -46,5 +46,19 @@ class RoleListingService{
         return response
     }
 
+
+    addRoleListing(requestBody){
+        const response = axios.post(API_URL + "updaterolelisting/" + requestBody)
+        .then((response)=>{
+            console.log("Role Listing successfully updated")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Failed to update role listing" + error)
+            return error
+        })
+
+        return response
+    }
 }
 export default new RoleListingService()
