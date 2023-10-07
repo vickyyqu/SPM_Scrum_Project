@@ -25,9 +25,9 @@ export default {
         const skills = ref();
 
         const minDate = ref();
-        const currentDate = ref(new Date().toISOString().split('T')[0]);
-        const startD = new Date();
-        const endD = new Date();
+        const currentDate = ref(new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString())//ref(new Date().toISOString().split('T')[0]);
+        const startD = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
+        const endD = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
         openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
         closeW.value = endD.toISOString().slice(0, 10);
 
