@@ -18,8 +18,8 @@ export default {
         const closeW = ref();
         const roleDesc = ref();
         const selectedRoleDesc = ref('');
-        const country = ref();
-        const dept = ref();
+        const country = ref('');
+        const dept = ref('');
         const reportingManager = ref('');
         const staff = ref();
         const skills = ref();
@@ -68,7 +68,7 @@ export default {
         })
 
         const sendRequest = async () => {
-            console.log(currentDate)
+            console.log(country.value)
             if (String(roleName.value).trim() == "" || String(country.value).trim() == "" || String(dept.value).trim() == "" || String(reportingManager.value).trim() == "" || String(openW.value).trim() == "" || String(closeW.value).trim() == "") {
                 alert("Please ensure that all fields are filled in!");
             }
