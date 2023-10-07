@@ -21,7 +21,7 @@ export default {
         const openW = ref();
         const closeW = ref();
         // const currentDate = ref(new Date().toISOString().split("T")[0]);
-        const currentDate = ref(new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString());
+        const currentDate = ref(new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10));
         const roleDesc = ref();
         const selectedRoleDesc = ref();
         const country = ref();
@@ -111,11 +111,16 @@ export default {
                 openW.value = minDate.value;
                 alert("Please ensure that the open window is on or after today!")
             }
+
+            if(inputDate > closeW.value){
+                openW.value = currentDate.value;
+                alert("Please ensure that the close window is later than open window!")
+            }
         };
 
         const handleCloseWChange = () => {
             const inputDate = closeW.value;
-            if (inputDate <= openW.value) {
+            if (inputDate < openW.value) {
                 closeW.value = openW.value;
                 alert("Please ensure that the close window is later than open window!")
             }
