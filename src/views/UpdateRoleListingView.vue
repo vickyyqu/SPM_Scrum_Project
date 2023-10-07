@@ -26,7 +26,7 @@ export default {
         const country = ref();
         const dept = ref();
         const reportingManager = ref(0);
-        const managers = ref();
+        const staff = ref();
         const skills = ref();
         const countries = countryService.getAllCountries();
         const departments = departmentService.getAllDepartments();
@@ -63,7 +63,6 @@ export default {
                 country.value = roleListing.value.country;
                 dept.value = roleListing.value.dept;
                 reportingManager.value = roleListing.value.reportingManager;
-
                 const startD = new Date(roleListing.value.OpenW);
                 const endD = new Date(roleListing.value.CloseW);
                 minDate.value = startD.toISOString().slice(0, 10);
@@ -74,9 +73,14 @@ export default {
                 console.log(closeW.value);
             });
 
-        staffService.getAllManagers().then((response) => {
-            managers.value = response.data;
-            console.log(managers.value);
+        // staffService.getAllManagers().then((response) => {
+        //     managers.value = response.data;
+        //     console.log(managers.value);
+        // });
+
+        staffService.getAllStaffs().then((response) => {
+            staff.value = response.data;
+            console.log(staff.value);
         });
 
         roleService.getAllRoles().then((response) => {
@@ -107,15 +111,17 @@ export default {
 
         const handleDateChange = () => {
             const inputDate = openW.value;
-            if (inputDate < minDate.value) {
+            if(inputDate < currentDate.value){
                 openW.value = minDate.value;
+                alert("Please ensure that the open window is on or after today!")
             }
         };
 
         const handleCloseWChange = () => {
             const inputDate = closeW.value;
             if (inputDate <= openW.value) {
-                closeW.value = minDate.value;
+                closeW.value = openW.value;
+                alert("Please ensure that the close window is later than open window!")
             }
         };
 
@@ -130,7 +136,7 @@ export default {
             selectedRoleDesc,
             country,
             dept,
-            managers,
+            staff,
             sendRequest,
             skills,
             handleDateChange,
@@ -190,7 +196,7 @@ export default {
                         >
                         <v-select
                             v-model="reportingManager"
-                            :options="managers"
+                            :options="staff"
                             label="staffFName"
                             :reduce="(option) => option.staffID"
                             :clearable="false"
