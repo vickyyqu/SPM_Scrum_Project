@@ -20,7 +20,8 @@ export default {
         const minDate = ref();
         const openW = ref();
         const closeW = ref();
-        const currentDate = ref(new Date().toISOString().split("T")[0]);
+        // const currentDate = ref(new Date().toISOString().split("T")[0]);
+        const currentDate = ref(new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString());
         const roleDesc = ref();
         const selectedRoleDesc = ref();
         const country = ref();
@@ -72,11 +73,6 @@ export default {
                 console.log(openW.value);
                 console.log(closeW.value);
             });
-
-        // staffService.getAllManagers().then((response) => {
-        //     managers.value = response.data;
-        //     console.log(managers.value);
-        // });
 
         staffService.getAllStaffs().then((response) => {
             staff.value = response.data;
