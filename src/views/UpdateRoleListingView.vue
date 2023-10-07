@@ -143,9 +143,6 @@ export default {
 </script>
 
 <template>
-    <div>
-        <Navbar />
-
         <div>
             <div v-if="roleListing">
                 <h1 class="text-start mt-5">Edit Listing</h1>
@@ -269,10 +266,9 @@ export default {
 
             </div>
             <div v-else>
-                <h1>Role Listing does not exist</h1>
+                <div>Role Listing does not exist</div>
             </div>
         </div>
-    </div>
 </template>
 
 <style scoped>
