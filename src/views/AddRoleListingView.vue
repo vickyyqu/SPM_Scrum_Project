@@ -210,4 +210,9 @@ export default {
     </div>
 </template>
 
-<style></style>
+<style scoped>
+.custom-select {
+    background-color: white; 
+}
+</style>
+
