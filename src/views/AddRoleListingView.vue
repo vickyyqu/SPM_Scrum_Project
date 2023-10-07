@@ -109,7 +109,7 @@ export default {
         const handleCloseWChange = () => {
             const inputDate = closeW.value;
             if (inputDate <= openW.value) {
-                closeW.value = currentDate.value;
+                closeW.value = openW.value;
                 alert("Please ensure that the close window is later than open window!")
             }
         };
