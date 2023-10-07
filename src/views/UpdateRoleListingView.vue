@@ -203,12 +203,12 @@ export default {
                             class="custom-select rounded-1"
                         >
                             <template
-                                #selected-option="{ staffFName, staffLName }"
+                                #selected-option="{ staffID, staffFName, staffLName }"
                             >
-                                <div>{{ staffFName }} {{ staffLName }}</div>
+                                <div>{{ staffID }} {{ staffFName }} {{ staffLName }}</div>
                             </template>
-                            <template #option="{ staffFName, staffLName }">
-                                <div>{{ staffFName }} {{ staffLName }}</div>
+                            <template #option="{ staffID, staffFName, staffLName }">
+                                <div>{{ staffID }} {{ staffFName }} {{ staffLName }}</div>
                             </template></v-select
                         >
                         </div>
