@@ -21,7 +21,7 @@ export default {
         const country = ref();
         const dept = ref();
         const reportingManager = ref('');
-        const managers = ref();
+        const staff = ref();
         const skills = ref();
 
         const minDate = ref();
@@ -33,8 +33,11 @@ export default {
 
         // const departments = ref(); //departmentService.getAllDepartments();
 
-        staffService.getAllManagers().then((response) => {
-            managers.value = response.data;
+        // staffService.getAllManagers().then((response) => {
+        //     managers.value = response.data;
+        // });
+        staffService.getAllStaffs().then((response) => {
+            staff.value = response.data;
         });
 
         roleService.getAllRoles().then((response) => {
@@ -122,7 +125,7 @@ export default {
             selectedRoleDesc,
             country,
             dept,
-            managers,
+            staff,
             sendRequest,
             skills,
             countries,
@@ -165,13 +168,13 @@ export default {
                 </div>
                 <div class="col">
                     <label for="reporting_manager" class="form-label fw-semibold">Reporting Manager:</label>
-                    <v-select v-model="reportingManager" :options="managers" label="staffFName"
+                    <v-select v-model="reportingManager" :options="staff" label="staffFName"
                         :reduce="(option) => option.staffID" :clearable="false" class="custom-select rounded-1">
                         <template #selected-option="{ staffFName, staffLName }">
                             <div>{{ staffFName }} {{ staffLName }}</div>
                         </template>
-                        <template #option="{ staffFName, staffLName }">
-                            <div>{{ staffFName }} {{ staffLName }}</div>
+                        <template #option="{ staffID, staffFName, staffLName }">
+                            <div>{{staffID}} {{ staffFName }} {{ staffLName }}</div>
                         </template></v-select>
                 </div>
 
