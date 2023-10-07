@@ -71,10 +71,7 @@ export default {
             }
             else if (openW.value > closeW.value) {
                 alert("Please ensure that the close window is after the open window!");
-            } else if (openW.value < currentDate.value) {
-                alert("Please ensure that the open window is after today's date!");
-            } else if (closeW.value < currentDate.value) {
-                alert("Please ensure that the close window is after today's date!");
+            
             } else {
 
                 const requestBody = {
@@ -102,6 +99,7 @@ export default {
             const inputDate = openW.value;
             if (inputDate < minDate.value) {
                 openW.value = minDate.value;
+                alert("Please ensure that the open window is on or after today!")
             }
         };
 
@@ -109,6 +107,7 @@ export default {
             const inputDate = closeW.value;
             if (inputDate <= openW.value) {
                 closeW.value = currentDate.value;
+                alert("Please ensure that the close window is later than open window!")
             }
         };
 
