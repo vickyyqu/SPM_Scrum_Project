@@ -1,125 +1,221 @@
+<script>
+import Navbar from "../components/navbar.vue";
+import { ref, watch, computed } from "vue";
+import roleListingService from "../../services/RoleListing.js";
+import roleService from "../../services/Role.js";
+import staffService from "../../services/Staff.js";
+import skillService from "../../services/Skill.js";
+import countryService from "../../services/Country.js";
+import departmentService from "../../services/Department.js"
+import "vue-select/dist/vue-select.css";
+
+export default {
+    setup() {
+        const roleListing = ref();
+        const roles = ref();
+        const roleName = ref('');
+        const openW = ref();
+        const closeW = ref();
+        const roleDesc = ref();
+        const selectedRoleDesc = ref('');
+        const country = ref('');
+        const dept = ref('');
+        const reportingManager = ref('');
+        const staff = ref();
+        const skills = ref();
+
+        const minDate = ref();
+        const currentDate = ref(new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString())//ref(new Date().toISOString().split('T')[0]);
+        const startD = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
+        const endD = new Date(new Date().getTime() + 8 * 60 * 60 * 1000)
+        openW.value = startD.toISOString().slice(0, 10); // Convert to "YYYY-MM-DD" format
+        closeW.value = endD.toISOString().slice(0, 10);
+
+        // const departments = ref(); //departmentService.getAllDepartments();
+
+        // staffService.getAllManagers().then((response) => {
+        //     managers.value = response.data;
+        // });
+        staffService.getAllStaffs().then((response) => {
+            staff.value = response.data;
+        });
+
+        roleService.getAllRoles().then((response) => {
+            roles.value = response.data;
+        });
+
+        const departments = departmentService.getAllDepartments()
+
+        const countries = countryService.getAllCountries()
+
+        watch(roleName, async () => {
+            try {
+
+                const response_roleDesc = await roleService.getRoleDesc(roleName.value.roleName);
+
+                selectedRoleDesc.value = response_roleDesc.data.Role_Desc;
+
+                const response_skillProficiency = await skillService.getSkillsAndProficiencyLevelForRole(
+                    roleName.value.roleName
+                );
+
+                skills.value = response_skillProficiency.data;
+
+            } catch (error) {
+                answer.value = 'Error! Could not get skills and proficiency. ' + error
+            }
+
+        })
+
+        const sendRequest = async () => {
+            console.log(country.value)
+            if (String(roleName.value).trim() == "" || String(country.value).trim() == "" || String(dept.value).trim() == "" || String(reportingManager.value).trim() == "" || String(openW.value).trim() == "" || String(closeW.value).trim() == "") {
+                alert("Please ensure that all fields are filled in!");
+            }
+            else if (openW.value > closeW.value) {
+                alert("Please ensure that the close window is after the open window!");
+            
+            } else {
+
+                const requestBody = {
+                    roleName: roleName.value,
+                    country: country.value,
+                    dept: dept.value,
+                    reportingManager: reportingManager.value,
+                    openWindow: openW.value,
+                    closeWindow: closeW.value,
+                };
+
+                roleListingService.addRoleListing(requestBody)
+                    .then((response) => {
+                        alert("Listing successfully added!");
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        };
+
+        minDate.value = startD.toISOString().slice(0, 10);
+        function handleDateChange() {
+            const inputDate = openW.value;
+            if (inputDate < minDate.value) {
+                openW.value = minDate.value;
+                alert("Please ensure that the open window is on or after today!")
+            }
+        };
+
+        const handleCloseWChange = () => {
+            const inputDate = closeW.value;
+            if (inputDate <= openW.value) {
+                closeW.value = openW.value;
+                alert("Please ensure that the close window is later than open window!")
+            }
+        };
+
+        return {
+            roleListing,
+            roles,
+            roleName,
+            reportingManager,
+            openW,
+            closeW,
+            roleDesc,
+            selectedRoleDesc,
+            country,
+            dept,
+            staff,
+            sendRequest,
+            skills,
+            countries,
+            departments,
+            handleDateChange,
+            handleCloseWChange,
+        };
+    }
+}
+
+
+</script>
+
 <template>
-    <div class="container-fluid pt-5">
-
-        <div class="container">
-            <div class="row">
-                <div class="col text-start">
-                    <div class="mb-3">
-                        <label for="roleTitle" class="form-label">Role Title</label>
-                        <input type="text" class="form-control" id="roleTitle">
-                    </div>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-start mt-5">Add Listing</h1>
             </div>
-
-            <div class="row">
-                <div class="col-9 text-start">
-                    <label for="roleRequiredSkills1" class="form-label">Required Skills</label>
-                </div>
-                <div class="col-3 text-start">
-                    <label for="roleRequiredSkills1Proficiency" class="form-label">Proficiency</label>
-                </div>
-            </div>
-
-            <div class="row mb-5">
-                <div class="form-group">
-                    <div v-for="(input, index) in skills_required" :key="`skillsInput-${index}`"
-                        class="input wrapper flex items-center">
-                        <div class="row">
-                            <!-- <div class="col-9"><input v-model="input.skill" type="text" class="form-control" /></div> -->
-                            <div class="col-9">
-                                <select v-model="selected" class="form-select">
-                                    <option v-for="skill in skills" :value="skill.value">
-                                        {{ skill.skillName }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-3"><input v-model="input.proficiency" type="number" class="form-control" />
-                            </div>
-                        </div>
-
-                        <!--Add Svg Icon-->
-                        <svg @click="addField(input, skills_required)" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24" width="24" height="24" class="ml-2 cursor-pointer">
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path fill="green"
-                                d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
-                        </svg>
-
-                        <!--Remove Svg Icon-->
-                        <svg v-show="skills_required.length > 1" @click="removeField(index, skills_required)"
-                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
-                            class="ml-2 cursor-pointer">
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path fill="#EC4899"
-                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9.414l2.828-2.829 1.415 1.415L13.414 12l2.829 2.828-1.415 1.415L12 13.414l-2.828 2.829-1.415-1.415L10.586 12 7.757 9.172l1.415-1.415L12 10.586z" />
-                        </svg>
-                    </div>
+        </div>
+        <div class="text-start">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="role_name" class="form-label fw-semibold">Role Name:</label>
+                    <v-select :options="roles" label="roleName" track-by="roleName" v-model="roleName" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-4 text-start">
-                    <label for="roleCountry" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="roleCountry">
+                <div class="col">
+                    <label for="country" class="form-label fw-semibold">Country:</label>
+                    <v-select v-model="country" :options="countries" label="country" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
                 </div>
-                <div class="col-4 text-start">
-                    <label for="roleDepartment" class="form-label">Department</label>
-                    <input type="text" class="form-control" id="roleDepartment">
+                <div class="col">
+                    <label for="dept" class="form-label fw-semibold">Department:</label>
+                    <v-select v-model="dept" :options="departments" label="department" :clearable="false"
+                        class="custom-select rounded-1"></v-select>
                 </div>
-                <div class="col-4 text-start">
-                    <label for="roleReportingManager" class="form-label">Reporting Manager</label>
-                    <input type="text" class="form-control" id="roleReportingManager">
+                <div class="col">
+                    <label for="reporting_manager" class="form-label fw-semibold">Reporting Manager:</label>
+                    <v-select v-model="reportingManager" :options="staff" label="staffFName"
+                        :reduce="(option) => option.staffID" :clearable="false" class="custom-select rounded-1">
+                        <template #selected-option="{ staffFName, staffLName }">
+                            <div>{{ staffFName }} {{ staffLName }}</div>
+                        </template>
+                        <template #option="{ staffID, staffFName, staffLName }">
+                            <div>{{staffID}} {{ staffFName }} {{ staffLName }}</div>
+                        </template></v-select>
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="datePicker" class="form-label fw-semibold">Open Window:</label>
+                <input type="date" id="datePicker" name="datePicker" v-model="openW" @change="handleDateChange"
+                    class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="datePicker" class="form-label fw-semibold">Close Window:</label>
+                <input type="date" id="datePicker" name="datePicker" v-model="closeW" @change="handleCloseWChange"
+                    class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="roleDesc" class="form-label fw-semibold">Role Description:</label>
+                <div id="roleDesc" class="bg-white p-3 rounded-3">
+                    {{ selectedRoleDesc }}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col text-start">
-                    <label for="roleDescription" class="form-label">Description</label>
-                    <textarea class="form-control" id="roleDescription" rows="5"></textarea>
+            <div class="mb-3 gap-2">
+                <label for="roleDesc" class="form-label fw-semibold">Required Skills:</label>
+                <div>
+                    <span class="badge text-bg-primary me-2 mt-2" v-for="skill in skills">{{ skill.Skill_Name }}</span>
                 </div>
             </div>
 
-            <div class="row mt-5">
-                <div class="col d-flex justify-content-end">
-                    <button type="button" class="btn btn-warning rounded-pill">Post Listing</button>
-                </div>
-            </div>
+            <button type="submit" @click="sendRequest" class="btn btn-warning fw-semibold">
+                Add Role Listing
+            </button>
         </div>
     </div>
 </template>
-<style></style>
 
-<script>
-import { ref, onMounted } from 'vue'
-import skillService from '../../services/Skill.js'
+<style scoped>
+.custom-select {
+    background-color: white; 
+}
+</style>
 
-
-export default {
-    name: "AddRemove",
-    setup() {
-        const skills = ref([])
-
-        skillService.getAllSkills().then(response => {
-            skills.value = response.data
-            console.log(skills.value)
-        })
-        return {
-            skills
-        }
-    },
-    data() {
-        return {
-            skills_required: [{ skill: "" }],
-            proficiency: [{ proficiency: "" }]
-        };
-    },
-    methods: {
-        addField(value, fieldType) {
-            fieldType.push({ value: "" });
-        },
-        removeField(index, fieldType) {
-            fieldType.splice(index, 1);
-        },
-    },
-};
-</script>

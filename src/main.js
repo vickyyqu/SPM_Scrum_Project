@@ -14,8 +14,8 @@ const routes = [
         component: () => import("./views/RoleListingView.vue")
     },
     {
-        path: '/addrolelistings',
-        name: 'addRoleListings',
+        path: '/addrolelisting',
+        name: 'addRoleListing',
         component: () => import('./views/AddRoleListingView.vue')
     },
     {
