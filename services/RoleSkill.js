@@ -22,11 +22,11 @@ class RoleSkillService{
 
     getRoleSkills(listingId){
         const response = axios.get(API_URL + "getroleskills/" + listingId)
-        .then((response)=>{
+        .then(response=>{
             console.log("Get Role Skills Successful")
             return response
         })
-        .catch((error)=>{
+        .catch(error=>{
             console.log("Get Role Skills NOT successful " + error)
             return error
         })
