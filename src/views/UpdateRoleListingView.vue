@@ -85,7 +85,11 @@ export default {
         });
 
         const sendRequest = async () => {
-            const requestBody = {
+            if(closeW.value < openW.value){
+                alert("Please ensure that the close window is later than open window!")
+            }
+            else{
+                const requestBody = {
                 roleName: roleName.value,
                 country: country.value,
                 dept: dept.value,
@@ -103,6 +107,8 @@ export default {
                 .catch((error) => {
                     console.error("Error:", error);
                 });
+            }
+            
         };
 
         const handleDateChange = () => {
@@ -112,19 +118,19 @@ export default {
                 alert("Please ensure that the open window is on or after today!")
             }
 
-            if(inputDate > closeW.value){
-                openW.value = currentDate.value;
-                alert("Please ensure that the close window is later than open window!")
-            }
+            // if(inputDate > closeW.value){
+            //     openW.value = currentDate.value;
+            //     alert("Please ensure that the close window is later than open window!")
+            // }
         };
 
-        const handleCloseWChange = () => {
-            const inputDate = closeW.value;
-            if (inputDate < openW.value) {
-                closeW.value = openW.value;
-                alert("Please ensure that the close window is later than open window!")
-            }
-        };
+        // const handleCloseWChange = () => {
+        //     const inputDate = closeW.value;
+        //     if (inputDate < openW.value) {
+        //         closeW.value = openW.value;
+        //         alert("Please ensure that the close window is later than open window!")
+        //     }
+        // };
 
         return {
             roleListing,
@@ -140,10 +146,9 @@ export default {
             staff,
             sendRequest,
             skills,
-            handleDateChange,
-            handleCloseWChange,
             countries,
             departments,
+            handleDateChange
         };
     },
 };
@@ -225,8 +230,8 @@ export default {
                             id="datePicker"
                             name="datePicker"
                             v-model="openW"
-                            @change="handleDateChange"
                             class="form-control"
+                            @change="handleDateChange"
                         />
                     </div>
 
@@ -239,7 +244,7 @@ export default {
                             id="datePicker"
                             name="datePicker"
                             v-model="closeW"
-                            @change="handleCloseWChange"
+
                             class="form-control"
                         />
                     </div>
