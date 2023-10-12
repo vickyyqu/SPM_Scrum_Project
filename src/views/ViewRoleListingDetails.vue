@@ -1,6 +1,5 @@
 
 <script >
-import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
@@ -59,9 +58,9 @@ export default {
             }
         },
         async getOverallMatch() {
-            // var roleSkills = await this.getRoleSkill()
+            var roleSkills = await this.getRoleSkill()
             // var staffSkills = await this.getStaffSkill()
-            var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
+            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
             var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
             var allSkills = []
             var count = 0

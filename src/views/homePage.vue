@@ -1,4 +1,7 @@
 <script>
+import { useRoute } from "vue-router";
+import router from '../main';
+
 export default {
     data() {
         return {
@@ -24,8 +27,11 @@ export default {
     },
     methods: {
         validate(){
-            console.log(this.staffId)
-            console.log(this.pwd)
+            // console.log(this.staffId)
+            // console.log(this.pwd)
+
+            // sessionStorage.setItem("staffId", this.staffId)
+            this.$router.push("/rolelistings")
         },
         changeRole(role){
             console.log(role)
@@ -36,7 +42,7 @@ export default {
 </script> 
 
 <template>
-    <div class="container p-5 d-flex justify-content-center">
+    <div class="container-fluid d-flex justify-content-center">
         <div class="row mt-5 w-50" style="text-align:start;">
 
             <span style="pb-0 mb-0">I am a {{myRole}}</span>
@@ -49,19 +55,18 @@ export default {
 
             <form class="myForm mx-auto">
                 <div class="form-group mb-4">
-                    <label for="staffID">Staff ID:</label>
-                    <input class="form-control input-lg" type="text" name="staffID" id="staffID" v-model="staffId"
+                    <span style="pb-0 mb-0">Staff ID:</span>
+                    <input class="form-control input-lg" type="text" v-model="staffId"
                         placeholder="Enter your staff ID" />
                 </div>
                 <div class="form-group mb-4" style="text-align:start;">
-                    <label for="password">Password:</label>
-                    <input class="form-control input-lg" type="password" name="password" placeholder="Enter your password" v-model="pwd"/>
+                    <span style="pb-0 mb-0">Password:</span>
+                    <input class="form-control input-lg" type="password" placeholder="Enter your password" v-model="pwd"/>
                 </div>
                 <div class="form-group d-flex justify-content-center">
                     <button class="btn btn-success" @click="validate()">Login</button>
                 </div>
             </form>
-
         </div>
     </div>
 </template>

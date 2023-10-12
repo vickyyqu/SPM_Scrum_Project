@@ -7,47 +7,45 @@ import { createRouter, createWebHistory } from "vue-router";
 import 'bootstrap-icons/font/bootstrap-icons';
 import vSelect from 'vue-select'
 
-const routes = [
-    {
-        path: '/', 
-        name: 'homePage',
-        component: () => import("./views/homePage.vue")
-    },
-    {
-        path: '/rolelistings', 
-        name: 'roleListings',
-        component: () => import("./views/RoleListingView.vue")
-    },
-    {
-        path: '/addrolelisting',
-        name: 'addRoleListing',
-        component: () => import('./views/AddRoleListingView.vue')
-    },
-    {
-        path: '/viewskills',
-        name: 'viewskills',
-        component: () => import('./views/ViewSkillsView.vue')
-    },
-    {
-        path: '/updaterolelisting/:listing_id',
-        name: 'updaterolelisting',
-        component: () => import('./views/UpdateRoleListingView.vue')
-    },
-    {
-        path: '/rolelistingdetails', 
-        name: 'roleListingdetails',
-        component: () => import("./views/ViewRoleListingDetails.vue")
-    }
-]
-
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes:[
+        {
+            path: '/', 
+            name: 'homepage',
+            component: () => import("./views/HomePage.vue")
+        },
+        {
+            path: '/rolelistings', 
+            name: 'roleListings',
+            component: () => import("./views/RoleListingView.vue")
+        },
+        {
+            path: '/addrolelisting',
+            name: 'addRoleListing',
+            component: () => import('./views/AddRoleListingView.vue')
+        },
+        {
+            path: '/viewskills',
+            name: 'viewskills',
+            component: () => import('./views/ViewSkillsView.vue')
+        },
+        {
+            path: '/updaterolelisting/:listing_id',
+            name: 'updaterolelisting',
+            component: () => import('./views/UpdateRoleListingView.vue')
+        },
+        {
+            path: '/rolelistingdetails', 
+            name: 'roleListingdetails',
+            component: () => import("./views/ViewRoleListingDetails.vue")
+        }
+    ]
 });
+
+export default router
 
 const app = createApp(App)
 app.component('v-select', vSelect)
 app.use(router)
 app.mount('#app')
-
-export default router
