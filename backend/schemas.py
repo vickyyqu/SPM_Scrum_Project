@@ -9,7 +9,7 @@ class RoleListingTable(db.Model):
     Role_Name = db.Column(db.String(255), db.ForeignKey('Role_Skill.Role_Name'))
     Country = db.Column(db.String(255))
     Department =db.Column(db.String(255))
-    # Reporting_Manager = db.Column(db.String(255))
+    Reporting_Manager = db.Column(db.String(255))
     Open_Window = db.Column(db.DateTime)
     Close_Window = db.Column(db.DateTime)
     # Add more columns as needed
