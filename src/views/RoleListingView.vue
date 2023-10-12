@@ -10,18 +10,23 @@ export default {
     setup() {
         const roleListings = ref([])
         const route = useRoute()
+        var halfway = ref(0)
 
         roleListingService.getAllRoleListings().then(response => {
             roleListings.value = response.data
             console.log(roleListings.value)
+            halfway.value = Math.ceil(roleListings.value.length / 2)
+            console.log(halfway)
         })
         function viewDetails(roleName){
             router.push({path:"/rolelistingdetails", query:{ RoleName: roleName}})
         }
 
+
         return {
             roleListings,
-            viewDetails
+            viewDetails,
+            halfway
         }
 
 
@@ -42,30 +47,44 @@ export default {
  left: 0;background-color: lightgray; outline: black 1px solid;">
         <div class="row">
             <div class="col-6">
-                <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(roleListings[0]['name'])">
-                    <div class="card-body">
-                        <h5 class="card-title">{{roleListings[0]['name']}}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ roleListings[0]['dept'] }}</h6>
-                        <h6 href="#" class="subtitle">{{ roleListings[0]['OpenW'] }}</h6>
-                        <h6 href="#" class="subtitle">{{ roleListings[0]['CloseW'] }}</h6>
+                <div v-for="listing in roleListings.slice(0, halfway)" class="row mt-4"> 
+                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing['name'])">
+                        <div class="card-body">
+                            <h5 class="card-title">{{listing['name']}}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing['dept'] }}</h6>
+                            <h6 href="#" class="subtitle">{{ listing['OpenW'] }}</h6>
+                            <h6 href="#" class="subtitle">{{ listing['CloseW'] }}</h6>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-6">
-                <div class="card mx-auto rounded" style="width: 25rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ roleListings[1]['name'] }}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ roleListings[1]['dept'] }}</h6>
-                        <h6 href="#" class="subtitle">{{ roleListings[1]['OpenW'] }}</h6>
-                        <h6 href="#" class="subtitle">{{ roleListings[1]['CloseW'] }}</h6>
+                <div v-for="listing2 in roleListings.slice(halfway, roleListings.size)" class="row mt-4"> 
+                    <div class="card mx-auto rounded" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ listing2['name'] }}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing2['dept'] }}</h6>
+                            <h6 href="#" class="subtitle">{{ listing2['OpenW'] }}</h6>
+                            <h6 href="#" class="subtitle">{{ listing2['CloseW'] }}</h6>
+                        </div>
                     </div>
-                </div>
+                </div> 
             </div>
 
         </div>
     </div>
 </template>
 
-<style></style>
+<style>
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+</style>
 
