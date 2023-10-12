@@ -67,5 +67,15 @@ export default {
     </div>
 </template>
 
-<style></style>
+<style>
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+</style>
 
