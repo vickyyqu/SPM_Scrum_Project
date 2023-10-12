@@ -11,6 +11,9 @@ export default {
         const route = useRoute()
         var halfway = ref(0)
 
+        // retrieve staff id
+        console.log(sessionStorage.getItem("staffId"))
+
         roleListingService.getAllRoleListings().then(response => {
             roleListings.value = response.data
             console.log(roleListings.value)

@@ -1,7 +1,4 @@
 <script>
-import { useRoute } from "vue-router";
-import router from '../main';
-
 export default {
     data() {
         return {
@@ -26,11 +23,12 @@ export default {
         }
     },
     methods: {
-        validate(){
-            // console.log(this.staffId)
-            // console.log(this.pwd)
+        validateUser(){
+            console.log(this.staffId)
+            console.log(this.pwd)
 
-            // sessionStorage.setItem("staffId", this.staffId)
+            // set staff id
+            sessionStorage.setItem("staffId", this.staffId)
             this.$router.push("/rolelistings")
         },
         changeRole(role){
@@ -53,7 +51,7 @@ export default {
                 </span>
             </div>
 
-            <form class="myForm mx-auto">
+            <div class="myForm mx-auto">
                 <div class="form-group mb-4">
                     <span style="pb-0 mb-0">Staff ID:</span>
                     <input class="form-control input-lg" type="text" v-model="staffId"
@@ -64,9 +62,9 @@ export default {
                     <input class="form-control input-lg" type="password" placeholder="Enter your password" v-model="pwd"/>
                 </div>
                 <div class="form-group d-flex justify-content-center">
-                    <button class="btn btn-success" @click="validate()">Login</button>
+                    <button class="btn btn-success" @click="validateUser()">Login</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
