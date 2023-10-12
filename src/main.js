@@ -9,6 +9,11 @@ import vSelect from 'vue-select'
 
 const routes = [
     {
+        path: '/', 
+        name: 'homePage',
+        component: () => import("./views/homePage.vue")
+    },
+    {
         path: '/rolelistings', 
         name: 'roleListings',
         component: () => import("./views/RoleListingView.vue")
