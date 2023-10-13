@@ -33,6 +33,10 @@
                 </li>
 
                 <li class="nav-item" v-if="getRole().length>0">
+                    <a class="nav-link" href="/addrolelisting">Add Role Listing (HR)</a>
+                    </li>
+
+                <li class="nav-item" v-if="getRole().length>0">
                     <a class="nav-link" href="/" @click="logOut()">Log Out</a>
                 </li>
 

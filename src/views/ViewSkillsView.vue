@@ -47,9 +47,9 @@ export default {
           text-align: left;">
 
     <div class="list-group mx-auto my-2" style="width: 80%">
-      <h3>
+      <h2>
         List of Skills Available
-      </h3>
+      </h2>
       <h6>
         note: this is a feature that should be available to only HR, managers and directors <br>
         - to delete this note
