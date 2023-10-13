@@ -1,93 +1,376 @@
-
-<script >
-import { ref, onMounted } from 'vue'
+<script>
+import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import Navbar from '../components/Navbar.vue';
-import roleListingService from '../../services/RoleListing.js'
-import router from '../main';
+import Navbar from "../components/Navbar.vue";
+import roleListingService from "../../services/RoleListing.js";
+import countryService from "../../services/Country.js";
+import departmentService from "../../services/Department.js";
+import skillService from "../../services/Skill.js";
+import router from "../main";
 
 export default {
     components: {
-        Navbar
+        Navbar,
     },
     setup() {
-        const roleListings = ref([])
-        const route = useRoute()
-        var halfway = ref(0)
+        const roleListings = ref([]);
+        const route = useRoute();
+        var halfway = ref(0);
+        const countries = countryService.getAllCountries();
+        const skills = ref();
+        const departments = departmentService.getAllDepartments();
+        const selectedCountries = ref([]);
+        const selectedDepartments = ref([]);
+        const selectedSkills = ref([]);
+        const filteredListings = ref([]);
 
         // retrieve staff id
-        console.log(sessionStorage.getItem("staffId"))
+        console.log(sessionStorage.getItem("staffId"));
 
-        roleListingService.getAllRoleListings().then(response => {
-            roleListings.value = response.data
-            console.log(roleListings.value)
-            halfway.value = Math.ceil(roleListings.value.length / 2)
-            console.log(halfway)
-        })
-        function viewDetails(id){
-            router.push({path:"/rolelistingdetails", query:{ listingId: id}})
+        roleListingService.getAllRoleListings().then((response) => {
+            roleListings.value = response.data;
+            filteredListings.value = roleListings.value;
+            console.log(roleListings.value);
+            halfway.value = Math.ceil(roleListings.value.length / 2);
+            console.log(halfway);
+        });
+        function viewDetails(id) {
+            router.push({
+                path: "/rolelistingdetails",
+                query: { listingId: id },
+            });
         }
 
+        skillService.getAllSkills().then((response) => {
+            skills.value = response.data;
+            console.log(skills.value);
+        });
+
+        // clear filters
+        const clearFilters = () => {
+            selectedCountries.value = [];
+            selectedDepartments.value = [];
+            selectedSkills.value = [];
+            filteredListings.value = roleListings.value;
+        };
+
+        const filterListings = async () => {
+            filteredListings.value = roleListings.value;
+            console.log(filteredListings.value);
+            if (
+                selectedCountries.value.length &&
+                selectedDepartments.value.length
+            ) {
+                filteredListings.value = filteredListings.value.filter(
+                    (obj) =>
+                        selectedCountries.value.includes(obj.country) &&
+                        selectedDepartments.value.includes(obj.dept)
+                );
+            }
+            if (selectedCountries.value.length) {
+                filteredListings.value = filteredListings.value.filter((obj) =>
+                    selectedCountries.value.includes(obj.country)
+                );
+            }
+            if (selectedDepartments.value.length) {
+                filteredListings.value = filteredListings.value.filter((obj) =>
+                    selectedDepartments.value.includes(obj.dept)
+                );
+            }
+            if (selectedSkills.value.length) {
+                // Fetch skills for each role and then filter based on selected skills
+                filteredListings.value = await Promise.all(
+                    filteredListings.value.map(async (obj) => {
+                        try {
+                            const response =
+                                await skillService.getSkillsForRole(obj.name);
+                            const roleSkills = response.data.map(
+                                (skill) => skill.Skill_Name
+                            );
+
+                            // Check if at least one of the selected skills is included in the roleSkills
+                            if (
+                                selectedSkills.value.some((skill) =>
+                                    roleSkills.includes(skill)
+                                )
+                            ) {
+                                return obj;
+                            }
+                        } catch (error) {
+                            console.error(
+                                `Error fetching skills for role ${obj.role}:`,
+                                error
+                            );
+                        }
+                        return null;
+                    })
+                );
+
+                // Filter out listings with errors during the API request
+                filteredListings.value = filteredListings.value.filter(
+                    (listing) => listing !== null
+                );
+            }
+        };
+
+        watch(selectedCountries, filterListings);
+        watch(selectedDepartments, filterListings);
+        watch(selectedSkills, filterListings);
 
         return {
             roleListings,
             viewDetails,
-            halfway
-        }
+            halfway,
+            countries,
+            departments,
+            selectedCountries,
+            selectedDepartments,
+            clearFilters,
+            filterListings,
+            filteredListings,
+            skills,
+            selectedSkills,
+        };
     },
-
 };
-
 </script>
-
 
 <template>
     <Navbar />
-    <div class="container-fluid mt-5 pt-5" style="position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
- left: 0;background-color: lightgray; outline: black 1px solid;">
-        <div class="row">
-            <div class="col-6">
-                <div v-for="listing in roleListings.slice(0, halfway)" class="row mt-4"> 
-                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing['id'])">
-                        <div class="card-body">
-                            <h5 class="card-title">{{listing['name']}}</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing['dept'] }}</h6>
-                            <h6 href="#" class="subtitle">{{ listing['OpenW'] }}</h6>
-                            <h6 href="#" class="subtitle">{{ listing['CloseW'] }}</h6>
+    <div class="container-fluid">
+        <div class="row sidebar">
+            <div class="col-2">
+                <div class="row">
+                    <h6>Country</h6>
+                    <div class="form-check" v-for="country in countries">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            :value="country"
+                            id="flexCheckDefault"
+                            v-model="selectedCountries"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                            {{ country }}
+                        </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <h6>Departments</h6>
+                    <div class="form-check" v-for="department in departments">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            :value="department"
+                            id="flexCheckDefault"
+                            v-model="selectedDepartments"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                            {{ department }}
+                        </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <h6>Skills</h6>
+                    <div class="form-check">
+                        <div>
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :value="skills[0].skillName"
+                                id="flexCheckDefault"
+                                v-model="selectedSkills"
+                            />
+                            <label class="form-check-label" for="flexCheckDefault">
+                                {{ skills[0].skillName }}
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :value="skills[1].skillName"
+                                id="flexCheckDefault"
+                                v-model="selectedSkills"
+                            />
+                            <label class="form-check-label" for="flexCheckDefault">
+                                {{ skills[1].skillName }}
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :value="skills[2].skillName"
+                                id="flexCheckDefault"
+                                v-model="selectedSkills"
+                            />
+                            <label class="form-check-label" for="flexCheckDefault">
+                                {{ skills[2].skillName }}
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <a href=""
+                        class="underline"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                    >
+                        See more...
+                    </a>
+
+                    <!-- Modal -->
+                    <div
+                        class="modal fade"
+                        id="exampleModal"
+                        tabindex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1
+                                        class="modal-title fs-5"
+                                        id="exampleModalLabel"
+                                    >
+                                        Skills
+                                    </h1>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div
+                                        class="form-check"
+                                        v-for="skill in skills"
+                                    >
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            :value="skill.skillName"
+                                            id="flexCheckDefault"
+                                            v-model="selectedSkills"
+                                        />
+                                        <label
+                                            class="form-check-label"
+                                            for="flexCheckDefault"
+                                        >
+                                            {{ skill.skillName }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col p-0 d-grid gap-2 col-6 mx-auto w-100">
+                        <button class="btn btn-danger" @click="clearFilters">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <!-- {{ selectedCountries }}
+                {{ selectedDepartments }}
+                {{ selectedSkills }} -->
+            </div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-6">
+                        <div
+                            v-for="listing in filteredListings.slice(
+                                0,
+                                halfway
+                            )"
+                            class="row mt-4"
+                        >
+                            <div
+                                class="card mx-auto rounded"
+                                style="width: 25rem"
+                                @click="viewDetails(listing['id'])"
+                            >
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {{ listing["name"] }}
+                                    </h5>
+                                    <h6
+                                        class="card-subtitle mb-2 text-body-secondary"
+                                    >
+                                        {{ listing["dept"] }}
+                                    </h6>
+                                    <h6
+                                        class="card-subtitle mb-2 text-body-secondary"
+                                    >
+                                        {{ listing["country"] }}
+                                    </h6>
+                                    <h6 href="#" class="subtitle">
+                                        {{ listing["OpenW"] }}
+                                    </h6>
+                                    <h6 href="#" class="subtitle">
+                                        {{ listing["CloseW"] }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div
+                            v-for="listing2 in filteredListings.slice(
+                                halfway,
+                                roleListings.size
+                            )"
+                            class="row mt-4"
+                        >
+                            <div
+                                class="card mx-auto rounded"
+                                style="width: 25rem"
+                                @click="viewDetails(listing2['id'])"
+                            >
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {{ listing2["name"] }}
+                                    </h5>
+                                    <h6
+                                        class="card-subtitle mb-2 text-body-secondary"
+                                    >
+                                        {{ listing2["dept"] }}
+                                    </h6>
+                                    <h6
+                                        class="card-subtitle mb-2 text-body-secondary"
+                                    >
+                                        {{ listing2["country"] }}
+                                    </h6>
+                                    <h6 href="#" class="subtitle">
+                                        {{ listing2["OpenW"] }}
+                                    </h6>
+                                    <h6 href="#" class="subtitle">
+                                        {{ listing2["CloseW"] }}
+                                    </h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-6">
-                <div v-for="listing2 in roleListings.slice(halfway, roleListings.size)" class="row mt-4"> 
-                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing2['id'])">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ listing2['name'] }}</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing2['dept'] }}</h6>
-                            <h6 href="#" class="subtitle">{{ listing2['OpenW'] }}</h6>
-                            <h6 href="#" class="subtitle">{{ listing2['CloseW'] }}</h6>
-                        </div>
-                    </div>
-                </div> 
-            </div>
-
         </div>
     </div>
 </template>
 
 <style>
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.sidebar {
+    font-size: medium;
+    text-align: left;
 }
-
+/* body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+} */
 </style>
-
