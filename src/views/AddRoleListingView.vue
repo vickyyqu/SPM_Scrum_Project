@@ -91,6 +91,7 @@ export default {
 
                 roleListingService.addRoleListing(requestBody)
                     .then((response) => {
+                        window.location.href = `/rolelistings`;
                         alert("Listing successfully added!");
                         console.log(response);
                     })
@@ -144,10 +145,10 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container">
+    <div class="container" style="width: 80%">
         <div class="row">
             <div class="col">
-                <h1 class="text-start mt-5">Add Listing</h1>
+                <h2 class="text-start">Add Listing</h2>
             </div>
         </div>
         <div class="text-start">
@@ -210,7 +211,7 @@ export default {
                 </div>
             </div>
 
-            <button type="submit" @click="sendRequest" class="btn btn-warning fw-semibold">
+            <button @click="sendRequest" class="btn btn-warning fw-semibold">
                 Add Role Listing
             </button>
         </div>

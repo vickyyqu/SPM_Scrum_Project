@@ -160,38 +160,39 @@ export default {
             <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
 
-        <div class="mt-3 px-3" style="width: 40%; min-height: 50%; text-align: left;">
+        <div class="mt-3 px-3" style="min-height: 50%; text-align: left;">
             <h6 style="font-style:italic;">Skills Required:</h6>
 
             <div v-if="skillMatch_list.length == 0">
                 <button class="btn btn-warning px-2 py-1 w-100" disabled><span>There are no skills required for this role.</span></button>
             </div>
 
-            <div v-for="skill in skillMatch_list">
+            <div class="row">
+                <div v-for="skill in skillMatch_list" class="col-6 ">
 
-                <div v-if="skill.match == 100" class="mb-3">
-                    <div class="d-flex justify-content-between">
-                        <span style="max-width: 60%;">{{ skill.skill }}</span>
-                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+                    <div v-if="skill.match == 100" class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>{{ skill.skill }}</small>
+                            <small>Level {{ skill.proficiency }}</small>
+                        </div>
+                        <button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button>
                     </div>
-                    <button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button>
-                </div>
-
-                <div v-else-if="skill.match == 0" class="mb-3">
-                    <div class="d-flex justify-content-between">
-                        <span style="max-width: 60%;">{{ skill.skill }}</span>
-                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+    
+                    <div v-else-if="skill.match == 0" class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>{{ skill.skill }}</small>
+                            <small>Level {{ skill.proficiency }}</small>
+                        </div>
+                        <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this skill.</span></button>
                     </div>
-                    <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this
-                            skill.</span></button>
-                </div>
-
-                <div v-else class="mb-3">
-                    <div class="d-flex justify-content-between">
-                        <span style="max-width: 60%;">{{ skill.skill }}</span>
-                        <span style="max-width: 40%;">Level {{ skill.proficiency }}</span>
+    
+                    <div v-else class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>{{ skill.skill }}</small>
+                            <small>Level {{ skill.proficiency }}</small>
+                        </div>
+                        <button class="btn btn-warning px-2 py-1 w-100" disabled><span>{{ skill.match }}% Match</span></button>
                     </div>
-                    <button class="btn btn-warning px-2 py-1 w-100" disabled><span>{{ skill.match }}% Match</span></button>
                 </div>
             </div>
 
