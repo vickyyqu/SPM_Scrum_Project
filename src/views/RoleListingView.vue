@@ -2,10 +2,14 @@
 <script >
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
+import Navbar from '../components/Navbar.vue';
 import roleListingService from '../../services/RoleListing.js'
 import router from '../main';
 
 export default {
+    components: {
+        Navbar
+    },
     setup() {
         const roleListings = ref([])
         const route = useRoute()
@@ -38,6 +42,7 @@ export default {
 
 
 <template>
+    <Navbar />
     <div class="container-fluid" style="top: 0;right: 0;bottom: 0;left: 0;">
         <div class="row">
             <div class="col-6">

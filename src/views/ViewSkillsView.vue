@@ -1,8 +1,12 @@
 <script>
 import { ref, onMounted } from 'vue'
+import Navbar from '../components/Navbar.vue';
 import RoleSkillService from '../../services/RoleSkill.js'
 
 export default {
+  components: {
+        Navbar
+  },
   setup() {
     const roleSkills = ref([])
 
@@ -35,6 +39,7 @@ export default {
 </script>
 
 <template>
+  <Navbar />
   <div class="container-fluid" style="
           top: 0;
           right: 0;

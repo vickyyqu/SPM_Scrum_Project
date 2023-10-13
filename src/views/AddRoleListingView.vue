@@ -1,5 +1,6 @@
 <script>
 import { ref, watch, computed } from "vue";
+import Navbar from '../components/Navbar.vue';
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
 import staffService from "../../services/Staff.js";
@@ -9,6 +10,9 @@ import departmentService from "../../services/Department.js"
 import "vue-select/dist/vue-select.css";
 
 export default {
+    components: {
+        Navbar
+    },
     setup() {
         const roleListing = ref();
         const roles = ref();
@@ -139,6 +143,7 @@ export default {
 </script>
 
 <template>
+    <Navbar />
     <div class="container">
         <div class="row">
             <div class="col">
