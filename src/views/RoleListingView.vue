@@ -138,8 +138,8 @@ export default {
 <template>
     <Navbar />
     <div class="container-fluid">
-        <div class="row sidebar">
-            <div class="col-2">
+        <div class="row">
+            <div class="col-2 sidebar">
                 <div class="row">
                     <h6>Country</h6>
                     <div class="form-check" v-for="country in countries">
@@ -147,10 +147,10 @@ export default {
                             class="form-check-input"
                             type="checkbox"
                             :value="country"
-                            id="flexCheckDefault"
+                            :id="country"
                             v-model="selectedCountries"
                         />
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <label class="form-check-label" :for="country">
                             {{ country }}
                         </label>
                     </div>
@@ -162,10 +162,10 @@ export default {
                             class="form-check-input"
                             type="checkbox"
                             :value="department"
-                            id="flexCheckDefault"
+                            :id="department"
                             v-model="selectedDepartments"
                         />
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <label class="form-check-label" :for="department">
                             {{ department }}
                         </label>
                     </div>
@@ -178,10 +178,13 @@ export default {
                                 class="form-check-input"
                                 type="checkbox"
                                 :value="skills[0].skillName"
-                                id="flexCheckDefault"
+                                :id="skills[0].skillName"
                                 v-model="selectedSkills"
                             />
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label
+                                class="form-check-label"
+                                :for="skills[0].skillName"
+                            >
                                 {{ skills[0].skillName }}
                             </label>
                         </div>
@@ -190,10 +193,13 @@ export default {
                                 class="form-check-input"
                                 type="checkbox"
                                 :value="skills[1].skillName"
-                                id="flexCheckDefault"
+                                :id="skills[1].skillName"
                                 v-model="selectedSkills"
                             />
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label
+                                class="form-check-label"
+                                :for="skills[1].skillName"
+                            >
                                 {{ skills[1].skillName }}
                             </label>
                         </div>
@@ -202,16 +208,20 @@ export default {
                                 class="form-check-input"
                                 type="checkbox"
                                 :value="skills[2].skillName"
-                                id="flexCheckDefault"
+                                :id="skills[2].skillName"
                                 v-model="selectedSkills"
                             />
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label
+                                class="form-check-label"
+                                :for="skills[2].skillName"
+                            >
                                 {{ skills[2].skillName }}
                             </label>
                         </div>
                     </div>
                     <!-- Button trigger modal -->
-                    <a href=""
+                    <a
+                        href=""
                         class="underline"
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
@@ -252,12 +262,12 @@ export default {
                                             class="form-check-input"
                                             type="checkbox"
                                             :value="skill.skillName"
-                                            id="flexCheckDefault"
+                                            :id="skill.skillName"
                                             v-model="selectedSkills"
                                         />
                                         <label
                                             class="form-check-label"
-                                            for="flexCheckDefault"
+                                            :for="skill.skillName"
                                         >
                                             {{ skill.skillName }}
                                         </label>
@@ -270,7 +280,7 @@ export default {
                 <div class="row mt-3">
                     <div class="col p-0 d-grid gap-2 col-6 mx-auto w-100">
                         <button class="btn btn-danger" @click="clearFilters">
-                            Clear
+                            Clear Filters
                         </button>
                     </div>
                 </div>
@@ -280,7 +290,42 @@ export default {
             </div>
             <div class="col-10">
                 <div class="row">
-                    <div class="col-6">
+                    <div v-if="filteredListings.length > 0"
+                        class="col-6 g-3"
+                        v-for="listing in filteredListings.slice(0, halfway)"
+                    >
+                        <div
+                            class="card mx-auto rounded"
+                            style="width: 25rem"
+                            @click="viewDetails(listing['id'])"
+                        >
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ listing["name"] }}
+                                </h5>
+                                <h6
+                                    class="card-subtitle mb-2 text-body-secondary"
+                                >
+                                    {{ listing["dept"] }}
+                                </h6>
+                                <h6
+                                    class="card-subtitle mb-2 text-body-secondary"
+                                >
+                                    {{ listing["country"] }}
+                                </h6>
+                                <h6 href="#" class="subtitle">
+                                    {{ listing["OpenW"] }}
+                                </h6>
+                                <h6 href="#" class="subtitle">
+                                    {{ listing["CloseW"] }}
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="mt-5">
+                        <h3>No matching results.</h3>
+                    </div>
+                    <!-- <div class="col-6">
                         <div
                             v-for="listing in filteredListings.slice(
                                 0,
@@ -317,7 +362,6 @@ export default {
                             </div>
                         </div>
                     </div>
-
                     <div class="col-6">
                         <div
                             v-for="listing2 in filteredListings.slice(
@@ -354,7 +398,7 @@ export default {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -363,7 +407,7 @@ export default {
 
 <style>
 .sidebar {
-    font-size: medium;
+    font-size: small;
     text-align: left;
 }
 /* body {
