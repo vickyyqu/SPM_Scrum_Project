@@ -1,6 +1,7 @@
 <script>
 import { ref, watch, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import Navbar from '../components/Navbar.vue';
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
 import staffService from "../../services/Staff.js";
@@ -11,6 +12,9 @@ import countryService from "../../services/Country.js";
 import departmentService from "../../services/Department.js";
 
 export default {
+    components: {
+        Navbar
+    },
     setup() {
         const roleListing = ref();
         const roles = ref();
@@ -154,6 +158,7 @@ export default {
 </script>
 
 <template>
+    <Navbar />
         <div>
             <div v-if="roleListing">
                 <h1 class="text-start mt-5">Edit Listing</h1>

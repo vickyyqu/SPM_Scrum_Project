@@ -2,6 +2,7 @@
 <script >
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
+import Navbar from '../components/Navbar.vue';
 import roleListingService from '../../services/RoleListing.js'
 import RoleSkillService from '../../services/RoleSkill.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
@@ -10,7 +11,9 @@ import { all } from 'axios';
 import Role from '../../services/Role';
 
 export default {
-
+    components: {
+        Navbar
+    },
     data() {
         const route = useRoute()
         var role_name = route.query.RoleName
@@ -116,6 +119,7 @@ export default {
 
 
 <template>
+    <Navbar />
     <div class="container rounded py-4" style="outline: black 2px solid; min-height: 80vh;background-color: white;">
 
         <div class="row" style="width: 100%;">
