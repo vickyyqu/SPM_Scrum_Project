@@ -23,6 +23,8 @@ export default {
         const selectedDepartments = ref([]);
         const selectedSkills = ref([]);
         const filteredListings = ref([]);
+        const startD = ref();
+        const endD = ref();
 
         // retrieve staff id
         console.log(sessionStorage.getItem("staffId"));
@@ -51,6 +53,8 @@ export default {
             selectedCountries.value = [];
             selectedDepartments.value = [];
             selectedSkills.value = [];
+            startD.value = null;
+            endD.value = null;
             filteredListings.value = roleListings.value;
         };
 
@@ -105,10 +109,23 @@ export default {
                         return null;
                     })
                 );
+                
 
                 // Filter out listings with errors during the API request
                 filteredListings.value = filteredListings.value.filter(
                     (listing) => listing !== null
+                );
+            }
+            if(startD.value){
+                    const start = new Date(startD.value).toISOString().slice(0, 10);
+                    filteredListings.value = filteredListings.value.filter((obj) =>
+                    new Date(obj.OpenW).toISOString().slice(0, 10) >= start
+                );
+            }
+            if(endD.value){
+                    const end = new Date(endD.value).toISOString().slice(0, 10);
+                    filteredListings.value = filteredListings.value.filter((obj) =>
+                    new Date(obj.CloseW).toISOString().slice(0, 10) <= end
                 );
             }
         };
@@ -116,6 +133,8 @@ export default {
         watch(selectedCountries, filterListings);
         watch(selectedDepartments, filterListings);
         watch(selectedSkills, filterListings);
+        watch(startD, filterListings);
+        watch(endD, filterListings);
 
         return {
             roleListings,
@@ -130,6 +149,8 @@ export default {
             filteredListings,
             skills,
             selectedSkills,
+            startD,
+            endD,
         };
     },
 };
@@ -141,6 +162,16 @@ export default {
         <div class="row">
             <div class="col-2 sidebar">
                 <div class="row">
+                    <label for="startD" class="form-check-label fw-semibold"><h6>Open Window:</h6></label>
+                    <input type="date" class="form-control" id="startD" name="startD" v-model="startD">
+                </div>
+                {{ startD }}
+                <div class="row mt-3">
+                    <label for="endD" class="form-check-label fw-semibold"><h6>Close Window:</h6></label>
+                    <input type="date" class="form-control" id="endD" name="endD" v-model="endD">
+                </div>
+                {{ endD }}
+                <div class="row mt-3">
                     <h6>Country</h6>
                     <div class="form-check" v-for="country in countries">
                         <input
@@ -292,7 +323,7 @@ export default {
                 <div class="row">
                     <div v-if="filteredListings.length > 0"
                         class="col-6 g-3"
-                        v-for="listing in filteredListings.slice(0, halfway)"
+                        v-for="listing in filteredListings"
                     >
                         <div
                             class="card mx-auto rounded"
@@ -325,80 +356,6 @@ export default {
                     <div v-else class="mt-5">
                         <h3>No matching results.</h3>
                     </div>
-                    <!-- <div class="col-6">
-                        <div
-                            v-for="listing in filteredListings.slice(
-                                0,
-                                halfway
-                            )"
-                            class="row mt-4"
-                        >
-                            <div
-                                class="card mx-auto rounded"
-                                style="width: 25rem"
-                                @click="viewDetails(listing['id'])"
-                            >
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        {{ listing["name"] }}
-                                    </h5>
-                                    <h6
-                                        class="card-subtitle mb-2 text-body-secondary"
-                                    >
-                                        {{ listing["dept"] }}
-                                    </h6>
-                                    <h6
-                                        class="card-subtitle mb-2 text-body-secondary"
-                                    >
-                                        {{ listing["country"] }}
-                                    </h6>
-                                    <h6 href="#" class="subtitle">
-                                        {{ listing["OpenW"] }}
-                                    </h6>
-                                    <h6 href="#" class="subtitle">
-                                        {{ listing["CloseW"] }}
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div
-                            v-for="listing2 in filteredListings.slice(
-                                halfway,
-                                roleListings.size
-                            )"
-                            class="row mt-4"
-                        >
-                            <div
-                                class="card mx-auto rounded"
-                                style="width: 25rem"
-                                @click="viewDetails(listing2['id'])"
-                            >
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        {{ listing2["name"] }}
-                                    </h5>
-                                    <h6
-                                        class="card-subtitle mb-2 text-body-secondary"
-                                    >
-                                        {{ listing2["dept"] }}
-                                    </h6>
-                                    <h6
-                                        class="card-subtitle mb-2 text-body-secondary"
-                                    >
-                                        {{ listing2["country"] }}
-                                    </h6>
-                                    <h6 href="#" class="subtitle">
-                                        {{ listing2["OpenW"] }}
-                                    </h6>
-                                    <h6 href="#" class="subtitle">
-                                        {{ listing2["CloseW"] }}
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -410,11 +367,4 @@ export default {
     font-size: small;
     text-align: left;
 }
-/* body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-} */
 </style>
