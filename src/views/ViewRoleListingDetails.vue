@@ -9,6 +9,7 @@ import StaffSkillsService from '../../services/StaffSkill.js'
 import RoleService from '../../services/Role'
 import { all } from 'axios';
 import Role from '../../services/Role';
+import RoleListing from '../../services/RoleListing.js';
 
 export default {
     components: {
@@ -16,16 +17,19 @@ export default {
     },
     data() {
         const route = useRoute()
-        var role_name = route.query.RoleName
+        var listingId = route.query.listingId
+        var role_name = ""
         var role_desc = ""
+        var role = {}
         return {
+            role,
+            role_name,
             role_desc,
             route,
-            role_name,
-            listingId: 1,
+            listingId,
             staffId: 1,
             skillMatch_list: [],
-            overallMatch: 0.00
+            overallMatch: 0.00,
         }
     },
     mounted() {
@@ -35,8 +39,19 @@ export default {
     methods: {
         async getRoleDetails(){
             try {
-                const response = await RoleService.getRoleDesc(this.role_name)
-                this.role_desc = response.data['Role_Desc']
+                console.log(this.listingId)
+                const response = await roleListingService.getRoleListingById(this.listingId)
+                // console.log(response.data[0])
+                // console.log(response.data[0]['name'])
+                this.role_name = response.data[0]['name']
+                this.role = response.data[0]
+
+                const response2 = await RoleService.getRoleDesc(this.role_name)
+                this.role_desc = response2.data['Role_Desc']
+                // console.log(this.role)
+                // console.log(this.role_name)
+                // const response = await RoleService.getRoleDesc(this.role_name)
+                // this.role_desc = response.data['Role_Desc']
             }
             catch(error){
                 console.log(error)

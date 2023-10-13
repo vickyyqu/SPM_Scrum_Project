@@ -24,8 +24,8 @@ export default {
             halfway.value = Math.ceil(roleListings.value.length / 2)
             console.log(halfway)
         })
-        function viewDetails(roleName){
-            router.push({path:"/rolelistingdetails", query:{ RoleName: roleName}})
+        function viewDetails(id){
+            router.push({path:"/rolelistingdetails", query:{ listingId: id}})
         }
 
 
@@ -43,11 +43,15 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container-fluid" style="top: 0;right: 0;bottom: 0;left: 0;">
+    <div class="container-fluid mt-5 pt-5" style="position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+ left: 0;background-color: lightgray; outline: black 1px solid;">
         <div class="row">
             <div class="col-6">
                 <div v-for="listing in roleListings.slice(0, halfway)" class="row mt-4"> 
-                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing['name'])">
+                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing['id'])">
                         <div class="card-body">
                             <h5 class="card-title">{{listing['name']}}</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing['dept'] }}</h6>
@@ -60,7 +64,7 @@ export default {
 
             <div class="col-6">
                 <div v-for="listing2 in roleListings.slice(halfway, roleListings.size)" class="row mt-4"> 
-                    <div class="card mx-auto rounded" style="width: 25rem;">
+                    <div class="card mx-auto rounded" style="width: 25rem;" @click="viewDetails(listing2['id'])">
                         <div class="card-body">
                             <h5 class="card-title">{{ listing2['name'] }}</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ listing2['dept'] }}</h6>
