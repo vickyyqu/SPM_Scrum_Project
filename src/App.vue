@@ -4,9 +4,7 @@
 
 <template>
   <Navbar />
-  <div class="m-10">
-    <RouterView />
-  </div>
+  <RouterView />
 </template>
 
 <style scoped>

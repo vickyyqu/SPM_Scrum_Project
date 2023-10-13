@@ -1,6 +1,5 @@
 
 <script >
-import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
@@ -59,9 +58,9 @@ export default {
             }
         },
         async getOverallMatch() {
-            // var roleSkills = await this.getRoleSkill()
+            var roleSkills = await this.getRoleSkill()
             // var staffSkills = await this.getStaffSkill()
-            var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
+            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
             var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
             var allSkills = []
             var count = 0
@@ -104,6 +103,9 @@ export default {
                 this.overallMatch = 100
             }
             this.overallMatch = this.overallMatch.toFixed(0)
+        },
+        goBack(){
+            this.$router.push("/rolelistings")
         }
     }
 
@@ -123,7 +125,7 @@ export default {
                     <path
                         d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
                 </svg>
-                <button class="btn btn-light">Back</button>
+                <button class="btn btn-light" @click="goBack()">Back</button>
             </div>
             <div class="col-8"></div>
             <div class="col align-items-center justify-content-end" style="display: flex;">

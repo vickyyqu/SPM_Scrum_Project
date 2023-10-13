@@ -1,6 +1,5 @@
 
 <script >
-import Navbar from '../components/navbar.vue';
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import roleListingService from '../../services/RoleListing.js'
@@ -11,6 +10,9 @@ export default {
         const roleListings = ref([])
         const route = useRoute()
         var halfway = ref(0)
+
+        // retrieve staff id
+        console.log(sessionStorage.getItem("staffId"))
 
         roleListingService.getAllRoleListings().then(response => {
             roleListings.value = response.data
@@ -28,10 +30,7 @@ export default {
             viewDetails,
             halfway
         }
-
-
     },
-
 
 };
 
@@ -39,12 +38,7 @@ export default {
 
 
 <template>
-    <Navbar />
-    <div class="container-fluid mt-5 pt-5" style="position: absolute;
- top: 0;
- right: 0;
- bottom: 0;
- left: 0;background-color: lightgray; outline: black 1px solid;">
+    <div class="container-fluid" style="top: 0;right: 0;bottom: 0;left: 0;">
         <div class="row">
             <div class="col-6">
                 <div v-for="listing in roleListings.slice(0, halfway)" class="row mt-4"> 

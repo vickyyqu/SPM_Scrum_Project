@@ -35,26 +35,24 @@ export default {
 </script>
 
 <template>
-  <Navbar />
-  <div class="container-fluid mt-5 pt-5" style="position: absolute;
-              top: 0;
-              right: 0;
-              bottom: 0;
-              left: 0;background-color: lightgray; outline: black 1px solid;
-              text-align: left;">
+  <div class="container-fluid" style="
+          top: 0;
+          right: 0;
+          bottom: 0;
+          text-align: left;">
 
     <div class="list-group mx-auto my-2" style="width: 80%">
-      <h1>
+      <h3>
         List of Skills Available
-      </h1>
+      </h3>
       <h6>
         note: this is a feature that should be available to only HR, managers and directors <br>
         - to delete this note
       </h6>
     </div>
 
-    <div v-if="roleSkills.length > 0">
-      <ul class="list-group mx-auto my-2" style="width: 80%" v-for="(skill, index) in roleSkills" :key="index">
+    <div v-if="roleSkills.length > 0" >
+      <ul class="list-group mx-auto py-2" style="width: 80%" v-for="(skill, index) in roleSkills" :key="index">
         <li class="list-group-item" >
           <h6 class="my-auto rounded-lg">{{ skill }}</h6>
         </li>

@@ -1,5 +1,4 @@
 <script>
-import Navbar from "../components/navbar.vue";
 import { ref, watch, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import roleListingService from "../../services/RoleListing.js";

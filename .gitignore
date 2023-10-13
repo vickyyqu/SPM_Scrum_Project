@@ -27,3 +27,5 @@ dist-ssr
 # py cache
 __pycache__/
 *.py
+
+.env

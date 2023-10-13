@@ -32,9 +32,23 @@
                 <a class="nav-link" href="/viewskills">View Skills (HR)</a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="/" @click="logOut()">Log Out</a>
+                </li>
+
             </ul>
             </div>
         </div>
         </div>
     </nav>
 </template>
+<script>
+export default {
+    methods: {
+        logOut(){
+            sessionStorage.clear()
+            window.location.href = `/`;
+        }
+    }
+}
+</script>

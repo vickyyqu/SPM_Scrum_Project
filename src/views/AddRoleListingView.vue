@@ -1,5 +1,4 @@
 <script>
-import Navbar from "../components/navbar.vue";
 import { ref, watch, computed } from "vue";
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
