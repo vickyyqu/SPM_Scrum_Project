@@ -68,6 +68,7 @@ export default {
         },
         async getStaffSkill() {
             try {
+                this.staffId = sessionStorage.getItem("staffId")
                 const response = await StaffSkillsService.getStaffSkills(this.staffId)
                 console.log(response.data)
                 return response.data
@@ -77,9 +78,17 @@ export default {
         },
         async getOverallMatch() {
             var roleSkills = await this.getRoleSkill()
-            // var staffSkills = await this.getStaffSkill()
+            var staffSkills = await this.getStaffSkill()
             // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
-            var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
+            // var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
+            
+            if (staffSkills == null){
+                staffSkills = []
+            }
+            if (roleSkills == null){
+                roleSkills = []
+            }
+
             var allSkills = []
             var count = 0
             this.overallMatch = 0
@@ -91,9 +100,14 @@ export default {
                 for (let j = 0; j < staffSkills.length; j++) {
                     var sSkill = staffSkills[j].skill.toUpperCase()
 
-                    if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
+                    if (rSkill == sSkill && !allSkills.includes(rSkill)) {
+                    // if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
                         allSkills.push(rSkill)
-                        var match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
+                        var match = 100
+                        
+                        if (roleSkills[i].proficiency > 0){
+                            match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
+                        }
                         var out = {
                             "skill": roleSkills[i].skill,
                             "proficiency": roleSkills[i].proficiency,
