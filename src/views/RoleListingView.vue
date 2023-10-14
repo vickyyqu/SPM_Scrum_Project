@@ -25,6 +25,8 @@ export default {
         const filteredListings = ref([]);
         const startD = ref();
         const endD = ref();
+        const filteredSkills = ref();
+        const searchedSkill = ref();
 
         // retrieve staff id
         console.log(sessionStorage.getItem("staffId"));
@@ -45,6 +47,7 @@ export default {
 
         skillService.getAllSkills().then((response) => {
             skills.value = response.data;
+            filteredSkills.value = skills.value;
             console.log(skills.value);
         });
 
@@ -131,11 +134,22 @@ export default {
             }
         };
 
+        const filterSkillList = () => {
+
+            filteredSkills.value = skills.value;
+            filteredSkills.value = filteredSkills.value.filter((item) =>
+                    item.skillName
+                        .toLowerCase()
+                        .includes(searchedSkill.value.toLowerCase())
+            );
+        };
+
         watch(selectedCountries, filterListings);
         watch(selectedDepartments, filterListings);
         watch(selectedSkills, filterListings);
         watch(startD, filterListings);
         watch(endD, filterListings);
+        watch(searchedSkill, filterSkillList);
 
         return {
             roleListings,
@@ -152,6 +166,8 @@ export default {
             selectedSkills,
             startD,
             endD,
+            filteredSkills,
+            searchedSkill,
         };
     },
 };
@@ -306,9 +322,20 @@ export default {
                                     ></button>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="input-group mb-3">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Search skills..."
+                                            aria-label="Username"
+                                            aria-describedby="basic-addon1"
+                                            v-model="searchedSkill"
+                                        />
+                                    </div>
                                     <div
+                                        v-if="filteredSkills.length > 0"
                                         class="form-check"
-                                        v-for="skill in skills"
+                                        v-for="skill in filteredSkills"
                                     >
                                         <input
                                             class="form-check-input"
@@ -323,6 +350,9 @@ export default {
                                         >
                                             {{ skill.skillName }}
                                         </label>
+                                    </div>
+                                    <div v-else>
+                                        <h6>No matching results.</h6>
                                     </div>
                                 </div>
                             </div>
