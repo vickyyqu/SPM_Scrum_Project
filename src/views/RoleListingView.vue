@@ -181,7 +181,7 @@ export default {
     <Navbar />
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2 sidebar">
+            <div class="col-12 col-md-2 sidebar">
                 <div class="row">
                     <label for="startD" class="form-check-label fw-semibold"
                         ><h6>Open Window</h6></label
@@ -372,16 +372,15 @@ export default {
                 {{ selectedDepartments }}
                 {{ selectedSkills }} -->
             </div>
-            <div class="col-10">
+            <div class="col-12 col-md-10 px-md-5">
                 <div class="row" v-if="!isLoading">
                     <div
                         v-if="filteredListings.length > 0"
-                        class="col-6 g-3"
+                        class="col-12 col-md-6 g-3"
                         v-for="listing in filteredListings"
                     >
                         <div
                             class="card mx-auto rounded"
-                            style="width: 25rem"
                             @click="viewDetails(listing['id'])"
                         >
                             <div class="card-body">
