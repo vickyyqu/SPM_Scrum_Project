@@ -27,6 +27,7 @@ export default {
         const endD = ref();
         const filteredSkills = ref();
         const searchedSkill = ref();
+        const isLoading = ref(false);
 
         // retrieve staff id
         console.log(sessionStorage.getItem("staffId"));
@@ -62,6 +63,7 @@ export default {
         };
 
         const filterListings = async () => {
+            isLoading.value = true;
             filteredListings.value = roleListings.value;
             console.log(filteredListings.value);
             if (
@@ -132,15 +134,16 @@ export default {
                         new Date(obj.CloseW).toISOString().slice(0, 10) <= end
                 );
             }
+
+            isLoading.value = false;
         };
 
         const filterSkillList = () => {
-
             filteredSkills.value = skills.value;
             filteredSkills.value = filteredSkills.value.filter((item) =>
-                    item.skillName
-                        .toLowerCase()
-                        .includes(searchedSkill.value.toLowerCase())
+                item.skillName
+                    .toLowerCase()
+                    .includes(searchedSkill.value.toLowerCase())
             );
         };
 
@@ -168,6 +171,7 @@ export default {
             endD,
             filteredSkills,
             searchedSkill,
+            isLoading,
         };
     },
 };
@@ -190,7 +194,6 @@ export default {
                         v-model="startD"
                     />
                 </div>
-                {{ startD }}
                 <div class="row mt-3">
                     <label for="endD" class="form-check-label fw-semibold"
                         ><h6>Close Window</h6></label
@@ -203,7 +206,6 @@ export default {
                         v-model="endD"
                     />
                 </div>
-                {{ endD }}
                 <div class="row mt-3">
                     <h6>Country</h6>
                     <div class="form-check" v-for="country in countries">
@@ -371,7 +373,7 @@ export default {
                 {{ selectedSkills }} -->
             </div>
             <div class="col-10">
-                <div class="row">
+                <div class="row" v-if="!isLoading">
                     <div
                         v-if="filteredListings.length > 0"
                         class="col-6 g-3"
@@ -405,9 +407,12 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div v-else class="mt-5">
+                    <div v-else class="container mt-5">
                         <h3>No matching results.</h3>
                     </div>
+                </div>
+                <div v-else class="container mt-5">
+                    <h3>Filtering...</h3>
                 </div>
             </div>
         </div>
