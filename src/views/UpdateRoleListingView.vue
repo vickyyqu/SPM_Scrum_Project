@@ -1,6 +1,7 @@
 <script>
 import { ref, watch, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import router from '../main';
 import Navbar from '../components/Navbar.vue';
 import roleListingService from "../../services/RoleListing.js";
 import roleService from "../../services/Role.js";
@@ -106,6 +107,7 @@ export default {
                 .then((response) => {
                     console.log("Response:", response.data);
                     alert("Listing successfully updated!");
+                    router.push({path:"/rolelistingdetails", query:{ listingId: roleListing.value.id}})
                 })
                 .catch((error) => {
                     console.error("Error:", error);
@@ -159,9 +161,9 @@ export default {
 
 <template>
     <Navbar />
-        <div>
+        <div class="container" style="width: 80%">
             <div v-if="roleListing">
-                <h1 class="text-start mt-5">Edit Listing</h1>
+                <h2 class="text-start">Edit Listing</h2>
 
                 <div class="text-start">
                     <div class="mb-3">
