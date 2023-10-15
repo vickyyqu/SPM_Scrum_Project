@@ -179,7 +179,7 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container-fluid">
+    <div class="container-fluid" style="width: 80%;">
         <div class="row">
             <div class="col-12 col-md-2 sidebar">
                 <div class="row">
