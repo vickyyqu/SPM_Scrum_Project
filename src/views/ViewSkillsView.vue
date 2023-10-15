@@ -46,14 +46,10 @@ export default {
           bottom: 0;
           text-align: left;">
 
-    <div class="list-group mx-auto my-2" style="width: 80%">
+    <div class="list-group mx-auto" style="width: 80%">
       <h2>
         List of Skills Available
       </h2>
-      <h6>
-        note: this is a feature that should be available to only HR, managers and directors <br>
-        - to delete this note
-      </h6>
     </div>
 
     <div v-if="roleSkills.length > 0" >

@@ -43,11 +43,14 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container-fluid mt-5 pt-5" style="position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
- left: 0;background-color: lightgray; outline: black 1px solid;">
+    <div class="container-fluid" style="
+        top: 0;
+        right: 0;
+        bottom: 0;">
+        
+        <!-- <h2 class="text-start">
+            All Open Role Listings
+        </h2> -->
         <div class="row">
             <div class="col-6">
                 <div v-for="listing in roleListings.slice(0, halfway)" class="row mt-4"> 
@@ -79,7 +82,7 @@ export default {
     </div>
 </template>
 
-<style>
+<!-- <style>
 
 body {
   margin: 0;
@@ -89,5 +92,5 @@ body {
   min-height: 100vh;
 }
 
-</style>
+</style> -->
 

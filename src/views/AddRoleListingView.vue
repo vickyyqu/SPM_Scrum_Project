@@ -145,7 +145,7 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container" style="width: 80%">
+    <div class="container-fluid" style="width: 80%">
         <div class="row">
             <div class="col">
                 <h2 class="text-start">Add Listing</h2>
