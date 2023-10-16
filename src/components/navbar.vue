@@ -20,21 +20,21 @@
                 <a class="nav-link" href="/rolelistings">Role Listings</a>
                 </li>
 
-                <li class="nav-item" v-if="getRole().length>0">
-                <a class="nav-link" href="#">My Skills Profile</a>
+                <li class="nav-item" v-if="getRole()=='HR'">
+                    <a class="nav-link" href="/addrolelisting">Add Role Listing</a>
                 </li>
+
+                <li class="nav-item" v-if="getRole()=='HR'">
+                    <a class="nav-link" href="/viewskills">View All Skills</a>
+                </li>
+
+                <!-- <li class="nav-item" v-if="getRole()=='Staff'">
+                <a class="nav-link" href="#">My Skills Profile</a>
+                </li> -->
 
                 <li class="nav-item" v-if="getRole().length>0">
                 <a class="nav-link" href="#">My Profile</a>
                 </li>
-
-                <li class="nav-item" v-if="getRole().length>0">
-                <a class="nav-link" href="/viewskills">View Skills (HR)</a>
-                </li>
-
-                <li class="nav-item" v-if="getRole().length>0">
-                    <a class="nav-link" href="/addrolelisting">Add Role Listing (HR)</a>
-                    </li>
 
                 <li class="nav-item" v-if="getRole().length>0">
                     <a class="nav-link" href="/" @click="logOut()">Log Out</a>
