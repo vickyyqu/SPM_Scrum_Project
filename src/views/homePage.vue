@@ -1,5 +1,6 @@
 <script>
 import Navbar from '../components/Navbar.vue';
+import StaffsService from '../../services/Staff';
 export default {
     components: {
         Navbar
@@ -11,37 +12,55 @@ export default {
             roles: ["Staff", "HR", "Manager/Director"],
             myRole: "",
             usersList: {
-                "HR": [
-                    {
-                        "userId" : "140002",
-                        "pwd": "smu123"
-                    }, 
-                    {
-                        "userId" : "140003",
-                        "pwd": "smu123"
-                    }
-                ], 
-                "Manager/Director": [
-                    {
-                        "userId" : "130001",
-                        "pwd": "smu123"
-                    }
-                ], 
-                "Staff": [
-                    {
-                        "userId" : "140001",
-                        "pwd": "smu123"
-                    },
-                    {
-                        "userId" : "140008",
-                        "pwd": "smu123"
-                    }
-                ]
+                "HR": {}, 
+                "Manager/Director": {}, 
+                "Staff": {}
             },
             errMsg: ""
         }
     },
+    mounted() {
+        this.getAllStaff()
+    },
     methods: {
+        async getAllStaff(){
+            try { 
+                const response = await StaffsService.getAllStaffs()
+                var allStaff = response.data
+                console.log(allStaff)
+
+                this.usersList =  {
+                    "HR": {}, 
+                    "Manager/Director": {}, 
+                    "Staff": {}
+                }
+
+                for (let i=0; i<allStaff.length; i++){
+                    if (allStaff[i].staffRole == 1) { // Manager or Director role 
+                        var staff = allStaff[i].staffID
+
+                        if (!this.usersList["Manager/Director"].hasOwnProperty(staff)){
+                            this.usersList["Manager/Director"][staff] = "smu123"
+                        }
+                    } else if (allStaff[i].staffRole == 3) { // Staff role 
+                        var staff = allStaff[i].staffID
+
+                        if (!this.usersList["HR"].hasOwnProperty(staff)){
+                            this.usersList["HR"][staff] = "smu123"
+                        }
+                    } else { // HR role 
+                        var staff = allStaff[i].staffID
+
+                        if (!this.usersList["Staff"].hasOwnProperty(staff)){
+                            this.usersList["Staff"][staff] = "smu123"
+                        }
+                    }
+                }
+            }
+            catch(error){
+                console.log(error)
+            }
+        },
         validateUser(){
             console.log(this.staffId)
             console.log(this.pwd)
@@ -52,21 +71,19 @@ export default {
                 var userExist = false
                 var checkUser = this.usersList[this.myRole]
 
-                for (let i=0; i<checkUser.length; i++){
-                    if (checkUser[i]["userId"]==this.staffId && checkUser[i]["pwd"]==this.pwd) {
-                        console.log("Login successful!")
-                        userExist = true
+                if (checkUser.hasOwnProperty(this.staffId) && checkUser[this.staffId]==this.pwd) {
+                    console.log("Login successful!")
+                    userExist = true
 
-                        // set staff id
-                        sessionStorage.setItem("staffId", this.staffId)
-                        sessionStorage.setItem("myRole", this.myRole)
-                        this.$router.push("/rolelistings")
+                    // set staff id
+                    sessionStorage.setItem("staffId", this.staffId)
+                    sessionStorage.setItem("myRole", this.myRole)
+                    this.$router.push("/rolelistings")
 
-                    } else if (checkUser[i]["userId"]==this.staffId && checkUser[i]["pwd"]!=this.pwd){
-                        userExist = true
-                        this.errMsg = "Password is incorrect."
-                        this.pwd = ""
-                    }
+                } else if (checkUser.hasOwnProperty(this.staffId) && checkUser[this.staffId]!=this.pwd){
+                    userExist = true
+                    this.errMsg = "Password is incorrect."
+                    this.pwd = ""
                 }
 
                 if (!userExist){
@@ -126,11 +143,11 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <template v-for="role in roles">
-                    <tr v-for="each in usersList[role]">
-                        <td>{{ role }}</td>
-                        <td>{{each['userId']}}</td>
-                        <td>{{each['pwd']}}</td>
+                <template v-if="myRole.length>0">
+                    <tr v-for="(value, key) in usersList[myRole]">
+                        <td>{{ myRole }}</td>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
                     </tr>
                 </template>
             </tbody>
