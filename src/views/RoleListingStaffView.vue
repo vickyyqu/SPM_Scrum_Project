@@ -1,4 +1,10 @@
+
 <script>
+
+// note for the team: 
+// i have copy pasted this from the original RoleListingStaffView.vue and made no change at all on this page
+// meanwhile, im editing the (original) rolelistingview.vue for the edit button
+
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import Navbar from "../components/navbar.vue";
@@ -12,136 +18,6 @@ export default {
     components: {
         Navbar,
     },
-    
-    data() {
-        const route = useRoute()
-        var listingId = route.query.listingId
-        var role_name = ""
-        var role_desc = ""
-        var role = {}
-        return {
-            role,
-            role_name,
-            role_desc,
-            route,
-            listingId,
-            staffId: 1,
-            skillMatch_list: [],
-            overallMatch: 0.00,
-            myRole: ""
-        }
-    },
-    mounted() {
-        this.getOverallMatch()
-        this.getRoleDetails()
-        this.myRole = sessionStorage.getItem("myRole")
-    },
-    methods: {
-        async getRoleDetails(){
-            try {
-                console.log(this.listingId)
-                const response = await roleListingService.getRoleListingById(this.listingId)
-                // console.log(response.data[0])
-                // console.log(response.data[0]['name'])
-                this.role_name = response.data[0]['name']
-                this.role = response.data[0]
-
-                const response2 = await RoleService.getRoleDesc(this.role_name)
-                this.role_desc = response2.data['Role_Desc']
-                // console.log(this.role)
-                // console.log(this.role_name)
-                // const response = await RoleService.getRoleDesc(this.role_name)
-                // this.role_desc = response.data['Role_Desc']
-            }
-            catch(error){
-                console.log(error)
-            }
-        },
-        async getRoleSkill() {
-            try {
-                const response = await RoleSkillService.getRoleSkills(this.listingId)
-                console.log(response.data)
-                return response.data
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getStaffSkill() {
-            try {
-                this.staffId = sessionStorage.getItem("staffId")
-                const response = await StaffSkillsService.getStaffSkills(this.staffId)
-                console.log(response.data)
-                return response.data
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getOverallMatch() {
-            var roleSkills = await this.getRoleSkill()
-            var staffSkills = await this.getStaffSkill()
-            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
-            // var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
-            
-            if (staffSkills == null){
-                staffSkills = []
-            }
-            if (roleSkills == null){
-                roleSkills = []
-            }
-
-            var allSkills = []
-            var count = 0
-            this.overallMatch = 0
-            this.skillMatch_list = []
-
-            for (let i = 0; i < roleSkills.length; i++) {
-                var rSkill = roleSkills[i].skill.toUpperCase()
-
-                for (let j = 0; j < staffSkills.length; j++) {
-                    var sSkill = staffSkills[j].skill.toUpperCase()
-
-                    if (rSkill == sSkill && !allSkills.includes(rSkill)) {
-                    // if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
-                        allSkills.push(rSkill)
-                        var match = 100
-
-                        if (roleSkills[i].proficiency > 0){
-                            match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
-                        }
-                        var out = {
-                            "skill": roleSkills[i].skill,
-                            "proficiency": roleSkills[i].proficiency,
-                            "match": match.toFixed(0)
-                        }
-                        this.skillMatch_list.push(out)
-                        this.overallMatch += match
-                        count ++
-                    }
-                }
-                if (!allSkills.includes(rSkill)) {
-                    allSkills.push(rSkill)
-                    var out = {
-                        "skill": roleSkills[i].skill,
-                        "proficiency": roleSkills[i].proficiency,
-                        "match": 0
-                    }
-                    this.skillMatch_list.push(out)
-                    count ++
-                }
-            }
-            if (count > 0){
-                this.overallMatch = this.overallMatch/count
-            } else if (roleSkills.length  == 0){
-                this.overallMatch = 100
-            }
-            this.overallMatch = this.overallMatch.toFixed(0)
-        },
-        editListing(id){
-            this.$router.push("/updaterolelisting/" + id)
-        }
-        
-    },
-
     setup() {
         const roleListings = ref([]);
         const route = useRoute();
@@ -174,7 +50,7 @@ export default {
                 path: "/rolelistingdetails",
                 query: { listingId: id },
             });
-        };
+        }
 
         skillService.getAllSkills().then((response) => {
             skills.value = response.data;
@@ -509,11 +385,11 @@ export default {
                         class="col-12 col-md-6 g-3"
                         v-for="listing in filteredListings"
                     >
-                        <div class="card mx-auto rounded">
-                            <div 
-                                class="card-body" 
-                                @click="viewDetails(listing['id'])" 
-                            >
+                        <div
+                            class="card mx-auto rounded"
+                            @click="viewDetails(listing['id'])"
+                        >
+                            <div class="card-body">
                                 <h5 class="card-title">
                                     {{ listing["name"] }}
                                 </h5>
@@ -534,11 +410,6 @@ export default {
                                     {{ listing["CloseW"] }}
                                 </h6>
                             </div>
-
-                            <!-- edit button -->
-                            <button class="btn btn-light" @click="editListing(listing['id'])">Edit</button>
-                            <!-- edit button -->
-
                         </div>
                     </div>
                     <div v-else class="container mt-5">

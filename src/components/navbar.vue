@@ -16,8 +16,12 @@
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
 
-                <li class="nav-item" v-if="getRole().length>0">
+                <li class="nav-item" v-if="getRole()=='HR'">
                 <a class="nav-link" href="/rolelistings">Role Listings</a>
+                </li>
+
+                <li class="nav-item" v-if="getRole()=='Staff'">
+                <a class="nav-link" href="/rolelistingsstaff">Role Listings</a>
                 </li>
 
                 <li class="nav-item" v-if="getRole()=='HR'">

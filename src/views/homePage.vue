@@ -1,5 +1,5 @@
 <script>
-import Navbar from '../components/Navbar.vue';
+import Navbar from '../components/navbar.vue';
 import StaffsService from '../../services/Staff';
 export default {
     components: {
@@ -78,7 +78,12 @@ export default {
                     // set staff id
                     sessionStorage.setItem("staffId", this.staffId)
                     sessionStorage.setItem("myRole", this.myRole)
-                    this.$router.push("/rolelistings")
+                    if (this.myRole == "Staff"){
+                        this.$router.push("/rolelistingsstaff")
+                    }
+                    if (this.myRole == "HR"){
+                        this.$router.push("/rolelistings")
+                    }
 
                 } else if (checkUser.hasOwnProperty(this.staffId) && checkUser[this.staffId]!=this.pwd){
                     userExist = true
