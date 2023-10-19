@@ -382,8 +382,9 @@ export default {
                         <div
                             class="card mx-auto rounded"
                             @click="viewDetails(listing['id'])"
+                            style="cursor: pointer;"
                         >
-                            <div class="card-body">
+                            <div class="card-body" >
                                 <h5 class="card-title">
                                     {{ listing["name"] }}
                                 </h5>
@@ -397,11 +398,11 @@ export default {
                                 >
                                     {{ listing["country"] }}
                                 </h6>
+                                <small href="#" class="subtitle" style="font-size: 10px;">
+                                    {{ "Open From : " + listing["OpenW"].split(" ")[1] + " " + listing["OpenW"].split(" ")[2]+ " " + listing["OpenW"].split(" ")[3]  + " to " + listing["CloseW"].split(" ")[1] + " " + listing["CloseW"].split(" ")[2]+ " " + listing["CloseW"].split(" ")[3] }}
+                                </small>
                                 <h6 href="#" class="subtitle">
-                                    {{ listing["OpenW"] }}
-                                </h6>
-                                <h6 href="#" class="subtitle">
-                                    {{ listing["CloseW"] }}
+                                   
                                 </h6>
                             </div>
                         </div>

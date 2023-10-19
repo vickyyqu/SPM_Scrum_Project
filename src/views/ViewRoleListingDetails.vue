@@ -22,8 +22,12 @@ export default {
         var role_name = ""
         var role_desc = ""
         var role = {}
+        var role_country = ""
+        var role_dept = ""
         return {
             role,
+            role_country,
+            role_dept,
             role_name,
             role_desc,
             route,
@@ -47,6 +51,8 @@ export default {
                 // console.log(response.data[0])
                 // console.log(response.data[0]['name'])
                 this.role_name = response.data[0]['name']
+                this.role_country = response.data[0]['country']
+                this.role_dept = response.data[0]['dept']
                 this.role = response.data[0]
 
                 const response2 = await RoleService.getRoleDesc(this.role_name)
@@ -159,8 +165,8 @@ export default {
 
         <div class="row" style="width: 100%;">
             <div class="col justify-content-start align-items-center" style="display: flex;">
-                <svg class="ms-4 me-3" style="fill: black; align-items: left;" xmlns="http://www.w3.org/2000/svg"
-                    height="1.5em" viewBox="0 0 448 512">
+                <svg  class="ms-4 me-3" style="fill: black; align-items: left;" xmlns="http://www.w3.org/2000/svg"
+                    height="1.5em" viewBox="0 0 448 512" @click="goBack()">
                     <path
                         d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
                 </svg>
@@ -181,6 +187,10 @@ export default {
         <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{role_name}}
             <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
+        <br/>
+
+        <p class="px-3" style="text-align: left;"><span style="font-weight: bold;">Department</span> : {{ role_dept }} <span class="ms-3" style="font-weight: bold;">Country</span> : {{ role_country }} </p>
+        <br>
 
         <div class="mt-3 px-3" style="min-height: 50%; text-align: left;">
             <h6 style="font-style:italic;">Skills Required:</h6>
@@ -221,7 +231,7 @@ export default {
         </div>
 
         <div class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
-            <h6 style="font-style:italic;">Role Description:</h6>
+            <h6 style="font-style:italic; font-weight: bold;">Role Description:</h6>
             <p>{{ role_desc }}</p>
         </div>
 
