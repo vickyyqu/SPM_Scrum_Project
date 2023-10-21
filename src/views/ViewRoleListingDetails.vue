@@ -2,7 +2,7 @@
 <script >
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
-import Navbar from '../components/Navbar.vue';
+import Navbar from '../components/navbar.vue';
 import roleListingService from '../../services/RoleListing.js'
 import RoleSkillService from '../../services/RoleSkill.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
@@ -146,7 +146,12 @@ export default {
             this.overallMatch = this.overallMatch.toFixed(0)
         },
         goBack(){
-            this.$router.push("/rolelistings")
+            if (this.myRole == "Staff"){
+                this.$router.push("/rolelistingsstaff")
+            }
+            else if (this.myRole == "HR"){
+                this.$router.push("/rolelistings")
+            }
         },
         editListing(){
             this.$router.push("/updaterolelisting/" + this.listingId)

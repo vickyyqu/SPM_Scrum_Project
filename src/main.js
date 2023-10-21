@@ -21,6 +21,11 @@ const router = createRouter({
             component: () => import("./views/RoleListingView.vue")
         },
         {
+            path: '/rolelistingsstaff', 
+            name: 'roleListingsStaff',
+            component: () => import("./views/RoleListingStaffView.vue")
+        },
+        {
             path: '/addrolelisting',
             name: 'addRoleListing',
             component: () => import('./views/AddRoleListingView.vue')
