@@ -18,6 +18,20 @@ class RoleListingService{
         return response
     }
 
+    getStaffRoleListings(){
+        const response = axios.get(API_URL + "getstaffrolelistings")
+        .then((response)=>{
+            console.log("Get Role Listings Successful")
+            return response
+        })
+        .catch((error)=>{
+            console.log("Get Role Listings NOT successful " + error)
+            return error
+        })
+
+        return response
+    }
+
     getRoleListingById(listing_id){
         const response = axios.get(API_URL + "getrolelisting/" + listing_id)
         .then((response)=>{
