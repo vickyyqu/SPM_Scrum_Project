@@ -510,12 +510,11 @@ export default {
                         v-for="listing in filteredListings"
                     >
 
-                        <div
-                            class="card mx-auto rounded"
+                        <div class="card mx-auto rounded">
+
+                            <div class="card-body" 
                             @click="viewDetails(listing['id'])"
-                            style="cursor: pointer;"
-                        >
-                            <div class="card-body" >
+                            style="cursor: pointer;">
 
                                 <h5 class="card-title">
                                     {{ listing["name"] }}
