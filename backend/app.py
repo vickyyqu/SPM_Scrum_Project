@@ -1,5 +1,6 @@
 from config import *
 from schemas import *
+from datetime import datetime
 
 ##### API Endpoints ######
 
@@ -13,6 +14,23 @@ def get_allrolelistings():
         data = RoleListingTable.query.all()
         data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country': item.Country,
                       'dept': item.Department, 'OpenW': item.Open_Window, 'CloseW': item.Close_Window} for item in data]
+        return jsonify(data_dict)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+
+@app.route('/getstaffrolelistings', methods=['GET'])
+def get_all_role_listings():
+    try:
+        # Get today's date
+        today_date = datetime.now().date()
+
+        # Fetch data from the database using SQLAlchemy
+        data = RoleListingTable.query.filter(RoleListingTable.Close_Window >= today_date).all()
+
+        data_dict = [{'id': item.Listing_ID, 'name': item.Role_Name, 'country': item.Country,
+                      'dept': item.Department, 'OpenW': item.Open_Window, 'CloseW': item.Close_Window} for item in data]
+
         return jsonify(data_dict)
     except Exception as e:
         return jsonify({'error': str(e)})

@@ -38,7 +38,7 @@ export default {
         // retrieve staff id
         console.log(sessionStorage.getItem("staffId"));
 
-        roleListingService.getAllRoleListings().then((response) => {
+        roleListingService.getStaffRoleListings().then((response) => {
             roleListings.value = response.data;
             filteredListings.value = roleListings.value;
             console.log(roleListings.value);
@@ -403,12 +403,15 @@ export default {
                                 >
                                     {{ listing["country"] }}
                                 </h6>
-                                <h6 href="#" class="subtitle">
+                                <small href="#" class="subtitle" style="font-size: 10px;">
+                                    {{ "Open From : " + listing["OpenW"].split(" ")[1] + " " + listing["OpenW"].split(" ")[2]+ " " + listing["OpenW"].split(" ")[3]  + " to " + listing["CloseW"].split(" ")[1] + " " + listing["CloseW"].split(" ")[2]+ " " + listing["CloseW"].split(" ")[3] }}
+                                </small>
+                                <!-- <h6 href="#" class="subtitle">
                                     {{ listing["OpenW"] }}
                                 </h6>
                                 <h6 href="#" class="subtitle">
                                     {{ listing["CloseW"] }}
-                                </h6>
+                                </h6> -->
                             </div>
                         </div>
                     </div>
