@@ -327,6 +327,74 @@ def get_skill_and_proficiency_for_role(role_name):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
+    
+@app.route('/getappliedstatus/<int:listing_id>&<int:staff_id>', methods=['GET'])
+def getappliedstatus(listing_id, staff_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        application = (db.session.query(ApplicationTable.Application_ID)
+            .filter(ApplicationTable.Listing_ID == listing_id, ApplicationTable.Staff_ID == staff_id)
+            .first()
+        )
+        
+        if application != None:
+            application_dict = {"Application_ID": application[0]}
+            return jsonify(application_dict)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/getapplicationsbylistingid/<int:listing_id>', methods=['GET'])
+def getapplicationsbylistingid(listing_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = ApplicationTable.query.filter_by(Listing_ID=listing_id).all()
+        data_dict = []
+        for i in range(len(data)):
+            staff_name = db.session.query(StaffTable.Staff_FName, StaffTable.Staff_LName).filter_by(Staff_ID=data[i].Staff_ID).first()
+            data_dict.append({'application_id': data[i].Application_ID, 'listing_id': data[i].Listing_ID, 'staff_id': data[i].Staff_ID, 'staff_fname': staff_name.Staff_FName, 'staff_lname': staff_name.Staff_LName, 'brief_description': data[i].Brief_Description})
+
+        if data_dict == []:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Applications do not exist."
+                })
+
+        return jsonify(data_dict)
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/delete_application/<int:listing_id>&<int:staff_id>', methods=['DELETE'])
+def delete_application(listing_id, staff_id):
+    try:
+        data = ApplicationTable.query.filter_by(Listing_ID=listing_id, Staff_ID = staff_id).first()
+        db.session.delete(data)
+        db.session.commit()
+        return jsonify({'message': 'Data deleted successfully!'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete data.', 'details': str(e)}), 500
+    
+
+@app.route('/apply_role', methods=['POST'])
+def apply_role():
+    try:
+        data = request.get_json()
+        new_data = ApplicationTable(
+            Listing_ID = data['listing_ID'], 
+            Staff_ID = data['staff_ID'], 
+            Brief_Description = data['brief_description']
+        )
+        db.session.add(new_data)
+        db.session.commit()
+        return jsonify({'message': 'Data added successfully!'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to add data.', 'details': str(e)}), 500
 
 
 if __name__ == '__main__':

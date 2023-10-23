@@ -51,3 +51,11 @@ class StaffTable(db.Model):
     Country = db.Column(db.String(50))
     Email = db.Column(db.String(50))
     Role = db.Column(db.Integer)
+
+class ApplicationTable(db.Model):
+    __tablename__ = 'Application'  # Replace with your table name
+    # Define your table columns here
+    Application_ID = db.Column(db.Integer, primary_key = True)
+    Listing_ID = db.Column(db.Integer)
+    Staff_ID = db.Column(db.Integer)
+    Brief_Description = db.Column(db.String(255))
