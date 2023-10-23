@@ -327,6 +327,51 @@ def get_skill_and_proficiency_for_role(role_name):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
+    
+@app.route('/getappliedstatus/<int:listing_id>&<int:staff_id>', methods=['GET'])
+def getappliedstatus(listing_id, staff_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = ApplicationTable.query.filter_by(Listing_ID=listing_id, Staff_ID = staff_id).first()
+        data_dict = [{'application': item.Application_ID, 'listing': item.Listing_ID, 'staff': item.Staff_ID, 'description' : item.Brief_Description} for item in data]
+
+        if data_dict == []:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "No applications found does not exist."
+                })
+        
+        return jsonify(data_dict)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/delete_application/<int:listing_id>&<int:staff_id>', methods=['DELETE'])
+def delete_application(listing_id, staff_id):
+    try:
+        data = ApplicationTable.query.filter_by(Listing_ID=listing_id, Staff_ID = staff_id).first()
+        db.session.delete(data)
+        db.session.commit()
+        return jsonify({'message': 'Data deleted successfully!'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete data.', 'details': str(e)}), 500
+    
+
+@app.route('/apply_role', methods=['POST'])
+def apply_role():
+    try:
+        data = request.get_json()
+        new_data = ApplicationTable(Application_ID = data['application_ID'], Listing_ID = data['listing_ID'], Staff_ID = data['staff_ID'])
+        db.session.add(new_data)
+        db.session.commit()
+        return jsonify({'message': 'Data added successfully!'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to add data.', 'details': str(e)}), 500
 
 
 if __name__ == '__main__':
