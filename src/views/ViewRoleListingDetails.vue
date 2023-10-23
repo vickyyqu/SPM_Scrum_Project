@@ -19,16 +19,23 @@ export default {
     },
     data() {
         const route = useRoute()
+        const currentDate = new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10)
         var listingId = route.query.listingId
         var role_name = ""
         var role_desc = ""
         var role = {}
         var role_country = ""
         var role_dept = ""
+        var open_window = ""
+        var close_window = ""
+        var reporting_manager = ""
+        var brief_description = ""
         var applicationId = 0
-        var applied = false
+        var status = ""
+        
 
         return {
+            currentDate,
             role,
             role_country,
             role_dept,
@@ -37,11 +44,15 @@ export default {
             route,
             listingId,
             staffId: 1,
+            open_window,
+            close_window,
+            reporting_manager,
+            brief_description,
             skillMatch_list: [],
             applications_list: [],
             overallMatch: 0.00,
             myRole: "",
-            applied: false
+            status
         }
     },
     mounted() {
@@ -62,7 +73,9 @@ export default {
                 this.role_name = response.data[0]['name']
                 this.role_country = response.data[0]['country']
                 this.role_dept = response.data[0]['dept']
-                this.role = response.data[0]
+                this.open_window = new Date(response.data[0]['OpenW'])
+                this.close_window = new Date(response.data[0]['CloseW']).toISOString().slice(0, 10)
+                this.reporting_manager = response.data[0]['reportingManager']
 
                 const response2 = await RoleService.getRoleDesc(this.role_name)
                 this.role_desc = response2.data['Role_Desc']
@@ -162,13 +175,17 @@ export default {
                 const response = await StaffApplicationService.getAppliedStatus(this.listingId, this.staffId)
 
                 console.log(response)
-                if(response.data['Application_ID'] == null){
-                    this.applied = false
+                if(this.close_window < this.currentDate){
+                    this.status = 'closed'
+                }
+                else if(response.data == null){
+                    this.status = 'unapplied'
                 }
                 else{
-                    this.applied = true
+                    this.status = 'applied'
                 }
                 console.log(response.data)
+                console.log(this.status)
             } catch (error) {
                 console.log(error)
             }
@@ -199,24 +216,42 @@ export default {
         },
 
         async sendRequest(){
-            requestBody = {
-                rolename: applicationId.value,
-                country: listingId.value,
-                dept: staffId.value,
-                reportingManager: brief_description.value
-            };
-
-            try {
-                const response = await axios.post(
-                    "http://localhost:8000/apply_role" +
-                        roleListing.value.id,
-                    requestBody
-                );
-                console.log("Response:", response.data);
-                alert("Listing successfully updated!");
-            } catch (error) {
-                console.error("Error:", error)
+            if (this.brief_description == ""){
+                alert("Please write in more about yourself")
             }
+            else{
+                var requestBody = {
+                    listing_ID: this.listingId,
+                    staff_ID: this.staffId,
+                    brief_description: this.brief_description
+                };
+
+                try {
+                    const response = await axios.post(
+                        "http://localhost:8000/apply_role", requestBody
+                    );
+                    console.log("Response:", response.data);
+                    alert("Successfully applied for role!");
+
+                    window.location.reload()
+                } catch (error) {
+                    console.error("Error:", error)
+                }
+            }
+        },
+
+        async deleteRequest(){
+            try {
+                const response = await axios.delete(
+                    "http://localhost:8000/delete_application/" + this.listingId + '&' + this.staffId
+                );
+
+                console.log("Response:", response.data);
+                alert("Application has been withdrawn");
+                window.location.reload()
+            } catch (error) {
+                console.error("Error:", error);
+            };
         }
     }
 };
@@ -245,9 +280,30 @@ export default {
                 <button class="btn btn-light" @click="editListing()">Edit</button>
             </div>
             <div v-else-if="myRole=='Staff'" class="col align-items-center justify-content-end" style="display: flex;">
-                <button class="btn btn-warning" v-if = "applied" disabled> Applied </button>
-                <button class="btn btn-warning" v-if = "applied" @click = 'deleteRequest'>Cancel</button>
-                <button class="btn btn-warning" v-else @click = 'sendRequest'>Apply for Role</button>
+                <button class="btn btn-secondary" v-if = "status=='closed'" disabled>Applications are closed</button>
+                <button class="btn btn-warning me-3" v-if = "status=='applied'" disabled> Applied </button>
+                <button class="btn btn-danger" v-if = "status=='applied'" @click = 'deleteRequest'>Cancel</button>
+                <!-- Button trigger modal -->
+                <button type="button" v-if = "status=='unapplied'" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Apply For Role
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Please state your reasons for applying:</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    <div class="modal-body">
+                        <textarea v-model = "brief_description" class = 'form-control'></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" @click = 'sendRequest'>Apply For Role</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
 
@@ -256,7 +312,14 @@ export default {
         </h2>
         <br/>
 
-        <p class="px-3" style="text-align: left;"><span style="font-weight: bold;">Department</span> : {{ role_dept }} <span class="ms-3" style="font-weight: bold;">Country</span> : {{ role_country }} </p>
+        <p class="px-3" style="text-align: left;">
+            <span style="font-weight: bold;">Department</span> : {{ role_dept }} 
+            <span class="ms-3" style="font-weight: bold;">Country</span> : {{ role_country }} 
+            <span class="ms-3" style="font-weight: bold;">Reporting Manager</span> : {{ reporting_manager }}
+            <br>
+            <span style="font-weight: bold;">Closing Date</span> : {{ close_window }}
+        </p>
+
         <br>
 
         <div class="mt-3 px-3" style="min-height: 50%; text-align: left;">

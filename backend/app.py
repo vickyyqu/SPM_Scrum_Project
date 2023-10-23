@@ -383,7 +383,11 @@ def delete_application(listing_id, staff_id):
 def apply_role():
     try:
         data = request.get_json()
-        new_data = ApplicationTable(Application_ID = data['application_ID'], Listing_ID = data['listing_ID'], Staff_ID = data['staff_ID'])
+        new_data = ApplicationTable(
+            Listing_ID = data['listing_ID'], 
+            Staff_ID = data['staff_ID'], 
+            Brief_Description = data['brief_description']
+        )
         db.session.add(new_data)
         db.session.commit()
         return jsonify({'message': 'Data added successfully!'}), 201
