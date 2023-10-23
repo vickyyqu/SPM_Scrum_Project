@@ -45,9 +45,12 @@ export default {
         }
     },
     mounted() {
+        this.myRole = sessionStorage.getItem("myRole")
+        this.staffId = sessionStorage.getItem("staffId")
         this.getOverallMatch()
         this.getRoleDetails()
-        this.myRole = sessionStorage.getItem("myRole")
+        this.getAppliedStatus()
+        this.getApplicationsByListingID()
     },
     methods: {
         async getRoleDetails(){
@@ -154,9 +157,18 @@ export default {
 
         async getAppliedStatus(){
             try {
-                const response = await StaffApplicationService.getAppliedStatus(staffId, listingId)
-                this.applied.value = response.data
-                console.log(applied.value)
+                console.log(this.listingId)
+                console.log(this.staffId)
+                const response = await StaffApplicationService.getAppliedStatus(this.listingId, this.staffId)
+
+                console.log(response)
+                if(response.data['Application_ID'] == None){
+                    applied = False
+                }
+                else{
+                    applied = True
+                }
+                console.log(response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -207,8 +219,6 @@ export default {
             }
         }
     }
-
-
 };
 
 </script>
@@ -292,7 +302,7 @@ export default {
             <p>{{ role_desc }}</p>
         </div>
 
-        <div v-if="myRole='HR'" class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
+        <div v-if="myRole=='HR'" class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style ="font-weight: bold;">Applications</h6>
             <ul class="list-group">
                 <li v-for="application in applications_list" class="list-group-item">{{application.Staff_ID}} {{ application.Brief_Description }}</li>

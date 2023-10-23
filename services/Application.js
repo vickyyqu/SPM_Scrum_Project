@@ -21,7 +21,7 @@ class StaffApplicationService {
         const response = axios.get(API_URL + "getappliedstatus/" + listing_ID + '&' + staff_ID)
         .then((response)=>{
             console.log(response)
-            console.log("Get Staff Application Successful")
+            console.log("Get Application Status Successful")
             return response
         })
         .catch((error)=>{
