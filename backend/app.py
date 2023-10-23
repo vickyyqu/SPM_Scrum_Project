@@ -349,7 +349,10 @@ def getapplicationsbylistingid(listing_id):
     try:
         # Fetch data from the database using SQLAlchemy
         data = ApplicationTable.query.filter_by(Listing_ID=listing_id).all()
-        data_dict = [{'application_id': item.Application_ID, 'listing_id': item.Listing_ID, 'staff_id': item.Staff_ID, 'brief_description': item.Brief_Description} for item in data]
+        data_dict = []
+        for i in range(len(data)):
+            staff_name = db.session.query(StaffTable.Staff_FName, StaffTable.Staff_LName).filter_by(Staff_ID=data[i].Staff_ID).first()
+            data_dict.append({'application_id': data[i].Application_ID, 'listing_id': data[i].Listing_ID, 'staff_id': data[i].Staff_ID, 'staff_fname': staff_name.Staff_FName, 'staff_lname': staff_name.Staff_LName, 'brief_description': data[i].Brief_Description})
 
         if data_dict == []:
             return jsonify(

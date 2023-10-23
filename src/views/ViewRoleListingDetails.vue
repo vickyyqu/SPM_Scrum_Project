@@ -252,7 +252,7 @@ export default {
         </div>
 
         <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{role_name}}
-            <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
+            <button v-if="myRole=='Staff'" class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
         <br/>
 
@@ -305,7 +305,7 @@ export default {
         <div v-if="myRole=='HR'" class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style ="font-weight: bold;">Applications</h6>
             <ul class="list-group">
-                <li v-for="application in applications_list" class="list-group-item">{{application.Staff_ID}} {{ application.Brief_Description }}</li>
+                <li v-for="application in applications_list" class="list-group-item">{{ application.staff_fname }} {{ application.staff_lname }}</li>
             </ul>
         </div>
 
