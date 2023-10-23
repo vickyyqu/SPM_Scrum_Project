@@ -6,8 +6,9 @@ import Navbar from '../components/navbar.vue';
 import roleListingService from '../../services/RoleListing.js'
 import RoleSkillService from '../../services/RoleSkill.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
+import StaffApplicationService from '../../services/Application.js'
 import RoleService from '../../services/Role'
-import { all } from 'axios';
+import axios, { all } from 'axios';
 import Role from '../../services/Role';
 import RoleListing from '../../services/RoleListing.js';
 import router from '../main';
@@ -24,6 +25,9 @@ export default {
         var role = {}
         var role_country = ""
         var role_dept = ""
+        var applicationId = 0
+        const applied = ref()
+
         return {
             role,
             role_country,
@@ -34,8 +38,10 @@ export default {
             listingId,
             staffId: 1,
             skillMatch_list: [],
+            applications_list: [],
             overallMatch: 0.00,
-            myRole: ""
+            myRole: "",
+            applied
         }
     },
     mounted() {
@@ -145,6 +151,28 @@ export default {
             }
             this.overallMatch = this.overallMatch.toFixed(0)
         },
+
+        async getAppliedStatus(){
+            try {
+                const response = await StaffApplicationService.getAppliedStatus(staffId, listingId)
+                this.applied.value = response.data
+                console.log(applied.value)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        async getApplicationsByListingID(){
+            try {
+                const response = await StaffApplicationService.getApplicationsByListingID(this.listingId)
+                this.applications_list = response.data
+                console.log(response.data)
+                return response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
         goBack(){
             if (this.myRole == "Staff"){
                 this.$router.push("/rolelistingsstaff")
@@ -153,8 +181,30 @@ export default {
                 this.$router.push("/rolelistings")
             }
         },
+
         editListing(){
             this.$router.push("/updaterolelisting/" + this.listingId)
+        },
+
+        async sendRequest(){
+            requestBody = {
+                rolename: applicationId.value,
+                country: listingId.value,
+                dept: staffId.value,
+                reportingManager: brief_description.value
+            };
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:8000/apply_role" +
+                        roleListing.value.id,
+                    requestBody
+                );
+                console.log("Response:", response.data);
+                alert("Listing successfully updated!");
+            } catch (error) {
+                console.error("Error:", error)
+            }
         }
     }
 
@@ -185,7 +235,9 @@ export default {
                 <button class="btn btn-light" @click="editListing()">Edit</button>
             </div>
             <div v-else-if="myRole=='Staff'" class="col align-items-center justify-content-end" style="display: flex;">
-                <button class="btn btn-warning">Apply for Role</button>
+                <button class="btn btn-warning" v-if = "applied" disabled> Applied </button>
+                <button class="btn btn-warning" v-if = "applied" @click = 'deleteRequest'>Cancel</button>
+                <button class="btn btn-warning" v-else @click = 'sendRequest'>Apply for Role</button>
             </div>
         </div>
 
@@ -207,28 +259,28 @@ export default {
             <div class="row">
                 <div v-for="skill in skillMatch_list" class="col-6 ">
 
-                    <div v-if="skill.match == 100" class="mb-3">
+                    <div v-if="skill.match == 100 && myRole == 'Staff'" class="mb-3">
                         <div class="d-flex justify-content-between">
                             <small>{{ skill.skill }}</small>
-                            <small>Level {{ skill.proficiency }}</small>
+                            <div v-if="myRole=='Staff'"><small>Level {{ skill.proficiency }}</small></div>
                         </div>
-                        <button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button>
+                        <div v-if="myRole=='Staff'"><button class="btn btn-success px-2 py-1 w-100" disabled><span>100% Match</span></button></div>
                     </div>
     
-                    <div v-else-if="skill.match == 0" class="mb-3">
+                    <div v-else-if="skill.match == 0 && myRole == 'Staff'" class="mb-3">
                         <div class="d-flex justify-content-between">
                             <small>{{ skill.skill }}</small>
-                            <small>Level {{ skill.proficiency }}</small>
+                            <div v-if="myRole=='Staff'"><small>Level {{ skill.proficiency }}</small></div>
                         </div>
-                        <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this skill.</span></button>
+                        <div v-if="myRole=='Staff'"><button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this skill.</span></button></div>
                     </div>
     
                     <div v-else class="mb-3">
                         <div class="d-flex justify-content-between">
                             <small>{{ skill.skill }}</small>
-                            <small>Level {{ skill.proficiency }}</small>
+                            <div v-if="myRole=='Staff'"><small>Level {{ skill.proficiency }}</small></div>
                         </div>
-                        <button class="btn btn-warning px-2 py-1 w-100" disabled><span>{{ skill.match }}% Match</span></button>
+                        <div v-if="myRole=='Staff'"><button class="btn btn-warning px-2 py-1 w-100" disabled><span>{{ skill.match }}% Match</span></button></div>
                     </div>
                 </div>
             </div>
@@ -238,6 +290,13 @@ export default {
         <div class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style="font-style:italic; font-weight: bold;">Role Description:</h6>
             <p>{{ role_desc }}</p>
+        </div>
+
+        <div v-if="myRole='HR'" class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
+            <h6 style ="font-weight: bold;">Applications</h6>
+            <ul class="list-group">
+                <li v-for="application in applications_list" class="list-group-item">{{application.Staff_ID}} {{ application.Brief_Description }}</li>
+            </ul>
         </div>
 
     </div>

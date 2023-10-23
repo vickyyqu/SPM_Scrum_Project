@@ -3,8 +3,8 @@ import axios from "axios";
 const API_URL = "http://localhost:8000/";
 
 class StaffApplicationService {
-    getStaffApplicationsByListingID(listing_ID){
-        const response = axios.get(API_URL + "getstaffapplicationsbylistingid/" + listing_ID)
+    getApplicationsByListingID(listing_ID){
+        const response = axios.get(API_URL + "getapplicationsbylistingid/" + listing_ID)
         .then((response)=>{
             console.log("Get Staff Applications Successful")
             return response
@@ -20,6 +20,7 @@ class StaffApplicationService {
     getAppliedStatus(listing_ID, staff_ID){
         const response = axios.get(API_URL + "getappliedstatus/" + listing_ID + '&' + staff_ID)
         .then((response)=>{
+            console.log(response)
             console.log("Get Staff Application Successful")
             return response
         })

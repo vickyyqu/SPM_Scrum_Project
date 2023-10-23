@@ -332,18 +332,34 @@ def get_skill_and_proficiency_for_role(role_name):
 def getappliedstatus(listing_id, staff_id):
     try:
         # Fetch data from the database using SQLAlchemy
-        data = ApplicationTable.query.filter_by(Listing_ID=listing_id, Staff_ID = staff_id).first()
-        data_dict = [{'application': item.Application_ID, 'listing': item.Listing_ID, 'staff': item.Staff_ID, 'description' : item.Brief_Description} for item in data]
+        application = (db.session.query(ApplicationTable.Application_ID)
+            .filter(ApplicationTable.Listing_ID == listing_id, ApplicationTable.Staff_ID == staff_id)
+            .first()
+        )
+        
+        if application != None:
+            application_dict = {"Application_ID": application[0]}
+            return jsonify(application_dict)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/getapplicationsbylistingid/<int:listing_id>', methods=['GET'])
+def getapplicationsbylistingid(listing_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        data = ApplicationTable.query.filter_by(Listing_ID=listing_id).all()
+        data_dict = [{'application_id': item.Application_ID, 'listing_id': item.Listing_ID, 'staff_id': item.Staff_ID, 'brief_description': item.Brief_Description} for item in data]
 
         if data_dict == []:
             return jsonify(
                 {
                     "code": 404,
-                    "error": "No applications found does not exist."
+                    "error": "Applications do not exist."
                 })
-        
+
         return jsonify(data_dict)
-    
+
     except Exception as e:
         return jsonify({'error': str(e)})
     
