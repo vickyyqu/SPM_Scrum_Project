@@ -26,7 +26,7 @@ export default {
         var role_country = ""
         var role_dept = ""
         var applicationId = 0
-        const applied = ref()
+        var applied = false
 
         return {
             role,
@@ -41,7 +41,7 @@ export default {
             applications_list: [],
             overallMatch: 0.00,
             myRole: "",
-            applied
+            applied: false
         }
     },
     mounted() {
@@ -162,11 +162,11 @@ export default {
                 const response = await StaffApplicationService.getAppliedStatus(this.listingId, this.staffId)
 
                 console.log(response)
-                if(response.data['Application_ID'] == None){
-                    applied = False
+                if(response.data['Application_ID'] == null){
+                    this.applied = false
                 }
                 else{
-                    applied = True
+                    this.applied = true
                 }
                 console.log(response.data)
             } catch (error) {
