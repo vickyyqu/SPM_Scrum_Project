@@ -22,18 +22,25 @@ class TestApp(flask_testing.TestCase):
     print(app.config['SQLALCHEMY_DATABASE_URI'])
     db = SQLAlchemy(app)
     CORS(app)
+    print("Here line 25")
 
     def create_app(self):
+        print("Here line 29")
         return app
+        
 
     def setUp(self):
         db.create_all()
+        print("Here line 34")
+
 
     def tearDown(self):
+        print("Here line 38")
         db.session.remove()
 
 class TestApplication(TestApp):
     def test_submit_role_application(self):
+        print("Here line 43")
         request_body = {
             "closeWindow": "2023-10-20",
             "openWindow": "2023-11-20",
@@ -72,6 +79,7 @@ class TestApplication(TestApp):
         self.assertEqual(getAppResponse.status_code, 200)
         self.client.delete(f"/delete_application/{listing_id}&{staff_id}")
     def test_submit_role_application_invalid(self):
+        print("Here line 82")
         request_body = {
             "closeWindow": "2023-10-20",
             "openWindow": "2023-11-20",
@@ -101,6 +109,7 @@ class TestApplication(TestApp):
 
     def test_withdraw_application(self):
     # First, submit an application (assuming you have already tested the submission)
+        print("Here line 112")
         request_body = {
             "closeWindow": "2023-10-20",
             "openWindow": "2023-11-20",
@@ -141,6 +150,7 @@ class TestApplication(TestApp):
 
     def test_withdraw_application_invalid(self):
     # First, submit an application (assuming you have already tested the submission)
+        print("Here line 153")
         request_body = {
             "closeWindow": "2023-10-20",
             "openWindow": "2023-11-20",
