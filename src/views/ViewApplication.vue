@@ -3,14 +3,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import Navbar from '../components/Navbar.vue';
-import roleListingService from '../../services/RoleListing.js'
 import RoleSkillService from '../../services/RoleSkill.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
-import RoleService from '../../services/Role'
-import { all } from 'axios';
-import Role from '../../services/Role';
-import RoleListing from '../../services/RoleListing.js';
-import router from '../main';
 
 export default {
     components: {
@@ -18,48 +12,24 @@ export default {
     },
     data() {
         const route = useRoute()
-        var listingId = route.query.listingId
-        var role_name = ""
-        var role_desc = ""
-        var role = {}
+        var staffName = route.query.staffName
+        var desc = route.query.desc
+        var listingId = parseInt(route.query.listingId)
+        var staffId = parseInt(route.query.staffId)
         return {
-            role,
-            role_name,
-            role_desc,
+            desc,
             route,
+            staffName,
             listingId,
-            staffId: 1,
+            staffId,
             skillMatch_list: [],
-            overallMatch: 0.00,
-            myRole: ""
+            overallMatch: 0.00
         }
     },
     mounted() {
         this.getOverallMatch()
-        this.getRoleDetails()
-        this.myRole = sessionStorage.getItem("myRole")
     },
     methods: {
-        async getRoleDetails(){
-            try {
-                console.log(this.listingId)
-                const response = await roleListingService.getRoleListingById(this.listingId)
-                // console.log(response.data[0])
-                // console.log(response.data[0]['name'])
-                this.role_name = response.data[0]['name']
-                this.role = response.data[0]
-
-                const response2 = await RoleService.getRoleDesc(this.role_name)
-                this.role_desc = response2.data['Role_Desc']
-                // console.log(this.role)
-                // console.log(this.role_name)
-                // const response = await RoleService.getRoleDesc(this.role_name)
-                // this.role_desc = response.data['Role_Desc']
-            }
-            catch(error){
-                console.log(error)
-            }
-        },
         async getRoleSkill() {
             try {
                 const response = await RoleSkillService.getRoleSkills(this.listingId)
@@ -71,7 +41,6 @@ export default {
         },
         async getStaffSkill() {
             try {
-                this.staffId = sessionStorage.getItem("staffId")
                 const response = await StaffSkillsService.getStaffSkills(this.staffId)
                 console.log(response.data)
                 return response.data
@@ -82,9 +51,6 @@ export default {
         async getOverallMatch() {
             var roleSkills = await this.getRoleSkill()
             var staffSkills = await this.getStaffSkill()
-            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
-            // var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
-            
             if (staffSkills == null){
                 staffSkills = []
             }
@@ -104,7 +70,6 @@ export default {
                     var sSkill = staffSkills[j].skill.toUpperCase()
 
                     if (rSkill == sSkill && !allSkills.includes(rSkill)) {
-                    // if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
                         allSkills.push(rSkill)
                         var match = 100
 
@@ -140,10 +105,10 @@ export default {
             this.overallMatch = this.overallMatch.toFixed(0)
         },
         goBack(){
-            this.$router.push("/rolelistings")
-        },
-        editListing(){
-            this.$router.push("/updaterolelisting/" + this.listingId)
+            this.$router.push({
+                path: "/rolelistingdetails",
+                query: { listingId: this.listingId },
+            })
         }
     }
 
@@ -166,24 +131,18 @@ export default {
                 </svg>
                 <button class="btn btn-light" @click="goBack()">Back</button>
             </div>
-            <div v-if="myRole=='HR'" class="col align-items-center justify-content-end" style="display: flex;">
-                <svg class="mx-3" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                    <path
-                        d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
-                </svg>
-                <button class="btn btn-light" @click="editListing()">Edit</button>
-            </div>
-            <div v-else-if="myRole=='Staff'" class="col align-items-center justify-content-end" style="display: flex;">
-                <button class="btn btn-warning">Apply for Role</button>
-            </div>
         </div>
 
-        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{role_name}}
+        <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{staffName}}
             <button class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
 
+        <p class="px-3" style="text-align: left;">
+            <span style="font-weight: bold;">Staff ID</span> : {{ staffId }}
+        </p>
+
         <div class="mt-3 px-3" style="min-height: 50%; text-align: left;">
-            <h6 style="font-style:italic;">Skills Required:</h6>
+            <h6 style="font-style:italic;font-weight: bold;">Skills Match:</h6>
 
             <div v-if="skillMatch_list.length == 0">
                 <button class="btn btn-warning px-2 py-1 w-100" disabled><span>There are no skills required for this role.</span></button>
@@ -220,13 +179,13 @@ export default {
 
         </div>
 
-        <div class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
-            <h6 style="font-style:italic;">Role Description:</h6>
-            <p>{{ role_desc }}</p>
+        <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
+            <h6 style="font-style:italic;font-weight: bold;">Applicant's Skills:</h6>
         </div>
 
-        <div>
-            Applications    
+        <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
+            <h6 style="font-style:italic;font-weight: bold;">Application Description:</h6>
+            <p>{{ desc }}</p>
         </div>
 
     </div>
@@ -241,4 +200,3 @@ export default {
     min-height: 100vh;
     }
 </style>
-

@@ -44,6 +44,11 @@ const router = createRouter({
             path: '/rolelistingdetails', 
             name: 'roleListingdetails',
             component: () => import("./views/ViewRoleListingDetails.vue")
+        },
+        {
+            path: '/viewapplication', 
+            name: 'viewapplication',
+            component: () => import("./views/ViewApplication.vue")
         }
     ]
 });
