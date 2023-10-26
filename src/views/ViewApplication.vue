@@ -16,6 +16,7 @@ export default {
         var desc = route.query.desc
         var listingId = parseInt(route.query.listingId)
         var staffId = parseInt(route.query.staffId)
+        var allstaffskills = []
         return {
             desc,
             route,
@@ -23,7 +24,8 @@ export default {
             listingId,
             staffId,
             skillMatch_list: [],
-            overallMatch: 0.00
+            overallMatch: 0.00,
+            allstaffskills,
         }
     },
     mounted() {
@@ -51,6 +53,7 @@ export default {
         async getOverallMatch() {
             var roleSkills = await this.getRoleSkill()
             var staffSkills = await this.getStaffSkill()
+            this.allstaffskills = staffSkills;
             if (staffSkills == null){
                 staffSkills = []
             }
@@ -164,7 +167,7 @@ export default {
                             <small>{{ skill.skill }}</small>
                             <small>Level {{ skill.proficiency }}</small>
                         </div>
-                        <button class="btn btn-danger px-2 py-1 w-100" disabled><span>You do not have this skill.</span></button>
+                        <button class="btn btn-danger px-2 py-1 w-100" disabled><span>Applicant does not have this skill.</span></button>
                     </div>
     
                     <div v-else class="mb-3">
@@ -181,6 +184,7 @@ export default {
 
         <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style="font-style:italic;font-weight: bold;">Applicant's Skills:</h6>
+            <div v-for="skill in allstaffskills"><small>{{ skill.skill }}</small></div>
         </div>
 
         <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
