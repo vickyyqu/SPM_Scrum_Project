@@ -1,6 +1,87 @@
-from config import *
-from schemas import *
 from datetime import datetime
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
+from dotenv import load_dotenv
+import os
+
+# Load db variable from .env file into environment
+load_dotenv()
+database_url = os.getenv("DATABASE_URL")
+print(database_url)
+
+app = Flask(__name__)
+
+if __name__ == '__main__':
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
+                                               'pool_recycle': 280}
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+CORS(app)
+
+class RoleListingTable(db.Model):
+    __tablename__ = 'Role_Listing'  # Replace with your table name
+    # Define your table columns here
+    Listing_ID = db.Column(db.Integer, primary_key=True)
+    Role_Name = db.Column(db.String(255), db.ForeignKey('Role_Skill.Role_Name'))
+    Country = db.Column(db.String(255))
+    Department =db.Column(db.String(255))
+    Reporting_Manager = db.Column(db.String(255))
+    Open_Window = db.Column(db.DateTime)
+    Close_Window = db.Column(db.DateTime)
+    # Add more columns as needed
+
+class RoleSkillTable(db.Model):
+    __tablename__ = "Role_Skill"
+    Role_Name = db.Column(db.String(255), db.ForeignKey('Role.Role_Name'), primary_key=True)
+    Skill_Name = db.Column(db.String(255), db.ForeignKey('Skill.Skill_Name'), primary_key=True)
+    Proficiency_Level = db.Column(db.Integer)
+
+class StaffSkillTable(db.Model):
+    __tablename__ = "Staff_Skill"
+    Staff_ID = db.Column(db.String(255), primary_key=True)
+    Skill_Name = db.Column(db.String(255), primary_key=True)
+    isVisible = db.Column(db.Boolean)
+    Proficiency_Level = db.Column(db.Integer)
+
+class SkillTable(db.Model):
+    __tablename__ = 'Skill'  # Replace with your table name
+    # Define your table columns here
+    Skill_Name = db.Column(db.String(255), primary_key=True)
+    Skill_Desc = db.Column(db.String(255))
+    # Add more columns as needed
+
+class RoleTable(db.Model):
+    __tablename__ = 'Role'  # Replace with your table name
+    # Define your table columns here
+    Role_Name = db.Column(db.String(255), primary_key=True)
+    Role_Desc = db.Column(db.String(255))
+    # Add more columns as needed
+
+class StaffTable(db.Model):
+    __tablename__ = 'Staff'  # Replace with your table name
+    # Define your table columns here
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+    Staff_FName = db.Column(db.String(50))
+    Staff_LName = db.Column(db.String(50))
+    Dept = db.Column(db.String(50))
+    Country = db.Column(db.String(50))
+    Email = db.Column(db.String(50))
+    Role = db.Column(db.Integer)
+
+class ApplicationTable(db.Model):
+    __tablename__ = 'Application'  # Replace with your table name
+    # Define your table columns here
+    Application_ID = db.Column(db.Integer, primary_key = True)
+    Listing_ID = db.Column(db.Integer)
+    Staff_ID = db.Column(db.Integer)
+    Brief_Description = db.Column(db.String(255))
 
 ##### API Endpoints ######
 
@@ -306,27 +387,27 @@ def get_skill_and_proficiency_for_role(role_name):
         return jsonify({'error': 'Failed to retrieve skills for role.', 'details': str(e)}), 500
 
 
-    try:
-        data = request.get_json()
-        listing = RoleListingTable.query.filter_by(
-            Listing_ID=listing_id).first()
+    # try:
+    #     data = request.get_json()
+    #     listing = RoleListingTable.query.filter_by(
+    #         Listing_ID=listing_id).first()
 
-        if listing is not None:
-            listing.Role_Name = data['roleName']
-            listing.Country = data['country']
-            listing.Department = data['dept']
-            listing.Reporting_Manager = data['reportingManager']
-            listing.Open_Window = data['openWindow']
-            listing.Close_Window = data['closeWindow']
+    #     if listing is not None:
+    #         listing.Role_Name = data['roleName']
+    #         listing.Country = data['country']
+    #         listing.Department = data['dept']
+    #         listing.Reporting_Manager = data['reportingManager']
+    #         listing.Open_Window = data['openWindow']
+    #         listing.Close_Window = data['closeWindow']
 
-            db.session.commit()
-            return jsonify({"message": "Listing updated successfully"}), 200
-        else:
-            return jsonify({"message": "Listing does not exist"}), 404
+    #         db.session.commit()
+    #         return jsonify({"message": "Listing updated successfully"}), 200
+    #     else:
+    #         return jsonify({"message": "Listing does not exist"}), 404
 
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
+    # except Exception as e:
+    #     db.session.rollback()
+    #     return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
     
 @app.route('/getappliedstatus/<int:listing_id>&<int:staff_id>', methods=['GET'])
 def getappliedstatus(listing_id, staff_id):
