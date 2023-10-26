@@ -12,13 +12,14 @@ class TestApp(flask_testing.TestCase):
     # app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     # app.config['TESTING'] = True
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+   
     # SQLAlchemy configuration
     
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     db = SQLAlchemy(app)
+    CORS(app)
 
     def create_app(self):
         return app
