@@ -110,8 +110,6 @@ export default {
         async getOverallMatch() {
             var roleSkills = await this.getRoleSkill()
             var staffSkills = await this.getStaffSkill()
-            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
-            // var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
             
             if (staffSkills == null){
                 staffSkills = []
@@ -252,6 +250,17 @@ export default {
             } catch (error) {
                 console.error("Error:", error);
             };
+        },
+        viewApplication(application){
+            this.$router.push({
+                path: "/viewapplication",
+                query: { 
+                    staffName: application.staff_fname + " " + application.staff_lname,
+                    staffId: application.staff_id,
+                    listingId: application.listing_id,
+                    desc: application.brief_description
+                },
+            });
         }
     }
 };
@@ -310,7 +319,6 @@ export default {
         <h2 class="mt-3 px-3 pt-3" style="text-align: left;align-items:center">{{role_name}}
             <button v-if="myRole=='Staff'" class="btn btn-dark py-2 ms-3" disabled>{{ overallMatch }}% Match</button>
         </h2>
-        <br/>
 
         <p class="px-3" style="text-align: left;">
             <span style="font-weight: bold;">Department</span> : {{ role_dept }} 
@@ -322,8 +330,8 @@ export default {
 
         <br>
 
-        <div class="mt-3 px-3" style="min-height: 50%; text-align: left;">
-            <h6 style="font-style:italic;">Skills Required:</h6>
+        <div class="px-3" style="min-height: 50%; text-align: left;">
+            <h6 style="font-style:italic; font-weight: bold;">Skills Required:</h6>
 
             <div v-if="skillMatch_list.length == 0">
                 <button class="btn btn-warning px-2 py-1 w-100" disabled><span>There are no skills required for this role.</span></button>
@@ -366,10 +374,19 @@ export default {
         </div>
 
         <div v-if="myRole=='HR'" class="mt-3 p-3" style="width: 100%; height: 25%;text-align: left;">
-            <h6 style ="font-weight: bold;">Applications</h6>
-            <ul class="list-group">
-                <li v-for="application in applications_list" class="list-group-item">{{ application.staff_fname }} {{ application.staff_lname }}</li>
-            </ul>
+            <h6 style="font-style:italic; font-weight: bold;">Applications:</h6>
+            <template v-if="applications_list.length > 0">
+                <ul class="list-group">
+                    <li v-for="application in applications_list" class="list-group-item p-2 d-flex justify-content-between">
+                        {{ application.staff_fname }} {{ application.staff_lname }}
+                        <button class="btn btn-outline-primary py-0 px-1 me-2" @click="viewApplication(application)"><small>View Application</small></button>
+                    </li>
+                </ul>
+            </template>
+            <template v-else>
+                <p>There are currently no applications.</p>
+            </template>
+
         </div>
 
     </div>
