@@ -26,9 +26,9 @@ class TestApp(flask_testing.TestCase):
 
     def create_app(self):
         print("Here line 29")
-        print(app.config)
-        print(app.config['SQLALCHEMY_DATABASE_URI'])
-        # return app
+        # print(app.config)
+        # print(app.config['SQLALCHEMY_DATABASE_URI'])
+        return app
         
 
     def setUp(self):
