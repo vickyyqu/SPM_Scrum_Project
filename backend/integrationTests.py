@@ -18,6 +18,7 @@ class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     db = SQLAlchemy(app)
     CORS(app)
 
