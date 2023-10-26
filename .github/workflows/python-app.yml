@@ -39,5 +39,5 @@ jobs:
     #     python flask/unit_tests.py
     - name: Run integration tests
       run: |
-        python backend/integration_tests.py
+        python backend/integrationTests.py
 
