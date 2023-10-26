@@ -89,6 +89,8 @@ export default {
                     closeWindow: closeW.value,
                 };
 
+                console.log(requestBody)
+
                 roleListingService.addRoleListing(requestBody)
                     .then((response) => {
                         window.location.href = `/rolelistings`;
