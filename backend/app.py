@@ -387,27 +387,27 @@ def get_skill_and_proficiency_for_role(role_name):
         return jsonify({'error': 'Failed to retrieve skills for role.', 'details': str(e)}), 500
 
 
-    try:
-        data = request.get_json()
-        listing = RoleListingTable.query.filter_by(
-            Listing_ID=listing_id).first()
+    # try:
+    #     data = request.get_json()
+    #     listing = RoleListingTable.query.filter_by(
+    #         Listing_ID=listing_id).first()
 
-        if listing is not None:
-            listing.Role_Name = data['roleName']
-            listing.Country = data['country']
-            listing.Department = data['dept']
-            listing.Reporting_Manager = data['reportingManager']
-            listing.Open_Window = data['openWindow']
-            listing.Close_Window = data['closeWindow']
+    #     if listing is not None:
+    #         listing.Role_Name = data['roleName']
+    #         listing.Country = data['country']
+    #         listing.Department = data['dept']
+    #         listing.Reporting_Manager = data['reportingManager']
+    #         listing.Open_Window = data['openWindow']
+    #         listing.Close_Window = data['closeWindow']
 
-            db.session.commit()
-            return jsonify({"message": "Listing updated successfully"}), 200
-        else:
-            return jsonify({"message": "Listing does not exist"}), 404
+    #         db.session.commit()
+    #         return jsonify({"message": "Listing updated successfully"}), 200
+    #     else:
+    #         return jsonify({"message": "Listing does not exist"}), 404
 
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
+    # except Exception as e:
+    #     db.session.rollback()
+    #     return jsonify({'error': 'Failed to update listing.', 'details': str(e)}), 500
     
 @app.route('/getappliedstatus/<int:listing_id>&<int:staff_id>', methods=['GET'])
 def getappliedstatus(listing_id, staff_id):
