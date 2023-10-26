@@ -372,7 +372,7 @@ def delete_application(listing_id, staff_id):
         data = ApplicationTable.query.filter_by(Listing_ID=listing_id, Staff_ID = staff_id).first()
         db.session.delete(data)
         db.session.commit()
-        return jsonify({'message': 'Data deleted successfully!'}), 201
+        return jsonify({'message': 'Data deleted successfully!'}), 200
 
     except Exception as e:
         db.session.rollback()
