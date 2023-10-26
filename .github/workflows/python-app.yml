@@ -37,9 +37,6 @@ jobs:
     # - name: Run unit tests
     #   run: |
     #     python flask/unit_tests.py
-    - name: Create test database
-      run: |
-        **sudo systemctl start mysql** mysql -uroot -proot < databases/tracker/create_databases.sql
     - name: Run integration tests
       run: |
         python backend/integrationTests.py
