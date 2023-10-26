@@ -5,7 +5,10 @@ from app import *
 from config import app, db
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    # app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
+    # app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
 
