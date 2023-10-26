@@ -1,16 +1,24 @@
+from flask import Flask
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 import unittest
 import json
 import flask_testing
 from app import *
-from config import app, db
 
 class TestApp(flask_testing.TestCase):
+    
     # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
     # app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     # app.config['TESTING'] = True
+    app = Flask(__name__)
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    # SQLAlchemy configuration
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
+    db = SQLAlchemy(app)
 
     def create_app(self):
         return app
