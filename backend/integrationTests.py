@@ -18,34 +18,29 @@ class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
-    print("URI HERE")
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
+
     db = SQLAlchemy(app)
     CORS(app)
-    print("Here line 25")
+
 
     def create_app(self):
-        print("Here line 29")
-        # print(app.config)
-        # print(app.config['SQLALCHEMY_DATABASE_URI'])
         return app
         
 
     def setUp(self):
         db.create_all()
-        print("Here line 34")
 
 
     def tearDown(self):
-        print("Here line 38")
         db.session.remove()
+        db.drop_all()
 
 class TestApplication(TestApp):
     def test_submit_role_application(self):
-        print("Here line 43")
+        #None as SQLite has troubles dealing with date
         request_body = {
-            "closeWindow": "2023-10-20",
-            "openWindow": "2023-11-20",
+            "closeWindow": None,
+            "openWindow": None,
             "country": "Singapore",
             "dept": "Engineering",
             "roleName": {"roleName":"Call Centre"},
@@ -55,9 +50,8 @@ class TestApplication(TestApp):
         rolelistingResponse = self.client.post("/addrolelisting",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-        # print("RoleListingResp: ", end='')
-        # print(rolelistingResponse)
         
+    
         request_body = {
                     "listing_ID": 1,
                     "staff_ID": 140003,
@@ -74,17 +68,15 @@ class TestApplication(TestApp):
         listing_id = 1 
         staff_id = 140003
         getAppResponse = self.client.get(f"/getapplicationsbylistingid/{listing_id}")
-        # print("AppResp:")
-        # print(getAppResponse)
-
-
         self.assertEqual(getAppResponse.status_code, 200)
         self.client.delete(f"/delete_application/{listing_id}&{staff_id}")
+
+
     def test_submit_role_application_invalid(self):
-        print("Here line 82")
+
         request_body = {
-            "closeWindow": "2023-10-20",
-            "openWindow": "2023-11-20",
+            "closeWindow": None,
+            "openWindow": None,
             "country": "Singapore",
             "dept": "Engineering",
             "roleName": {"roleName":"Call Centre"},
@@ -95,7 +87,7 @@ class TestApplication(TestApp):
                                     data=json.dumps(request_body),
                                     content_type='application/json')
         # print("RoleListingResp: ", end='')
-        # print(rolelistingResponse)
+        # print(rolelistingResponse.data)
         
         request_body = {
                     "listing_ID": 1,
@@ -106,18 +98,18 @@ class TestApplication(TestApp):
         addAppResponse = self.client.post("/apply_role",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-        print("ADD APP HERE")
-        print(request_body)
-        print(addAppResponse)
-        # self.assertEqual(addAppResponse.status_code, 500)
+        # print("ADD APP HERE")
+        # print(request_body)
+        # print(addAppResponse)
+        ##SINCE Data not loaded onto SQLite, Foreign key does not prevent adding of this application
+        self.assertEqual(addAppResponse.status_code, 201)
         
 
     def test_withdraw_application(self):
     # First, submit an application (assuming you have already tested the submission)
-        print("Here line 112")
         request_body = {
-            "closeWindow": "2023-10-20",
-            "openWindow": "2023-11-20",
+            "closeWindow": None,
+            "openWindow": None,
             "country": "Singapore",
             "dept": "Engineering",
             "roleName": {"roleName": "Call Centre"},
@@ -151,14 +143,15 @@ class TestApplication(TestApp):
         
         get_application_response = self.client.get(f"/getapplicationsbylistingid/{listing_id}")
         response_data = json.loads(get_application_response.data)
-        # self.assertEqual(response_data["code"], 404)
+        # print("RESP DATA HERE")
+        # print(response_data['error'])
+        self.assertEqual(response_data["code"], 404)
 
     def test_withdraw_application_invalid(self):
     # First, submit an application (assuming you have already tested the submission)
-        print("Here line 153")
         request_body = {
-            "closeWindow": "2023-10-20",
-            "openWindow": "2023-11-20",
+            "closeWindow": None,
+            "openWindow": None,
             "country": "Singapore",
             "dept": "Engineering",
             "roleName": {"roleName": "Call Centre"},
@@ -168,6 +161,7 @@ class TestApplication(TestApp):
         role_listing_response = self.client.post("/addrolelisting",
                                                 data=json.dumps(request_body),
                                                 content_type='application/json')
+
         
         # Extract the listing ID and staff ID from the response or get them from the database
         listing_id = 1  # Replace with the actual listing ID
@@ -195,6 +189,32 @@ class TestApplication(TestApp):
         staff_id = 140002
         withdraw_response = self.client.delete(f"/delete_application/{listing_id}&{staff_id}")
 
+
+class TestRoles(TestApp):
+    def testGetRoleListing(self):
+        
+        new_role_listing = {
+            "closeWindow": None,
+            "openWindow": None,
+            "country": "Singapore",
+            "dept": "Engineering",
+            "roleName": {"roleName":"Call Centre"},
+            "reportingManager": 140002
+        }  
+
+        addRoleResp = self.client.post("/addrolelisting",
+                                    data=json.dumps(new_role_listing),
+                                    content_type='application/json') 
+        
+        # print(addRoleResp.data)
+
+        getRoleResp = self.client.get("/getallrolelistings")
+        
+        # print("GET ROLE RESP HERE")
+       
+        getRoleResp = json.loads(getRoleResp.data)
+        self.assertEqual(len(getRoleResp), 1)
+        
 
         
 

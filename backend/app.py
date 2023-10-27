@@ -8,7 +8,6 @@ import os
 # Load db variable from .env file into environment
 load_dotenv()
 database_url = os.getenv("DATABASE_URL")
-print(database_url)
 
 app = Flask(__name__)
 
@@ -121,7 +120,7 @@ def get_all_role_listings():
 def add_rolelisting():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         new_role_listing = RoleListingTable(
             Role_Name = data['roleName']['roleName'],
             Country = data['country'],
@@ -306,7 +305,7 @@ def put_rolelisting(listing_id):
 @app.route('/getskillsforrole/<string:role_name>', methods=['GET'])
 def get_skills_for_role(role_name):
     try:
-        print(role_name)
+        # print(role_name)
         # Perform a join query to retrieve Skill_Name and Skill_Desc based on Role_Name
         skills_for_role = (
             db.session.query(SkillTable.Skill_Name, SkillTable.Skill_Desc)
@@ -328,7 +327,7 @@ def get_skills_for_role(role_name):
 @app.route('/getroledesc/<string:role_name>', methods=['GET'])
 def get_roledesc(role_name):
     try:
-        print(role_name)
+        # print(role_name)
         # Perform a join query to retrieve Skill_Name and Skill_Desc based on Role_Name
         skills_for_role = (
             db.session.query(RoleTable.Role_Name, RoleTable.Role_Desc)
@@ -355,7 +354,7 @@ def get_roles_matching_role(role_name_search):
             .all()
         )
 
-        print(roles_matching_search)
+        # print(roles_matching_search)
 
         result = [role_name._asdict()
                   for role_name in roles_matching_search]
