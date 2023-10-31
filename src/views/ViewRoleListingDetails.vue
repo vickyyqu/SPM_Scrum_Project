@@ -270,7 +270,7 @@ export default {
 
 <template>
     <Navbar />
-    <div class="container rounded py-4" style="outline: black 2px solid; min-height: 80vh;background-color: white; width:80%;">
+    <div class="container rounded py-4" style="outline: black 2px solid; min-height: 80vh;background-color: white; width:90vh;">
 
         <div class="row" style="width: 100%;">
             <div class="col justify-content-start align-items-center" style="display: flex;">
