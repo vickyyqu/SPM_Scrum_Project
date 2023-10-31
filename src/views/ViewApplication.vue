@@ -53,6 +53,7 @@ export default {
         async getOverallMatch() {
             var roleSkills = await this.getRoleSkill()
             var staffSkills = await this.getStaffSkill()
+
             this.allstaffskills = staffSkills;
             if (staffSkills == null){
                 staffSkills = []
@@ -184,12 +185,15 @@ export default {
 
         <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style="font-style:italic;font-weight: bold;">Applicant's Skills:</h6>
+            <div v-if="allstaffskills.length==0">
+                <small>Applicant has no skills.</small>
+            </div>
             <div v-for="skill in allstaffskills"><small>{{ skill.skill }}</small></div>
         </div>
 
         <div class="p-3" style="width: 100%; height: 25%;text-align: left;">
             <h6 style="font-style:italic;font-weight: bold;">Application Description:</h6>
-            <p>{{ desc }}</p>
+            <small>{{ desc }}</small>
         </div>
 
     </div>
