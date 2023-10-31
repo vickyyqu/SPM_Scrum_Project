@@ -32,110 +32,9 @@ export default {
         }
     },
     mounted() {
-        this.getOverallMatch()
-        this.getRoleDetails()
         this.myRole = sessionStorage.getItem("myRole")
     },
     methods: {
-        async getRoleDetails(){
-            try {
-                console.log(this.listingId)
-                const response = await roleListingService.getRoleListingById(this.listingId)
-                // console.log(response.data[0])
-                // console.log(response.data[0]['name'])
-                this.role_name = response.data[0]['name']
-                this.role = response.data[0]
-
-                const response2 = await RoleService.getRoleDesc(this.role_name)
-                this.role_desc = response2.data['Role_Desc']
-                // console.log(this.role)
-                // console.log(this.role_name)
-                // const response = await RoleService.getRoleDesc(this.role_name)
-                // this.role_desc = response.data['Role_Desc']
-            }
-            catch(error){
-                console.log(error)
-            }
-        },
-        async getRoleSkill() {
-            try {
-                const response = await RoleSkillService.getRoleSkills(this.listingId)
-                console.log(response.data)
-                return response.data
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getStaffSkill() {
-            try {
-                this.staffId = sessionStorage.getItem("staffId")
-                const response = await StaffSkillsService.getStaffSkills(this.staffId)
-                console.log(response.data)
-                return response.data
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getOverallMatch() {
-            var roleSkills = await this.getRoleSkill()
-            var staffSkills = await this.getStaffSkill()
-            // var roleSkills = [{ "proficiency": 5, "skill": "Product Design and Development" }, { "proficiency": 2, "skill": "Programming and Coding" }, { "proficiency": 6, "skill": "Product Management" }]
-            // var staffSkills = [{ "proficiency": 2, "isVisible": true, "skill": "Programming and Coding" }, { "proficiency": 4, "isVisible": true, "skill": "Product Management" }]
-            
-            if (staffSkills == null){
-                staffSkills = []
-            }
-            if (roleSkills == null){
-                roleSkills = []
-            }
-
-            var allSkills = []
-            var count = 0
-            this.overallMatch = 0
-            this.skillMatch_list = []
-
-            for (let i = 0; i < roleSkills.length; i++) {
-                var rSkill = roleSkills[i].skill.toUpperCase()
-
-                for (let j = 0; j < staffSkills.length; j++) {
-                    var sSkill = staffSkills[j].skill.toUpperCase()
-
-                    if (rSkill == sSkill && !allSkills.includes(rSkill)) {
-                    // if (staffSkills[j].isVisible && rSkill == sSkill && !allSkills.includes(rSkill)) {
-                        allSkills.push(rSkill)
-                        var match = 100
-
-                        if (roleSkills[i].proficiency > 0){
-                            match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
-                        }
-                        var out = {
-                            "skill": roleSkills[i].skill,
-                            "proficiency": roleSkills[i].proficiency,
-                            "match": match.toFixed(0)
-                        }
-                        this.skillMatch_list.push(out)
-                        this.overallMatch += match
-                        count ++
-                    }
-                }
-                if (!allSkills.includes(rSkill)) {
-                    allSkills.push(rSkill)
-                    var out = {
-                        "skill": roleSkills[i].skill,
-                        "proficiency": roleSkills[i].proficiency,
-                        "match": 0
-                    }
-                    this.skillMatch_list.push(out)
-                    count ++
-                }
-            }
-            if (count > 0){
-                this.overallMatch = this.overallMatch/count
-            } else if (roleSkills.length  == 0){
-                this.overallMatch = 100
-            }
-            this.overallMatch = this.overallMatch.toFixed(0)
-        },
         editListing(id){
             this.$router.push("/updaterolelisting/" + id)
         }
@@ -145,29 +44,9 @@ export default {
     setup() {
         const roleListings = ref([]);
         const route = useRoute();
-        var halfway = ref(0);
-        const countries = countryService.getAllCountries();
-        const skills = ref();
-        const departments = departmentService.getAllDepartments();
-        const selectedCountries = ref([]);
-        const selectedDepartments = ref([]);
-        const selectedSkills = ref([]);
-        const filteredListings = ref([]);
-        const startD = ref();
-        const endD = ref();
-        const filteredSkills = ref();
-        const searchedSkill = ref();
-        const isLoading = ref(false);
-
-        // retrieve staff id
-        console.log(sessionStorage.getItem("staffId"));
 
         roleListingService.getAllRoleListings().then((response) => {
             roleListings.value = response.data;
-            filteredListings.value = roleListings.value;
-            console.log(roleListings.value);
-            halfway.value = Math.ceil(roleListings.value.length / 2);
-            console.log(halfway);
         });
         function viewDetails(id) {
             router.push({
@@ -176,132 +55,10 @@ export default {
             });
         };
 
-        skillService.getAllSkills().then((response) => {
-            skills.value = response.data;
-            filteredSkills.value = skills.value;
-            console.log(skills.value);
-        });
-
-        // clear filters
-        const clearFilters = () => {
-            selectedCountries.value = [];
-            selectedDepartments.value = [];
-            selectedSkills.value = [];
-            startD.value = null;
-            endD.value = null;
-            filteredListings.value = roleListings.value;
-        };
-
-        const filterListings = async () => {
-            isLoading.value = true;
-            filteredListings.value = roleListings.value;
-            console.log(filteredListings.value);
-            if (
-                selectedCountries.value.length &&
-                selectedDepartments.value.length
-            ) {
-                filteredListings.value = filteredListings.value.filter(
-                    (obj) =>
-                        selectedCountries.value.includes(obj.country) &&
-                        selectedDepartments.value.includes(obj.dept)
-                );
-            }
-            if (selectedCountries.value.length) {
-                filteredListings.value = filteredListings.value.filter((obj) =>
-                    selectedCountries.value.includes(obj.country)
-                );
-            }
-            if (selectedDepartments.value.length) {
-                filteredListings.value = filteredListings.value.filter((obj) =>
-                    selectedDepartments.value.includes(obj.dept)
-                );
-            }
-            if (selectedSkills.value.length) {
-                // Fetch skills for each role and then filter based on selected skills
-                filteredListings.value = await Promise.all(
-                    filteredListings.value.map(async (obj) => {
-                        try {
-                            const response =
-                                await skillService.getSkillsForRole(obj.name);
-                            const roleSkills = response.data.map(
-                                (skill) => skill.Skill_Name
-                            );
-
-                            // Check if at least one of the selected skills is included in the roleSkills
-                            if (
-                                selectedSkills.value.some((skill) =>
-                                    roleSkills.includes(skill)
-                                )
-                            ) {
-                                return obj;
-                            }
-                        } catch (error) {
-                            console.error(
-                                `Error fetching skills for role ${obj.role}:`,
-                                error
-                            );
-                        }
-                        return null;
-                    })
-                );
-
-                // Filter out listings with errors during the API request
-                filteredListings.value = filteredListings.value.filter(
-                    (listing) => listing !== null
-                );
-            }
-            if (startD.value) {
-                const start = new Date(startD.value).toISOString().slice(0, 10);
-                filteredListings.value = filteredListings.value.filter(
-                    (obj) =>
-                        new Date(obj.OpenW).toISOString().slice(0, 10) >= start
-                );
-            }
-            if (endD.value) {
-                const end = new Date(endD.value).toISOString().slice(0, 10);
-                filteredListings.value = filteredListings.value.filter(
-                    (obj) =>
-                        new Date(obj.CloseW).toISOString().slice(0, 10) <= end
-                );
-            }
-
-            isLoading.value = false;
-        };
-
-        const filterSkillList = () => {
-            filteredSkills.value = skills.value;
-            filteredSkills.value = filteredSkills.value.filter((item) =>
-                item.skillName
-                    .toLowerCase()
-                    .includes(searchedSkill.value.toLowerCase())
-            );
-        };
-
-        watch(selectedCountries, filterListings);
-        watch(selectedDepartments, filterListings);
-        watch(selectedSkills, filterListings);
-        watch(startD, filterListings);
-        watch(endD, filterListings);
-        watch(searchedSkill, filterSkillList);
 
         return {
             roleListings,
-            viewDetails,
-            halfway,
-            countries,
-            departments,
-            selectedCountries,
-            selectedDepartments,
-            clearFilters,
-            filterListings,
-            filteredListings,
-            skills,
-            selectedSkills,
-            startD,
-            endD,
-            filteredSkills,
-            searchedSkill,
-            isLoading,
+            viewDetails
         };
     },
 };
@@ -311,245 +68,46 @@ export default {
     <Navbar />
     <div class="container-fluid" style="width: 80%;">
         <div class="row">
-            <div class="col-12 col-md-2 sidebar">
-                <div class="row">
-                    <label for="startD" class="form-check-label fw-semibold"
-                        ><h6>Open Window</h6></label
-                    >
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="startD"
-                        name="startD"
-                        v-model="startD"
-                    />
-                </div>
-                <div class="row mt-3">
-                    <label for="endD" class="form-check-label fw-semibold"
-                        ><h6>Close Window</h6></label
-                    >
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="endD"
-                        name="endD"
-                        v-model="endD"
-                    />
-                </div>
-                <div class="row mt-3">
-                    <h6>Country</h6>
-                    <div class="form-check" v-for="country in countries">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            :value="country"
-                            :id="country"
-                            v-model="selectedCountries"
-                        />
-                        <label class="form-check-label" :for="country">
-                            {{ country }}
-                        </label>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <h6>Departments</h6>
-                    <div class="form-check" v-for="department in departments">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            :value="department"
-                            :id="department"
-                            v-model="selectedDepartments"
-                        />
-                        <label class="form-check-label" :for="department">
-                            {{ department }}
-                        </label>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <h6>Skills</h6>
-                    <div class="form-check">
-                        <div>
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :value="skills[0].skillName"
-                                :id="skills[0].skillName"
-                                v-model="selectedSkills"
-                            />
-                            <label
-                                class="form-check-label"
-                                :for="skills[0].skillName"
-                            >
-                                {{ skills[0].skillName }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-check">
-                        <div>
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :value="skills[1].skillName"
-                                :id="skills[1].skillName"
-                                v-model="selectedSkills"
-                            />
-                            <label
-                                class="form-check-label"
-                                :for="skills[1].skillName"
-                            >
-                                {{ skills[1].skillName }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-check">
-                        <div>
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :value="skills[2].skillName"
-                                :id="skills[2].skillName"
-                                v-model="selectedSkills"
-                            />
-                            <label
-                                class="form-check-label"
-                                :for="skills[2].skillName"
-                            >
-                                {{ skills[2].skillName }}
-                            </label>
-                        </div>
-                    </div>
-                    <!-- Button trigger modal -->
-                    <a
-                        href=""
-                        class="underline"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                    >
-                        See more...
-                    </a>
+            <div
+                v-if="roleListings.length > 0"
+                class="col-12 col-md-6 g-3"
+                v-for="listing in roleListings"
+            >
+                <div class="card mx-auto rounded">
 
-                    <!-- Modal -->
-                    <div
-                        class="modal fade"
-                        id="exampleModal"
-                        tabindex="-1"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                    >
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1
-                                        class="modal-title fs-5"
-                                        id="exampleModalLabel"
-                                    >
-                                        Skills
-                                    </h1>
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="input-group mb-3">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="Search skills..."
-                                            aria-label="Username"
-                                            aria-describedby="basic-addon1"
-                                            v-model="searchedSkill"
-                                        />
-                                    </div>
-                                    <div
-                                        v-if="filteredSkills.length > 0"
-                                        class="form-check"
-                                        v-for="skill in filteredSkills"
-                                    >
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            :value="skill.skillName"
-                                            :id="skill.skillName"
-                                            v-model="selectedSkills"
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            :for="skill.skillName"
-                                        >
-                                            {{ skill.skillName }}
-                                        </label>
-                                    </div>
-                                    <div v-else>
-                                        <h6>No matching results.</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body" 
+                    @click="viewDetails(listing['id'])"
+                    style="cursor: pointer;">
+
+                        <h5 class="card-title">
+                            {{ listing["name"] }}
+                        </h5>
+                        <h6
+                            class="card-subtitle mb-2 text-body-secondary"
+                        >
+                            {{ listing["dept"] }}
+                        </h6>
+                        <h6
+                            class="card-subtitle mb-2 text-body-secondary"
+                        >
+                            {{ listing["country"] }}
+                        </h6>
+                        <small href="#" class="subtitle" style="font-size: 10px;">
+                            {{ "Open From : " + listing["OpenW"].split(" ")[1] + " " + listing["OpenW"].split(" ")[2]+ " " + listing["OpenW"].split(" ")[3]  + " to " + listing["CloseW"].split(" ")[1] + " " + listing["CloseW"].split(" ")[2]+ " " + listing["CloseW"].split(" ")[3] }}
+                        </small>
+                        <h6 href="#" class="subtitle">
+                            
+                        </h6>
                     </div>
+
+                    <!-- edit button -->
+                    <button class="btn btn-light" @click="editListing(listing['id'])">Edit</button>
+                    <!-- edit button -->
+
                 </div>
-                <div class="row mt-3">
-                    <div class="col p-0 d-grid gap-2 col-6 mx-auto w-100">
-                        <button class="btn btn-danger" @click="clearFilters">
-                            Clear Filters
-                        </button>
-                    </div>
-                </div>
-                <!-- {{ selectedCountries }}
-                {{ selectedDepartments }}
-                {{ selectedSkills }} -->
             </div>
-            <div class="col-12 col-md-10 px-md-5">
-                <div class="row" v-if="!isLoading">
-                    <div
-                        v-if="filteredListings.length > 0"
-                        class="col-12 col-md-6 g-3"
-                        v-for="listing in filteredListings"
-                    >
-
-                        <div class="card mx-auto rounded">
-
-                            <div class="card-body" 
-                            @click="viewDetails(listing['id'])"
-                            style="cursor: pointer;">
-
-                                <h5 class="card-title">
-                                    {{ listing["name"] }}
-                                </h5>
-                                <h6
-                                    class="card-subtitle mb-2 text-body-secondary"
-                                >
-                                    {{ listing["dept"] }}
-                                </h6>
-                                <h6
-                                    class="card-subtitle mb-2 text-body-secondary"
-                                >
-                                    {{ listing["country"] }}
-                                </h6>
-                                <small href="#" class="subtitle" style="font-size: 10px;">
-                                    {{ "Open From : " + listing["OpenW"].split(" ")[1] + " " + listing["OpenW"].split(" ")[2]+ " " + listing["OpenW"].split(" ")[3]  + " to " + listing["CloseW"].split(" ")[1] + " " + listing["CloseW"].split(" ")[2]+ " " + listing["CloseW"].split(" ")[3] }}
-                                </small>
-                                <h6 href="#" class="subtitle">
-                                   
-                                </h6>
-                            </div>
-
-                            <!-- edit button -->
-                            <button class="btn btn-light" @click="editListing(listing['id'])">Edit</button>
-                            <!-- edit button -->
-
-                        </div>
-                    </div>
-                    <div v-else class="container mt-5">
-                        <h3>No matching results.</h3>
-                    </div>
-                </div>
-                <div v-else class="container mt-5">
-                    <h3>Filtering...</h3>
-                </div>
+            <div v-else class="container mt-5">
+                <h3>No role listings listed.</h3>
             </div>
         </div>
     </div>
