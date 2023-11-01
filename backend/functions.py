@@ -1,4 +1,7 @@
 def role_skill_match(staff_skills, role_skills):
+    if staff_skills == None or role_skills == None:
+        return None, None
+    
     skill_match_list = []
     overall_match = 0
     all_skills = []
