@@ -59,8 +59,12 @@ export default {
         this.myRole = sessionStorage.getItem("myRole")
         this.staffId = sessionStorage.getItem("staffId")
         this.getOverallMatch()
+        // this.getRoleDetails()
+        // this.getAppliedStatus()
         this.getRoleDetails()
-        this.getAppliedStatus()
+        .then(() => {
+            this.getAppliedStatus();
+        })
         this.getApplicationsByListingID()
     },
     methods: {
@@ -173,6 +177,8 @@ export default {
                 const response = await StaffApplicationService.getAppliedStatus(this.listingId, this.staffId)
 
                 console.log(response)
+                console.log(this.close_window)
+                console.log(this.currentDate)
                 if(this.close_window < this.currentDate){
                     this.status = 'closed'
                 }
