@@ -497,18 +497,11 @@ def get_RoleSkillMatch(listing_id, staff_id):
         
         # Fetch data from the database using SQLAlchemy
         data = StaffSkillTable.query.filter_by(Staff_ID=staff_id)
-
-        if not data:
-            return jsonify(
-                {
-                    "code": 404,
-                    "error": "Staff does not exist."
-                }), 501
         
         staff_data_dict = [{'id': item.Staff_ID, 'skill': item.Skill_Name,
-                      'isVisible': item.isVisible, 'proficiency': item.Proficiency_Level} for item in data]
+                        'isVisible': item.isVisible, 'proficiency': item.Proficiency_Level} for item in data]
         
-        skill_match_list, overall_match = role_skill_match(role_data_dict, staff_data_dict)
+        skill_match_list, overall_match = role_skill_match(staff_data_dict, role_data_dict)
 
         return {
             "roleskill_match": skill_match_list,
