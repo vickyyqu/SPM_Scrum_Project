@@ -8,105 +8,105 @@ class TestRoleSkillMatchStaff1(unittest.TestCase):
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Account Management"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Account Management"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Business Development"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Business Development"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Customer Acquisition Management"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Customer Acquisition Management"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Database Administration"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Database Administration"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Financial Statements Analysis"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Financial Statements Analysis"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Pricing Strategy"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Pricing Strategy"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Product Management"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Product Management"
             },
             {
                 "id": 140001,
                 "isVisible": False,
-                "proficiency": 0,
-                "skill": "Technology Integration"
+                "Proficiency_Level": 0,
+                "Skill_Name": "Technology Integration"
             }
         ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 31)
@@ -117,80 +117,80 @@ class TestRoleSkillMatchStaff2(unittest.TestCase):
                     {
                         "id": 140002,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Accounting and Tax Systems"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Accounting and Tax Systems"
                     },
                     {
                         "id": 140002,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Business Environment Analysis"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Business Environment Analysis"
                     },
                     {
                         "id": 140002,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Customer Relationship Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
                     },
                     {
                         "id": 140002,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Professional and Business Ethics"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Professional and Business Ethics"
                     }
                 ]
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 0)
@@ -201,87 +201,87 @@ class TestRoleSkillMatchStaff3(unittest.TestCase):
                     {
                         "id": 140003,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Accounting Standards"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Accounting Standards"
                     },
                     {
                         "id": 140003,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Data Analytics"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Data Analytics"
                     },
                     {
                         "id": 140003,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Digital Fluency"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Digital Fluency"
                     },
                     {
                         "id": 140003,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Problem Solving"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Problem Solving"
                     },
                     {
                         "id": 140003,
                         "isVisible": False,
-                        "proficiency": 0,
-                        "skill": "Project Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Project Management"
                     }
                 ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 15)
@@ -292,87 +292,87 @@ class TestRoleSkillMatchStaff4(unittest.TestCase):
                 {
                     "id": 140004,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
                     "id": 140004,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Development"
                 },
                 {
                     "id": 140004,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
                     "id": 140004,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Database Administration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Database Administration"
                 },
                 {
                     "id": 140004,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 }
             ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 23)
@@ -383,56 +383,56 @@ class TestRoleSkillMatchStaffEmpty(unittest.TestCase):
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 0)
@@ -443,93 +443,93 @@ class TestRoleSkillMatchStaff5(unittest.TestCase):
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Integration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Integration"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Presentation Delivery"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Presentation Delivery"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Developing People"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Developing People"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Infrastructure Support"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Infrastructure Support"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Professional and Business Ethics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Professional and Business Ethics"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "SOP Development and Implementation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "SOP Development and Implementation"
                 }
             ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 0)
@@ -540,73 +540,73 @@ class TestRoleSkillMatchRole1(unittest.TestCase):
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Integration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Integration"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Presentation Delivery"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Presentation Delivery"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Developing People"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Developing People"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Infrastructure Support"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Infrastructure Support"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Professional and Business Ethics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Professional and Business Ethics"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "SOP Development and Implementation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "SOP Development and Implementation"
                 }
             ]
 
         roleSkill = [
                     {
-                        "proficiency": 0,
-                        "skill": "Call Centre Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Call Centre Management"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Collaboration"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Collaboration"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Communication"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Communication"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Customer Relationship Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Digital Fluency"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Digital Fluency"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Problem Solving"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Problem Solving"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Stakeholder Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Stakeholder Management"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Technology Application"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Technology Application"
                     }
                 ]
 
@@ -618,73 +618,73 @@ class TestRoleSkillMatchRole2(unittest.TestCase):
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Integration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Integration"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Presentation Delivery"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Presentation Delivery"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Developing People"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Developing People"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Infrastructure Support"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Infrastructure Support"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Professional and Business Ethics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Professional and Business Ethics"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "SOP Development and Implementation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "SOP Development and Implementation"
                 }
             ]
 
         roleSkill = [
                     {
-                        "proficiency": 0,
-                        "skill": "Developing People"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Developing People"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Collaboration"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Collaboration"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Communication"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Communication"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Customer Relationship Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Digital Fluency"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Digital Fluency"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Problem Solving"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Problem Solving"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Stakeholder Management"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Stakeholder Management"
                     },
                     {
-                        "proficiency": 0,
-                        "skill": "Technology Application"
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Technology Application"
                     }
                 ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 12)
@@ -696,93 +696,93 @@ class TestRoleSkillMatchRole3(unittest.TestCase):
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Integration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Integration"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Presentation Delivery"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Presentation Delivery"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Developing People"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Developing People"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Infrastructure Support"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Infrastructure Support"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Professional and Business Ethics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Professional and Business Ethics"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "SOP Development and Implementation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "SOP Development and Implementation"
                 }
             ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 0)
@@ -794,93 +794,93 @@ class TestRoleSkillMatchRole4(unittest.TestCase):
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Applications Integration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Applications Integration"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Business Presentation Delivery"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Presentation Delivery"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Developing People"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Developing People"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Infrastructure Support"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Infrastructure Support"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "Professional and Business Ethics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Professional and Business Ethics"
                 },
                 {
                     "id": 140008,
                     "isVisible": False,
-                    "proficiency": 0,
-                    "skill": "SOP Development and Implementation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "SOP Development and Implementation"
                 }
             ]
 
         roleSkill = [
                 {
-                    "proficiency": 0,
-                    "skill": "Account Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Account Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Budgeting"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Budgeting"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Development"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Development"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Needs Analysis"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Needs Analysis"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Business Negotiation"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Business Negotiation"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Collaboration"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Collaboration"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Communication"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Communication"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Data Analytics"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Data Analytics"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Pricing Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Pricing Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Problem Solving"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Problem Solving"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Product Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Product Management"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Sales Strategy"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Sales Strategy"
                 },
                 {
-                    "proficiency": 0,
-                    "skill": "Stakeholder Management"
+                    "Proficiency_Level": 0,
+                    "Skill_Name": "Stakeholder Management"
                 }
             ]
         self.assertEqual(role_skill_match(staffSkill, roleSkill)[1], 0)
