@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import Navbar from '../components/Navbar.vue';
 import RoleSkillMatchService from '../../services/RoleSkillMatch.js'
+import StaffSkillsService from '../../services/StaffSkill.js'
 
 export default {
     components: {
@@ -28,9 +29,21 @@ export default {
         }
     },
     mounted() {
+        this.getStaffSkill().then((response) => {
+            this.allstaffskills = response
+        })
         this.getOverallMatch()
     },
     methods: {
+        async getStaffSkill() {
+            try {
+                const response = await StaffSkillsService.getStaffSkills(this.staffId)
+                console.log(response.data)
+                return response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async getOverallMatch() {
             try {
                 const response = await RoleSkillMatchService.getRoleSkillMatch(this.listingId, this.staffId)
@@ -54,7 +67,6 @@ export default {
 };
 
 </script>
-
 
 <template>
     <Navbar />
