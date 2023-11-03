@@ -26,6 +26,6 @@ dist-ssr
 
 # py cache
 __pycache__/
-*.py
+.py
 !integrationTests.py
 .env

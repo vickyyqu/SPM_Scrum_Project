@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
+from functions import role_skill_match
 import os
 
 # Load db variable from .env file into environment
@@ -82,10 +83,10 @@ class ApplicationTable(db.Model):
     Staff_ID = db.Column(db.Integer)
     Brief_Description = db.Column(db.String(255))
 
+
 ##### API Endpoints ######
 
 # Role_Listing
-
 
 @app.route('/getallrolelistings', methods=['GET'])
 def get_allrolelistings():
@@ -475,6 +476,40 @@ def apply_role():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to add data.', 'details': str(e)}), 500
+
+@app.route('/getroleskillmatch/<int:listing_id>&<int:staff_id>', methods=['GET'])
+def get_RoleSkillMatch(listing_id, staff_id):
+    try:
+        # Fetch data from the database using SQLAlchemy
+        listing = RoleListingTable.query.filter_by(
+            Listing_ID=listing_id).first()
+        
+        if not listing:
+            return jsonify(
+                {
+                    "code": 404,
+                    "error": "Listing does not exist."
+                }), 501
+        
+        role = listing.Role_Name
+        data = RoleSkillTable.query.filter_by(Role_Name=role)
+        role_data_dict = [{'skill' : item.Skill_Name, 'proficiency' : item.Proficiency_Level } for item in data]
+        
+        # Fetch data from the database using SQLAlchemy
+        data = StaffSkillTable.query.filter_by(Staff_ID=staff_id)
+        
+        staff_data_dict = [{'id': item.Staff_ID, 'skill': item.Skill_Name,
+                        'isVisible': item.isVisible, 'proficiency': item.Proficiency_Level} for item in data]
+        
+        skill_match_list, overall_match = role_skill_match(staff_data_dict, role_data_dict)
+
+        return {
+            "roleskill_match": skill_match_list,
+            "overall_match": overall_match
+        }
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 501
 
 
 if __name__ == '__main__':

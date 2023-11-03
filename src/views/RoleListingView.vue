@@ -43,7 +43,7 @@ export default {
 
     setup() {
         const roleListings = ref([]);
-        const route = useRoute();
+        // const route = useRoute();
 
         roleListingService.getAllRoleListings().then((response) => {
             roleListings.value = response.data;

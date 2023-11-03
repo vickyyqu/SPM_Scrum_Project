@@ -3,7 +3,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import Navbar from '../components/Navbar.vue';
-import RoleSkillService from '../../services/RoleSkill.js'
+import RoleSkillMatchService from '../../services/RoleSkillMatch.js'
 import StaffSkillsService from '../../services/StaffSkill.js'
 
 export default {
@@ -29,18 +29,12 @@ export default {
         }
     },
     mounted() {
+        this.getStaffSkill().then((response) => {
+            this.allstaffskills = response
+        })
         this.getOverallMatch()
     },
     methods: {
-        async getRoleSkill() {
-            try {
-                const response = await RoleSkillService.getRoleSkills(this.listingId)
-                console.log(response.data)
-                return response.data
-            } catch (error) {
-                console.log(error)
-            }
-        },
         async getStaffSkill() {
             try {
                 const response = await StaffSkillsService.getStaffSkills(this.staffId)
@@ -51,62 +45,15 @@ export default {
             }
         },
         async getOverallMatch() {
-            var roleSkills = await this.getRoleSkill()
-            var staffSkills = await this.getStaffSkill()
-
-            this.allstaffskills = staffSkills;
-            if (staffSkills == null){
-                staffSkills = []
+            try {
+                const response = await RoleSkillMatchService.getRoleSkillMatch(this.listingId, this.staffId)
+                console.log(response.data)
+                
+                this.overallMatch = response.data.overall_match
+                this.skillMatch_list = response.data.roleskill_match
+            } catch (error) {
+                console.log(error)
             }
-            if (roleSkills == null){
-                roleSkills = []
-            }
-
-            var allSkills = []
-            var count = 0
-            this.overallMatch = 0
-            this.skillMatch_list = []
-
-            for (let i = 0; i < roleSkills.length; i++) {
-                var rSkill = roleSkills[i].skill.toUpperCase()
-
-                for (let j = 0; j < staffSkills.length; j++) {
-                    var sSkill = staffSkills[j].skill.toUpperCase()
-
-                    if (rSkill == sSkill && !allSkills.includes(rSkill)) {
-                        allSkills.push(rSkill)
-                        var match = 100
-
-                        if (roleSkills[i].proficiency > 0){
-                            match = Math.min(staffSkills[j].proficiency / roleSkills[i].proficiency, 1) * 100
-                        }
-                        var out = {
-                            "skill": roleSkills[i].skill,
-                            "proficiency": roleSkills[i].proficiency,
-                            "match": match.toFixed(0)
-                        }
-                        this.skillMatch_list.push(out)
-                        this.overallMatch += match
-                        count ++
-                    }
-                }
-                if (!allSkills.includes(rSkill)) {
-                    allSkills.push(rSkill)
-                    var out = {
-                        "skill": roleSkills[i].skill,
-                        "proficiency": roleSkills[i].proficiency,
-                        "match": 0
-                    }
-                    this.skillMatch_list.push(out)
-                    count ++
-                }
-            }
-            if (count > 0){
-                this.overallMatch = this.overallMatch/count
-            } else if (roleSkills.length  == 0){
-                this.overallMatch = 100
-            }
-            this.overallMatch = this.overallMatch.toFixed(0)
         },
         goBack(){
             this.$router.push({
@@ -120,7 +67,6 @@ export default {
 };
 
 </script>
-
 
 <template>
     <Navbar />

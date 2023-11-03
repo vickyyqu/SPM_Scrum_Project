@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import unittest
 import json
 import flask_testing
+from functions import role_skill_match
 from app import *
 
 class TestApp(flask_testing.TestCase):
@@ -217,9 +218,335 @@ class TestRoles(TestApp):
         
 
         
+class TestSkills(TestApp):
+    def testGetRoleSkillsDeveloper(self):
+        skill = SkillTable(Skill_Name = "Applications Development", Skill_Desc = "Test")
+        roleSkill = RoleSkillTable(Role_Name = "Developer", Skill_Name = "Applications Development", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Developer", Role_Desc = "The Developer leads important projects and possesses capability to make breakthroughs in design, development, testing, debugging and implementing software applications or specialised utility programs in support of end users' needs on platforms. He/She plans and coordinates regular updates and recommends improvements to existing applications. He identifies and resolves issues which have organisation wide and long-term impact. He identifies security risks, creates requirements to capture security issues, and performs initial threat modelling to ensure coding standards meets security requirements. He develops and maintains the software configuration management plan and oversees the building, verification and implementation of software releases. He provides guidance and technical support to the quality testing teams. He works in a team setting and is proficient in programming languages required by the organisation. He is familiar with software development tools and standards, as well as the relevant software platforms on which the solution is deployed on. The Developer is imaginative and creative in exploring a range of application designs and solutions. He is able to engage and support others in the team, readily put forth his ideas in a clear and compelling manner.")
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(skill)
+        db.session.commit()
 
+        current_role = "Developer"
+        getRoleSkills = self.client.get(f"/getskillsforrole/{current_role}")
+        getRoleSkillsData = json.loads(getRoleSkills.data)
+        self.assertEqual(getRoleSkills.status_code, 200)
+        self.assertEqual(len(getRoleSkillsData), 1)
+
+    def testGetRoleSkillsAM(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        current_role = "Account Manager"
+        getRoleSkills = self.client.get(f"/getskillsforrole/{current_role}")
+        getRoleSkillsData = json.loads(getRoleSkills.data)
+        self.assertEqual(getRoleSkills.status_code, 200)
+        self.assertEqual(len(getRoleSkillsData), 2)
 
             
+class TestMatch(TestApp):
+    def testRoleSkillMatch(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        current_role = "Account Manager"
+        getRoleSkills = self.client.get(f"/getskillsforrole/{current_role}")
+        getRoleSkillsData = json.loads(getRoleSkills.data)
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        # print(getProfLevel)
+        staffSkill = [
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Accounting and Tax Systems"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Business Environment Analysis"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Professional and Business Ethics"
+                    }
+                ]
+        
+        self.assertEqual(role_skill_match(staffSkill, getProfLevel)[1], 0)
+
+class Test50RoleMatch(TestApp):
+    def testRoleSkillMatch(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        current_role = "Account Manager"
+        getRoleSkills = self.client.get(f"/getskillsforrole/{current_role}")
+        getRoleSkillsData = json.loads(getRoleSkills.data)
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        # print(getProfLevel)
+        staffSkill = [
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 1,
+                        "Skill_Name": "Account Management"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Business Environment Analysis"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Professional and Business Ethics"
+                    }
+                ]
+
+        self.assertEqual(role_skill_match(staffSkill, getProfLevel)[1], 50)
+
+class Test100RoleMatch(TestApp):
+    def testRoleSkillMatch(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        current_role = "Account Manager"
+        getRoleSkills = self.client.get(f"/getskillsforrole/{current_role}")
+        getRoleSkillsData = json.loads(getRoleSkills.data)
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        # print(getProfLevel)
+        staffSkill = [
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 1,
+                        "Skill_Name": "Account Management"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 1,
+                        "Skill_Name": "Budgeting"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Customer Relationship Management"
+                    },
+                    {
+                        "id": 140002,
+                        "isVisible": False,
+                        "Proficiency_Level": 0,
+                        "Skill_Name": "Professional and Business Ethics"
+                    }
+                ]
+
+        self.assertEqual(role_skill_match(staffSkill, getProfLevel)[1], 100)
+
+class TestRoleSkillBackend0(TestApp):
+    def testRoleSkillMatchBackend(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+
+        staff = StaffTable(
+            Staff_ID = 140002,
+            Staff_FName = "Test",
+            Staff_LName = "Test",
+            Dept = "Engineering",
+            Country = "Singapore",
+            Email = "test@gmail.com",
+            Role = "Developer")
+        
+
+        staffSkill = StaffSkillTable(
+            Staff_ID = 140002,
+            Skill_Name = "Business Acumen",
+            isVisible = True,
+            Proficiency_Level = 1)
+        
+        db.session.add(staff)
+        db.session.add(staffSkill)
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        
+        current_role = "Account Manager"
+        currentStaff = 140002
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        staffSkills = self.client.get(f"/getstaffskills/{currentStaff}")
+        staffSkills = json.loads(staffSkills.data)
+
+        self.assertEqual(role_skill_match(staffSkills, getProfLevel)[1], 0)
+
+
+class TestRoleSkillBackend50(TestApp):
+    def testRoleSkillMatchBackend(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+
+        staff = StaffTable(
+            Staff_ID = 140002,
+            Staff_FName = "Test",
+            Staff_LName = "Test",
+            Dept = "Engineering",
+            Country = "Singapore",
+            Email = "test@gmail.com",
+            Role = "Developer")
+        
+
+        staffSkill = StaffSkillTable(
+            Staff_ID = 140002,
+            Skill_Name = "Budgeting",
+            isVisible = True,
+            Proficiency_Level = 1)
+        
+        db.session.add(staff)
+        db.session.add(staffSkill)
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        
+        current_role = "Account Manager"
+        currentStaff = 140002
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        staffSkills = self.client.get(f"/getstaffskills/{currentStaff}")
+        staffSkills = json.loads(staffSkills.data)
+
+        self.assertEqual(role_skill_match(staffSkills, getProfLevel)[1], 50)
+
+
+class TestRoleSkillBackend100(TestApp):
+    def testRoleSkillMatchBackend(self):
+        skill = SkillTable( Skill_Desc = "Test", Skill_Name = "Account Management")
+        skill2 = SkillTable( Skill_Desc = "Test", Skill_Name = "Budgeting")
+        roleSkill = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Budgeting", Proficiency_Level = 1)
+        roleSkill2 = RoleSkillTable(Role_Name = "Account Manager", Skill_Name = "Account Management", Proficiency_Level = 1)
+        role = RoleTable(Role_Name = "Account Manager", Role_Desc = "Test")
+
+        staff = StaffTable(
+            Staff_ID = 140002,
+            Staff_FName = "Test",
+            Staff_LName = "Test",
+            Dept = "Engineering",
+            Country = "Singapore",
+            Email = "test@gmail.com",
+            Role = "Developer")
+        
+
+        staffSkill = StaffSkillTable(
+            Staff_ID = 140002,
+            Skill_Name = "Budgeting",
+            isVisible = True,
+            Proficiency_Level = 1)
+        
+        staffSkill2 = StaffSkillTable(
+            Staff_ID = 140002,
+            Skill_Name = "Account Management",
+            isVisible = True,
+            Proficiency_Level = 1)
+        
+        db.session.add(staff)
+        db.session.add(staffSkill)
+        db.session.add(staffSkill2)
+        db.session.add(roleSkill)
+        db.session.add(role)
+        db.session.add(roleSkill2)
+        db.session.add(skill)
+        db.session.add(skill2)
+        db.session.commit()
+
+        
+        current_role = "Account Manager"
+        currentStaff = 140002
+        getProfLevel = self.client.get(f"getrequiredskillsandproficiency/{current_role}")
+        getProfLevel = json.loads(getProfLevel.data)
+        staffSkills = self.client.get(f"/getstaffskills/{currentStaff}")
+        staffSkills = json.loads(staffSkills.data)
+
+        self.assertEqual(role_skill_match(staffSkills, getProfLevel)[1], 100)
+
+
+        
+
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
