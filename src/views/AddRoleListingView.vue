@@ -209,7 +209,7 @@ export default {
             <div class="mb-3 gap-2">
                 <label for="roleDesc" class="form-label fw-semibold">Required Skills:</label>
                 <div>
-                    <span class="badge text-bg-primary me-2 mt-2" v-for="skill in skills">{{ skill.Skill_Name }}</span>
+                    <span class="badge text-bg-primary me-2 mt-2" v-for="skill in skills">{{ skill.Skill_Name }}, Level {{ skill.Proficiency_Level }}</span>
                 </div>
             </div>
 
