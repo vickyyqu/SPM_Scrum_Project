@@ -9,47 +9,46 @@ The Internal Role Listing Application is a user-friendly and centralized platfor
 
 EITHER downloading the zip folder 
 
-
     https://github.com/joel-teo/SPMG4T2.git
 
 
 OR run this command line in your terminal
 
-
     gh repo clone joel-teo/SPMG4T2
-
 
 
 **1. Start up MAMP / WAMP**
 
+**2. Run the sbrp.sql file (located in database_setup)**
 
-**2. Install required (Python) dependencies**
-
+**3. Install required (Python) dependencies**
     
     pip install -r requirements.txt
     
-
-**3. Change working directory to backend**
+**4. Change working directory to backend**
 
     cd backend
 
-**4. Run python application**
+**5. Run python application**
 
     python app.py
 
-**5. Open a new terminal**
+**6. Open a new terminal**
 
-**6. Install the required (JavaScript) dependencies****
+**7. Install the required (JavaScript) dependencies****
 
     npm install
 
-
-**6. Run the application in the development environment**
+**8. Run the application in the development environment**
 
     npm run dev
+
+
 ## API Documentation
 
 [API Docs Google Folder](https://drive.google.com/drive/folders/1LRD6al02ToTOjql-_mKQAYrCdwxRX_ia)
+
+
 ## Environment Variables
 
 To run this project, you will need to edit the following environment variables to your .env file
@@ -65,6 +64,7 @@ Windows:
 ```
 DATABASE_URL = 'mysql+mysqlconnector://root:root@localhost:3306/sbrp'
 ```
+
 
 ## Used By
 
