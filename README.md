@@ -3,6 +3,11 @@
 
 The Internal Role Listing Application is a user-friendly and centralized platform designed to streamline the application process for various job roles within the company. This application is used by staff members, HR, and Managers & Directors to manage internal role listings and internal career mobility.
 
+Link to GitHub repository:
+
+    https://github.com/joel-teo/SPMG4T2
+    
+
 
 ## How to run the application
 **0. Clone the GitHub project**
