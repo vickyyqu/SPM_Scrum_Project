@@ -19,7 +19,7 @@ OR run this command line in your terminal
 
 **1. Start up MAMP / WAMP**
 
-**2. Run the sbrp.sql file (located in database_setup)**
+**2. Import the sbrp.sql file (located in database_setup) into localhost/phpmyadmin**
 
 **3. Install required (Python) dependencies**
     
